@@ -97,13 +97,17 @@ async function main() {
 
   // ------------------------------------------------------------ Users
   // Passwords come from the environment so production never ships known credentials.
-  const sellerPassword = process.env.DEMO_SELLER_PASSWORD ?? "Password123!";
-  const adminPassword = process.env.DEMO_ADMIN_PASSWORD ?? "Admin123!";
+  // Values are normalised — some shells prepend a BOM when setting env vars.
+  const env = (name: string, fallback: string) =>
+    (process.env[name] ?? "").replace(/^﻿/, "").trim() || fallback;
+
+  const sellerPassword = env("DEMO_SELLER_PASSWORD", "Password123!");
+  const adminPassword = env("DEMO_ADMIN_PASSWORD", "Admin123!");
   const password = await bcrypt.hash(sellerPassword, 10);
 
   const admin = await prisma.user.create({
     data: {
-      email: process.env.DEMO_ADMIN_EMAIL ?? "admin@owlflow.io",
+      email: env("DEMO_ADMIN_EMAIL", "admin@owlflow.io"),
       passwordHash: await bcrypt.hash(adminPassword, 10),
       name: "Platform Admin",
       company: "OwlFlow",
@@ -117,7 +121,7 @@ async function main() {
 
   const seller = await prisma.user.create({
     data: {
-      email: process.env.DEMO_SELLER_EMAIL ?? "seller@owlflow.io",
+      email: env("DEMO_SELLER_EMAIL", "seller@owlflow.io"),
       passwordHash: password,
       name: "Hannah Lewis",
       company: "Little Thistle Studio",

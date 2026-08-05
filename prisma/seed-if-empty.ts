@@ -26,6 +26,23 @@ const DEMO_ACCOUNTS = [
   },
 ];
 
+/**
+ * A BOM-prefixed env var once leaked into seeded email addresses, which made the
+ * accounts impossible to sign in to. Strip it wherever it landed.
+ */
+async function repairEmails(prisma: PrismaClient) {
+  const users = await prisma.user.findMany({ where: { email: { startsWith: "﻿" } } });
+
+  for (const user of users) {
+    const email = user.email.replace(/^﻿/, "").trim();
+    const clash = await prisma.user.findUnique({ where: { email } });
+    if (clash) continue;
+
+    await prisma.user.update({ where: { id: user.id }, data: { email } });
+    console.log(`· bootstrap: repaired email ${JSON.stringify(user.email)} -> ${email}`);
+  }
+}
+
 async function syncDemoPasswords(prisma: PrismaClient) {
   for (const account of DEMO_ACCOUNTS) {
     const user = await prisma.user.findUnique({ where: { email: account.email } });
@@ -54,6 +71,7 @@ async function main() {
 
     if (users > 0) {
       console.log(`· bootstrap: ${users} users present, skipping seed.`);
+      await repairEmails(prisma);
       await syncDemoPasswords(prisma);
       return;
     }
