@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink-950: #06080f;
+  --color-ink-900: #0a0e18;
+  --color-ink-850: #0e1424;
+  --color-ink-800: #131b2e;
+  --color-ink-700: #1c2740;
+  --color-ink-600: #2a3855;
+  --color-brand-50: #eef7ff;
+  --color-brand-100: #d9edff;
+  --color-brand-200: #bce0ff;
+  --color-brand-300: #8ccdff;
+  --color-brand-400: #54b0ff;
+  --color-brand-500: #2a90ff;
+  --color-brand-600: #1470f0;
+  --color-brand-700: #0f59d4;
+  --color-brand-800: #134aab;
+  --color-brand-900: #154186;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background-color: var(--color-ink-950);
+  color: #e6ecf7;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  border-color: color-mix(in oklab, var(--color-ink-600) 60%, transparent);
+}
+
+::selection {
+  background: var(--color-brand-600);
+  color: white;
+}
+
+/* Thin scrollbars inside dashboard panes */
+.scroll-thin::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background: var(--color-ink-600);
+  border-radius: 999px;
+}
+.scroll-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Reusable primitives ------------------------------------------------- */
+@utility card {
+  border-radius: 1rem;
+  border-width: 1px;
+  border-color: color-mix(in oklab, var(--color-ink-600) 55%, transparent);
+  background-color: color-mix(in oklab, var(--color-ink-850) 85%, transparent);
+}
+
+@utility surface-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+.animate-float-slow {
+  animation: float-slow 7s ease-in-out infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}
