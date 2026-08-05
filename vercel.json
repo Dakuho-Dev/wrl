@@ -2,6 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
   "regions": ["sin1"],
-  "buildCommand": "prisma generate && next build",
+  "buildCommand": "prisma generate && DATABASE_URL=${DATABASE_URL_UNPOOLED:-$DATABASE_URL} prisma migrate deploy && DATABASE_URL=${DATABASE_URL_UNPOOLED:-$DATABASE_URL} tsx prisma/seed-if-empty.ts && next build",
   "installCommand": "npm install"
 }
