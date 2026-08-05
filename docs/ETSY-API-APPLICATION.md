@@ -16,9 +16,9 @@ Tài liệu này ghi lại chính xác những gì Etsy yêu cầu và nội dun
 | Security Policy | ✅ `/security` |
 | Cách người dùng xóa dữ liệu | ✅ `/privacy#data-deletion` + Dashboard → Settings |
 | Ghi chú thương hiệu Etsy | ✅ hiển thị ở footer mọi trang |
-| Callback URL (OAuth redirect) | ✅ `https://<domain>/api/integrations/etsy/callback` |
+| Callback URL (OAuth redirect) | ✅ `https://owlflow.vercel.app/api/integrations/etsy/callback` |
 
-> **Quan trọng:** phải deploy lên domain public trước. Etsy không duyệt `localhost`.
+> Website đã live tại **https://owlflow.vercel.app** — dùng đúng URL này khi điền đơn.
 
 ---
 
@@ -53,19 +53,19 @@ for advertising, and never shared with other sellers. Sellers can disconnect a s
 time, which deletes the stored tokens immediately, and can delete their entire account and
 all imported data from their dashboard.
 
-Website: https://<domain-cua-ban>
-Privacy Policy: https://<domain-cua-ban>/privacy
-Terms: https://<domain-cua-ban>/terms
+Website: https://owlflow.vercel.app
+Privacy Policy: https://owlflow.vercel.app/privacy
+Terms: https://owlflow.vercel.app/terms
 ```
 
 **Website URL**
 ```
-https://<domain-cua-ban>
+https://owlflow.vercel.app
 ```
 
 **Callback URL / Redirect URI** — phải khớp tuyệt đối, kể cả dấu `/`
 ```
-https://<domain-cua-ban>/api/integrations/etsy/callback
+https://owlflow.vercel.app/api/integrations/etsy/callback
 ```
 
 **Do you plan to charge for this application?** → Yes (có trang `/pricing`) hoặc No, tùy bạn.
@@ -76,15 +76,24 @@ https://<domain-cua-ban>/api/integrations/etsy/callback
 
 Etsy trả về **Keystring** (client id) và **Shared secret**.
 
-Đặt vào `.env` trên môi trường production:
+Nạp vào Vercel (`ETSY_REDIRECT_URI` đã đặt sẵn đúng giá trị):
 
 ```bash
-ETSY_CLIENT_ID="keystring"
-ETSY_CLIENT_SECRET="shared-secret"
-ETSY_REDIRECT_URI="https://<domain-cua-ban>/api/integrations/etsy/callback"
+printf '%s' 'keystring-cua-ban' | vercel env add ETSY_CLIENT_ID production --force
 ```
 
-Redeploy, rồi vào **Admin → Integrations** để xác nhận mọi biến môi trường đã "ok",
+```bash
+printf '%s' 'shared-secret-cua-ban' | vercel env add ETSY_CLIENT_SECRET production --force
+```
+
+```bash
+vercel deploy --prod --yes
+```
+
+Dùng `printf` chứ đừng dùng `echo` — một số shell thêm ký tự BOM vào đầu giá trị và
+Etsy sẽ từ chối `client_id`.
+
+Sau khi redeploy, vào **Admin → Integrations** để xác nhận mọi biến môi trường đã "ok",
 và nút Connect Etsy shop trong Dashboard → Shops chuyển sang chế độ live.
 
 ---
