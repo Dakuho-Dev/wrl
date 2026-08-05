@@ -2,6 +2,8 @@ import "server-only";
 
 import crypto from "node:crypto";
 
+import { appUrl, cleanEnv } from "@/lib/env";
+
 /**
  * Etsy Open API v3 client.
  *
@@ -27,12 +29,14 @@ export const DEFAULT_SCOPES = [
 ];
 
 export function etsyConfig() {
-  const clientId = process.env.ETSY_CLIENT_ID?.trim() ?? "";
-  const clientSecret = process.env.ETSY_CLIENT_SECRET?.trim() ?? "";
-  const appUrl = (process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000").replace(/\/$/, "");
-  const redirectUri =
-    process.env.ETSY_REDIRECT_URI?.trim() || `${appUrl}/api/integrations/etsy/callback`;
-  const scopes = (process.env.ETSY_SCOPES?.trim() || DEFAULT_SCOPES.join(" ")).split(/\s+/);
+  const clientId = cleanEnv(process.env.ETSY_CLIENT_ID);
+  const clientSecret = cleanEnv(process.env.ETSY_CLIENT_SECRET);
+  const base = appUrl();
+  const redirectUri = cleanEnv(
+    process.env.ETSY_REDIRECT_URI,
+    `${base}/api/integrations/etsy/callback`,
+  );
+  const scopes = cleanEnv(process.env.ETSY_SCOPES, DEFAULT_SCOPES.join(" ")).split(/\s+/);
 
   return {
     clientId,

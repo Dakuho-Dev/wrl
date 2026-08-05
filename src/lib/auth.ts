@@ -7,12 +7,13 @@ import { redirect } from "next/navigation";
 import { cache } from "react";
 
 import { prisma } from "@/lib/db";
+import { cleanEnv } from "@/lib/env";
 
 const COOKIE_NAME = "owlflow_session";
 const MAX_AGE_SECONDS = 60 * 60 * 24 * 30; // 30 days
 
 function secret() {
-  const value = process.env.AUTH_SECRET;
+  const value = cleanEnv(process.env.AUTH_SECRET);
   if (!value || value.length < 16) {
     // Keeps local dev working before .env is filled in.
     return new TextEncoder().encode("owlflow-development-secret-key-please-change");

@@ -16,6 +16,7 @@ import {
 } from "@/components/ui";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { appUrl as resolveAppUrl } from "@/lib/env";
 import { etsyConfig } from "@/lib/etsy";
 import { formatNumber, PLATFORM_LABEL, timeAgo } from "@/lib/utils";
 
@@ -25,7 +26,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminIntegrationsPage() {
   await requireAdmin();
   const etsy = etsyConfig();
-  const appUrl = (process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000").replace(/\/$/, "");
+  const appUrl = resolveAppUrl();
 
   const [byPlatform, liveShops, recentJobs, failedJobs] = await Promise.all([
     prisma.shop.groupBy({ by: ["platform", "status"], _count: { platform: true } }),

@@ -2,6 +2,8 @@ import "server-only";
 
 import crypto from "node:crypto";
 
+import { cleanEnv } from "@/lib/env";
+
 /**
  * Envelope encryption for marketplace OAuth tokens stored in the database.
  *
@@ -15,7 +17,7 @@ import crypto from "node:crypto";
 const PREFIX = "enc:v1:";
 
 function key() {
-  const material = process.env.ENCRYPTION_KEY || process.env.AUTH_SECRET;
+  const material = cleanEnv(process.env.ENCRYPTION_KEY) || cleanEnv(process.env.AUTH_SECRET);
   if (!material) {
     throw new Error("ENCRYPTION_KEY or AUTH_SECRET must be set to encrypt marketplace tokens");
   }
