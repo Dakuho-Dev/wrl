@@ -135,16 +135,40 @@ Xem trạng thái cấu hình tại **Admin → Integrations**.
 
 ## 5. Deploy
 
-Cần một URL public trước khi nộp đơn cho Etsy.
+**Đã deploy:** https://owlflow.vercel.app — Vercel project `tu99s-projects/owlflow`.
 
-**Vercel (khuyến nghị):**
-1. Push code lên GitHub
-2. Import vào Vercel
-3. Đổi `provider` trong `prisma/schema.prisma` sang `postgresql`, dùng Vercel Postgres / Neon
-4. Đặt biến môi trường như mục 4
-5. Deploy → chạy `npx prisma db push` và `npx tsx prisma/seed.ts` một lần
+Redeploy sau khi sửa code:
 
-Sau khi deploy, cập nhật `ETSY_REDIRECT_URI` đúng domain thật và khai báo lại trong app Etsy.
+```bash
+vercel deploy --prod --yes
+```
+
+Biến môi trường production đã cấu hình sẵn trên Vercel (`vercel env ls production`):
+`AUTH_SECRET`, `ENCRYPTION_KEY`, `NEXT_PUBLIC_APP_URL`, `ETSY_REDIRECT_URI`, `ETSY_SCOPES`,
+`ETSY_CLIENT_ID`, `ETSY_CLIENT_SECRET`, `DEMO_*`, `SHOW_DEMO_CREDENTIALS`.
+
+### Database
+
+Dùng Neon (Vercel → Storage → Neon). Sau khi tạo xong, kéo biến về máy và khởi tạo schema:
+
+```bash
+vercel env pull .env.production.local --environment production
+```
+
+```bash
+npx dotenv -e .env.production.local -- npx prisma db push
+```
+
+Hoặc đơn giản hơn — đặt tạm `DATABASE_URL` trong shell rồi chạy `npx prisma db push` và
+`npx tsx prisma/seed.ts`.
+
+### Database local (tuỳ chọn)
+
+```bash
+npm run db:up
+```
+
+Container Postgres ở cổng 5433, khớp `DATABASE_URL` trong `.env.example`.
 
 ---
 
