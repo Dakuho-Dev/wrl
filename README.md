@@ -135,7 +135,7 @@ Xem trạng thái cấu hình tại **Admin → Integrations**.
 
 ## 5. Deploy
 
-**Đã deploy:** https://dkh.vercel.app — Vercel project `tu99s-projects/dkh`.
+**Đã deploy:** https://dkh-io.vercel.app — Vercel project `tu99s-projects/dkh`.
 
 Redeploy sau khi sửa code:
 

@@ -16,9 +16,9 @@ Tài liệu này ghi lại chính xác những gì Etsy yêu cầu và nội dun
 | Security Policy | ✅ `/security` |
 | Cách người dùng xóa dữ liệu | ✅ `/privacy#data-deletion` + Dashboard → Settings |
 | Ghi chú thương hiệu Etsy | ✅ hiển thị ở footer mọi trang |
-| Callback URL (OAuth redirect) | ✅ `https://dkh.vercel.app/api/integrations/etsy/callback` |
+| Callback URL (OAuth redirect) | ✅ `https://dkh-io.vercel.app/api/integrations/etsy/callback` |
 
-> Website đã live tại **https://dkh.vercel.app** — dùng đúng URL này khi điền đơn.
+> Website đã live tại **https://dkh-io.vercel.app** — dùng đúng URL này khi điền đơn.
 
 ---
 
@@ -53,19 +53,19 @@ for advertising, and never shared with other sellers. Sellers can disconnect a s
 time, which deletes the stored tokens immediately, and can delete their entire account and
 all imported data from their dashboard.
 
-Website: https://dkh.vercel.app
-Privacy Policy: https://dkh.vercel.app/privacy
-Terms: https://dkh.vercel.app/terms
+Website: https://dkh-io.vercel.app
+Privacy Policy: https://dkh-io.vercel.app/privacy
+Terms: https://dkh-io.vercel.app/terms
 ```
 
 **Website URL**
 ```
-https://dkh.vercel.app
+https://dkh-io.vercel.app
 ```
 
 **Callback URL / Redirect URI** — phải khớp tuyệt đối, kể cả dấu `/`
 ```
-https://dkh.vercel.app/api/integrations/etsy/callback
+https://dkh-io.vercel.app/api/integrations/etsy/callback
 ```
 
 **Do you plan to charge for this application?** → Yes (có trang `/pricing`) hoặc No, tùy bạn.
