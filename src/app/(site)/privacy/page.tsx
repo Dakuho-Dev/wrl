@@ -5,7 +5,7 @@ import { LegalPage, LegalSection } from "@/components/site/legal";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "How OwlFlow collects, uses, stores and deletes data — including data accessed through marketplace APIs such as the Etsy Open API.",
+    "How DKH collects, uses, stores and deletes data — including data accessed through marketplace APIs such as the Etsy Open API.",
 };
 
 export default function PrivacyPage() {
@@ -13,18 +13,18 @@ export default function PrivacyPage() {
     <LegalPage
       title="Privacy Policy"
       updated="5 August 2026"
-      intro="This policy explains what information OwlFlow collects, why we collect it, how we protect it, and the choices you have. It covers both the information you give us directly and the information we access on your behalf through connected marketplace APIs."
+      intro="This policy explains what information DKH collects, why we collect it, how we protect it, and the choices you have. It covers both the information you give us directly and the information we access on your behalf through connected marketplace APIs."
     >
       <LegalSection heading="1. Who we are">
         <p>
-          OwlFlow (&ldquo;OwlFlow&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) provides an order
+          DKH (&ldquo;DKH&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) provides an order
           management and fulfillment automation service for online sellers. For the purposes of the
           GDPR we act as a <strong>data processor</strong> for the order and buyer data we handle on
           behalf of our customers (the sellers), and as a <strong>data controller</strong> for the
           account data of the sellers themselves.
         </p>
         <p>
-          Contact: <a href="mailto:privacy@owlflow.io">privacy@owlflow.io</a>
+          Contact: <a href="mailto:privacy@dkh.io">privacy@dkh.io</a>
         </p>
       </LegalSection>
 
@@ -38,7 +38,7 @@ export default function PrivacyPage() {
 
       <LegalSection id="marketplace-data" heading="3. Information we access through marketplace APIs">
         <p>
-          When you connect a shop, you authorize OwlFlow through the marketplace&apos;s own OAuth
+          When you connect a shop, you authorize DKH through the marketplace&apos;s own OAuth
           screen. We then access only the data covered by the scopes you approved. For Etsy this
           means:
         </p>
@@ -54,7 +54,7 @@ export default function PrivacyPage() {
           <li>
             <strong>Receipts / orders</strong> (<code>transactions_r</code>) — order id, buyer name,
             buyer email where provided, shipping address, line items, personalization text, totals
-            and payment state, used to create the order records you manage in OwlFlow.
+            and payment state, used to create the order records you manage in DKH.
           </li>
           <li>
             <strong>Tracking upload</strong> (<code>transactions_w</code>) — we write tracking
@@ -122,7 +122,7 @@ export default function PrivacyPage() {
         <p>
           You can access, correct, export or delete your data at any time from{" "}
           <strong>Dashboard → Settings</strong>, or by emailing{" "}
-          <a href="mailto:privacy@owlflow.io">privacy@owlflow.io</a>. Specifically:
+          <a href="mailto:privacy@dkh.io">privacy@dkh.io</a>. Specifically:
         </p>
         <ul className="space-y-1.5">
           <li><strong>Disconnect a shop</strong> — stops all syncing and deletes the stored tokens for that shop.</li>
@@ -130,7 +130,7 @@ export default function PrivacyPage() {
           <li><strong>Delete account</strong> — erases your account and every record attached to it.</li>
         </ul>
         <p>
-          Buyers whose data appears in a seller&apos;s OwlFlow account may contact us and we will
+          Buyers whose data appears in a seller&apos;s DKH account may contact us and we will
           route the request to the relevant seller (the controller) and assist with fulfilling it.
           EU and UK residents also have the right to lodge a complaint with their supervisory
           authority.
@@ -155,7 +155,7 @@ export default function PrivacyPage() {
       </LegalSection>
 
       <LegalSection heading="11. Children">
-        <p>OwlFlow is a business tool and is not directed at anyone under 16.</p>
+        <p>DKH is a business tool and is not directed at anyone under 16.</p>
       </LegalSection>
 
       <LegalSection heading="12. Changes">

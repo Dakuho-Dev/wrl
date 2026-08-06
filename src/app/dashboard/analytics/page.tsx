@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { AreaChart, BarList, Donut } from "@/components/app/charts";
+import { TrendChart, BarList, SplitBar } from "@/components/app/charts";
 import {
   Card,
   CardHeader,
@@ -120,13 +120,13 @@ export default async function AnalyticsPage() {
   ).sort((a, b) => b.value - a.value);
 
   const statusColors: Record<string, string> = {
-    NEW: "#38bdf8",
-    PROCESSING: "#fbbf24",
-    ON_HOLD: "#fb923c",
-    SHIPPED: "#a78bfa",
-    DELIVERED: "#34d399",
-    CANCELLED: "#f43f5e",
-    REFUNDED: "#94a3b8",
+    NEW: "#4a7fa5",
+    PROCESSING: "#c08a2e",
+    ON_HOLD: "#b5622b",
+    SHIPPED: "#6b5b95",
+    DELIVERED: "#1b5e3f",
+    CANCELLED: "#9b3a3a",
+    REFUNDED: "#a39d8c",
   };
 
   const statusData = Object.values(
@@ -134,7 +134,7 @@ export default async function AnalyticsPage() {
       acc[order.status] = {
         label: order.status.replaceAll("_", " ").toLowerCase(),
         value: (acc[order.status]?.value ?? 0) + 1,
-        color: statusColors[order.status] ?? "#64748b",
+        color: statusColors[order.status] ?? "#a39d8c",
       };
       return acc;
     }, {}),
@@ -159,14 +159,14 @@ export default async function AnalyticsPage() {
         <Card className="lg:col-span-2">
           <CardHeader title="Revenue — 12 weeks" />
           <div className="p-5">
-            <AreaChart data={weeks} currency="USD" height={220} />
+            <TrendChart data={weeks} currency="USD" height={220} />
           </div>
         </Card>
 
         <Card>
           <CardHeader title="Order status mix" />
           <div className="p-5">
-            {statusData.length ? <Donut data={statusData} /> : <EmptyState title="No data" />}
+            {statusData.length ? <SplitBar data={statusData} /> : <EmptyState title="No data" />}
           </div>
         </Card>
       </div>
@@ -208,9 +208,9 @@ export default async function AnalyticsPage() {
             </thead>
             <tbody>
               {topProducts.map((product) => (
-                <tr key={product.sku + product.title} className="transition hover:bg-ink-800/40">
-                  <Td className="font-medium text-white">{product.title}</Td>
-                  <Td className="text-xs text-slate-400">{product.sku}</Td>
+                <tr key={product.sku + product.title} className="transition hover:bg-paper-2">
+                  <Td className="font-medium text-ink">{product.title}</Td>
+                  <Td className="text-xs text-muted">{product.sku}</Td>
                   <Td className="text-right">{formatNumber(product.units)}</Td>
                   <Td className="text-right font-medium">{formatMoney(product.revenue)}</Td>
                 </tr>

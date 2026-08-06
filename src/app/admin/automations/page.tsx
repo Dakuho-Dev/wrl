@@ -64,18 +64,18 @@ export default async function AdminAutomationsPage() {
             </thead>
             <tbody>
               {automations.map((automation) => (
-                <tr key={automation.id} className="transition hover:bg-ink-800/30">
+                <tr key={automation.id} className="transition hover:bg-paper-2">
                   <Td>
-                    <p className="font-medium text-white">{automation.name}</p>
+                    <p className="font-medium text-ink">{automation.name}</p>
                     {automation.description ? (
-                      <p className="max-w-72 truncate text-xs text-slate-500">
+                      <p className="max-w-72 truncate text-xs text-muted-2">
                         {automation.description}
                       </p>
                     ) : null}
                   </Td>
-                  <Td className="text-xs text-slate-400">{automation.user.email}</Td>
+                  <Td className="text-xs text-muted">{automation.user.email}</Td>
                   <Td>
-                    <code className="rounded bg-ink-900 px-1.5 py-0.5 text-xs text-brand-300">
+                    <code className="rounded bg-paper-2 px-1.5 py-0.5 text-xs text-accent">
                       {automation.trigger}
                     </code>
                   </Td>
@@ -85,7 +85,7 @@ export default async function AdminAutomationsPage() {
                         (action, index) => (
                           <span
                             key={index}
-                            className="rounded-md bg-ink-800 px-1.5 py-0.5 text-[11px] text-emerald-300"
+                            className="rounded-none bg-paper-2 px-1.5 py-0.5 text-[11px] text-emerald-700"
                           >
                             {action.type}
                           </span>
@@ -99,7 +99,7 @@ export default async function AdminAutomationsPage() {
                     </Badge>
                   </Td>
                   <Td className="text-right">{formatNumber(automation.runCount)}</Td>
-                  <Td className="whitespace-nowrap text-xs text-slate-400">
+                  <Td className="whitespace-nowrap text-xs text-muted">
                     {timeAgo(automation.lastRunAt)}
                   </Td>
                 </tr>

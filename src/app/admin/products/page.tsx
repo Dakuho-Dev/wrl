@@ -93,25 +93,25 @@ export default async function AdminProductsPage({
             </thead>
             <tbody>
               {products.map((product) => (
-                <tr key={product.id} className="transition hover:bg-ink-800/30">
+                <tr key={product.id} className="transition hover:bg-paper-2">
                   <Td>
-                    <p className="font-medium text-white">{product.title}</p>
-                    <p className="text-xs text-slate-500">SKU {product.sku ?? "—"}</p>
+                    <p className="font-medium text-ink">{product.title}</p>
+                    <p className="text-xs text-muted-2">SKU {product.sku ?? "—"}</p>
                   </Td>
                   <Td>
                     <div className="flex items-center gap-2">
                       <PlatformIcon platform={product.shop.platform} />
-                      <span className="text-xs text-slate-400">{product.shop.name}</span>
+                      <span className="text-xs text-muted">{product.shop.name}</span>
                     </div>
                   </Td>
-                  <Td className="text-xs text-slate-400">{product.shop.user.email}</Td>
+                  <Td className="text-xs text-muted">{product.shop.user.email}</Td>
                   <Td>
                     <Badge tone={product.state === "active" ? "ACTIVE" : undefined}>
                       {product.state}
                     </Badge>
                   </Td>
                   <Td className="text-right">
-                    <span className={product.quantity === 0 ? "text-rose-400" : ""}>
+                    <span className={product.quantity === 0 ? "text-rose-700" : ""}>
                       {formatNumber(product.quantity)}
                     </span>
                   </Td>

@@ -102,19 +102,19 @@ export default async function BillingPage() {
 
       <Card className="mt-4 p-5">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-slate-300">Monthly order quota</span>
-          <span className="text-slate-400">
+          <span className="text-ink-2">Monthly order quota</span>
+          <span className="text-muted">
             {formatNumber(ordersThisMonth)} of {formatNumber(orderLimit)}
           </span>
         </div>
-        <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-ink-800">
+        <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-paper-2">
           <div
-            className={`h-full rounded-full ${usage > 85 ? "bg-amber-500" : "bg-gradient-to-r from-brand-600 to-brand-400"}`}
+            className={`h-full rounded-full ${usage > 85 ? "bg-amber-500" : "bg-gradient-to-r from-accent to-accent-2"}`}
             style={{ width: `${Math.max(usage, 2)}%` }}
           />
         </div>
         {usage > 85 ? (
-          <p className="mt-2 text-xs text-amber-300">
+          <p className="mt-2 text-xs text-amber-700">
             You are close to your monthly limit. Syncing pauses once the quota is reached — consider
             upgrading.
           </p>
@@ -128,20 +128,20 @@ export default async function BillingPage() {
           return (
             <Card
               key={plan.id}
-              className={`flex flex-col p-6 ${isCurrent ? "border-brand-500/60 bg-brand-900/10" : ""}`}
+              className={`flex flex-col p-6 ${isCurrent ? "border-accent bg-accent-soft" : ""}`}
             >
               <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-white">{plan.name}</h3>
+                <h3 className="font-semibold text-ink">{plan.name}</h3>
                 {isCurrent ? <Badge tone="ACTIVE">current</Badge> : null}
               </div>
-              <p className="mt-3 text-3xl font-semibold text-white">
+              <p className="mt-3 text-3xl font-semibold text-ink">
                 {formatMoney(plan.priceMonthly)}
-                <span className="text-sm font-normal text-slate-500">/mo</span>
+                <span className="text-sm font-normal text-muted-2">/mo</span>
               </p>
               <ul className="mt-5 flex-1 space-y-2">
                 {features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-2 text-sm text-slate-300">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
+                  <li key={feature} className="flex items-start gap-2 text-sm text-ink-2">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-700" />
                     {feature}
                   </li>
                 ))}
@@ -179,8 +179,8 @@ export default async function BillingPage() {
             <tbody>
               {invoices.map((invoice) => (
                 <tr key={invoice.id}>
-                  <Td className="font-mono text-xs text-white">{invoice.id}</Td>
-                  <Td className="text-xs text-slate-400">{formatDate(invoice.date)}</Td>
+                  <Td className="font-mono text-xs text-ink">{invoice.id}</Td>
+                  <Td className="text-xs text-muted">{formatDate(invoice.date)}</Td>
                   <Td className="text-sm">{current?.name}</Td>
                   <Td>
                     <Badge tone={invoice.status === "PAID" ? "PAID" : undefined}>
@@ -189,7 +189,7 @@ export default async function BillingPage() {
                   </Td>
                   <Td className="text-right font-medium">{formatMoney(invoice.amount)}</Td>
                   <Td className="text-right">
-                    <span className="inline-flex items-center gap-1 text-xs text-slate-500">
+                    <span className="inline-flex items-center gap-1 text-xs text-muted-2">
                       <Download className="h-3.5 w-3.5" /> PDF
                     </span>
                   </Td>
@@ -198,7 +198,7 @@ export default async function BillingPage() {
             </tbody>
           </Table>
         ) : (
-          <div className="px-5 py-8 text-center text-sm text-slate-500">
+          <div className="px-5 py-8 text-center text-sm text-muted-2">
             You are on the free Starter plan — no invoices yet.
           </div>
         )}

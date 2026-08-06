@@ -1,25 +1,25 @@
 # Local PostgreSQL for development, so local matches production (Neon/Vercel Postgres).
 #   docker compose up -d
-#   DATABASE_URL="postgresql://owlflow:owlflow@localhost:5433/owlflow?schema=public"
+#   DATABASE_URL="postgresql://dkh:dkh@localhost:5433/dkh?schema=public"
 
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: owlflow-postgres
+    container_name: dkh-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: owlflow
-      POSTGRES_PASSWORD: owlflow
-      POSTGRES_DB: owlflow
+      POSTGRES_USER: dkh
+      POSTGRES_PASSWORD: dkh
+      POSTGRES_DB: dkh
     ports:
       - "5433:5432"
     volumes:
-      - owlflow-pgdata:/var/lib/postgresql/data
+      - dkh-pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U owlflow -d owlflow"]
+      test: ["CMD-SHELL", "pg_isready -U dkh -d dkh"]
       interval: 5s
       timeout: 5s
       retries: 10
 
 volumes:
-  owlflow-pgdata:
+  dkh-pgdata:

@@ -52,7 +52,7 @@ export function ContactForm() {
 
       <SubmitButton />
 
-      <p className="text-xs leading-relaxed text-slate-500">
+      <p className="text-xs leading-relaxed text-muted-2">
         By sending this form you agree that we may store and use the information provided to respond
         to your enquiry, as described in our Privacy Policy.
       </p>

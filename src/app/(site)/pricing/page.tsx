@@ -27,7 +27,7 @@ const FAQS = [
   },
   {
     q: "Do you charge for shipping labels?",
-    a: "OwlFlow does not add a markup. You pay the carrier's rate directly through your own carrier account.",
+    a: "DKH does not add a markup. You pay the carrier's rate directly through your own carrier account.",
   },
 ];
 
@@ -39,15 +39,14 @@ export default async function PricingPage() {
 
   return (
     <>
-      <section className="relative overflow-hidden border-b border-ink-800/80">
-        <div className="surface-grid pointer-events-none absolute inset-0 opacity-30" />
-        <div className="pointer-events-none absolute -top-32 left-1/2 h-[420px] w-[720px] -translate-x-1/2 rounded-full bg-brand-700/20 blur-[120px]" />
+      <section className="relative overflow-hidden border-b border-line">
+        <div className="surface-rule pointer-events-none absolute inset-0 opacity-70" />
         <div className="relative mx-auto max-w-4xl px-4 py-20 text-center sm:px-6">
-          <p className="text-sm font-semibold uppercase tracking-widest text-brand-400">Pricing</p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+          <p className="text-sm font-semibold uppercase tracking-widest text-accent">Pricing</p>
+          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
             Pay for the volume you actually ship
           </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-400">
+          <p className="mx-auto mt-5 max-w-2xl text-lg text-muted">
             Every plan includes order sync, the automation engine and tracking upload. You only move
             up when you outgrow the limits.
           </p>
@@ -63,50 +62,50 @@ export default async function PricingPage() {
               return (
                 <div
                   key={plan.id}
-                  className={`relative flex flex-col rounded-2xl border p-7 ${
+                  className={`relative flex flex-col rounded-none border p-7 ${
                     highlighted
-                      ? "border-brand-500/60 bg-gradient-to-b from-brand-900/30 to-ink-850 shadow-xl shadow-brand-950/40"
-                      : "border-ink-600/50 bg-ink-850/60"
+                      ? "border-accent bg-gradient-to-b from-accent to-paper-2"
+                      : "border-line bg-surface"
                   }`}
                 >
                   {highlighted ? (
-                    <span className="absolute -top-3 left-7 rounded-full bg-brand-600 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white">
+                    <span className="absolute -top-3 left-7 rounded-full bg-accent px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-ink">
                       Most popular
                     </span>
                   ) : null}
 
-                  <h2 className="text-lg font-semibold text-white">{plan.name}</h2>
+                  <h2 className="text-lg font-semibold text-ink">{plan.name}</h2>
                   <div className="mt-4 flex items-baseline gap-1">
-                    <span className="text-4xl font-semibold tracking-tight text-white">
+                    <span className="text-4xl font-semibold tracking-tight text-ink">
                       ${plan.priceMonthly}
                     </span>
-                    <span className="text-sm text-slate-400">/ month</span>
+                    <span className="text-sm text-muted">/ month</span>
                   </div>
-                  <p className="mt-2 text-xs text-slate-500">
+                  <p className="mt-2 text-xs text-muted-2">
                     {plan.priceYearly > 0
                       ? `or $${plan.priceYearly}/year — two months free`
                       : "Free forever"}
                   </p>
 
-                  <div className="mt-5 grid grid-cols-2 gap-3 rounded-xl border border-ink-600/40 bg-ink-900/50 p-3 text-center">
+                  <div className="mt-5 grid grid-cols-2 gap-3 rounded-none border border-line bg-paper-2 p-3 text-center">
                     <div>
-                      <p className="text-lg font-semibold text-white">
+                      <p className="text-lg font-semibold text-ink">
                         {formatNumber(plan.orderLimit)}
                       </p>
-                      <p className="text-[11px] uppercase tracking-wide text-slate-500">
+                      <p className="text-[11px] uppercase tracking-wide text-muted-2">
                         orders / mo
                       </p>
                     </div>
                     <div>
-                      <p className="text-lg font-semibold text-white">{plan.shopLimit}</p>
-                      <p className="text-[11px] uppercase tracking-wide text-slate-500">shops</p>
+                      <p className="text-lg font-semibold text-ink">{plan.shopLimit}</p>
+                      <p className="text-[11px] uppercase tracking-wide text-muted-2">shops</p>
                     </div>
                   </div>
 
                   <ul className="mt-6 flex-1 space-y-3">
                     {features.map((feature) => (
-                      <li key={feature} className="flex items-start gap-2.5 text-sm text-slate-300">
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
+                      <li key={feature} className="flex items-start gap-2.5 text-sm text-ink-2">
+                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-700" />
                         {feature}
                       </li>
                     ))}
@@ -124,9 +123,9 @@ export default async function PricingPage() {
             })}
           </div>
 
-          <div className="mt-8 rounded-2xl border border-ink-600/50 bg-ink-850/40 p-6 text-center">
-            <h3 className="font-semibold text-white">Enterprise & custom volume</h3>
-            <p className="mx-auto mt-2 max-w-2xl text-sm text-slate-400">
+          <div className="mt-8 rounded-none border border-line bg-surface p-6 text-center">
+            <h3 className="font-semibold text-ink">Enterprise & custom volume</h3>
+            <p className="mx-auto mt-2 max-w-2xl text-sm text-muted">
               Above 25,000 orders a month, or need a private connector, dedicated infrastructure or
               a signed DPA? We will build a plan around your operation.
             </p>
@@ -137,14 +136,14 @@ export default async function PricingPage() {
         </div>
       </section>
 
-      <section className="border-t border-ink-800/80 py-20">
+      <section className="border-t border-line py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-2xl font-semibold tracking-tight text-white">Billing questions</h2>
+          <h2 className="text-2xl font-semibold tracking-tight text-ink">Billing questions</h2>
           <div className="mt-8 space-y-4">
             {FAQS.map((faq) => (
-              <div key={faq.q} className="rounded-2xl border border-ink-600/50 bg-ink-850/50 p-5">
-                <h3 className="font-medium text-white">{faq.q}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-400">{faq.a}</p>
+              <div key={faq.q} className="rounded-none border border-line bg-surface p-5">
+                <h3 className="font-medium text-ink">{faq.q}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{faq.a}</p>
               </div>
             ))}
           </div>

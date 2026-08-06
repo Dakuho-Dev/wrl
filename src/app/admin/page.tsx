@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { AlertTriangle, DollarSign, LifeBuoy, ShoppingBag, Store, Users } from "lucide-react";
 
-import { AreaChart, BarList } from "@/components/app/charts";
+import { TrendChart, BarList } from "@/components/app/charts";
 import {
   Badge,
   Card,
@@ -88,7 +88,7 @@ export default async function AdminHomePage() {
     <>
       <PageHeader
         title="Platform dashboard"
-        description="Everything happening across every OwlFlow account."
+        description="Everything happening across every DKH account."
       />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -124,8 +124,8 @@ export default async function AdminHomePage() {
           {errorShops > 0 ? (
             <Link href="/admin/shops?status=ERROR">
               <Card className="flex items-center gap-3 border-rose-500/30 bg-rose-500/5 p-4 transition hover:border-rose-500/50">
-                <AlertTriangle className="h-5 w-5 text-rose-400" />
-                <p className="text-sm text-rose-200">
+                <AlertTriangle className="h-5 w-5 text-rose-700" />
+                <p className="text-sm text-rose-700">
                   <strong>{errorShops}</strong> shop{errorShops === 1 ? "" : "s"} failing to sync
                 </p>
               </Card>
@@ -134,8 +134,8 @@ export default async function AdminHomePage() {
           {openTickets > 0 ? (
             <Link href="/admin/tickets">
               <Card className="flex items-center gap-3 border-amber-500/30 bg-amber-500/5 p-4 transition hover:border-amber-500/50">
-                <LifeBuoy className="h-5 w-5 text-amber-400" />
-                <p className="text-sm text-amber-200">
+                <LifeBuoy className="h-5 w-5 text-amber-700" />
+                <p className="text-sm text-amber-700">
                   <strong>{openTickets}</strong> open support ticket{openTickets === 1 ? "" : "s"}
                 </p>
               </Card>
@@ -148,7 +148,7 @@ export default async function AdminHomePage() {
         <Card className="lg:col-span-2">
           <CardHeader title="Orders imported — last 14 days" description="Across all accounts" />
           <div className="p-5">
-            <AreaChart data={days} />
+            <TrendChart data={days} />
           </div>
         </Card>
 
@@ -165,7 +165,7 @@ export default async function AdminHomePage() {
           <CardHeader
             title="Newest accounts"
             action={
-              <Link href="/admin/users" className="text-xs text-brand-400 hover:text-brand-300">
+              <Link href="/admin/users" className="text-xs text-accent hover:text-accent">
                 All users →
               </Link>
             }
@@ -181,21 +181,21 @@ export default async function AdminHomePage() {
             </thead>
             <tbody>
               {recentUsers.map((user) => (
-                <tr key={user.id} className="transition hover:bg-ink-800/40">
+                <tr key={user.id} className="transition hover:bg-paper-2">
                   <Td>
                     <Link
                       href={`/admin/users?q=${encodeURIComponent(user.email)}`}
-                      className="font-medium text-white hover:text-brand-300"
+                      className="font-medium text-ink hover:text-accent"
                     >
                       {user.name}
                     </Link>
-                    <p className="text-xs text-slate-500">{user.email}</p>
+                    <p className="text-xs text-muted-2">{user.email}</p>
                   </Td>
                   <Td>
                     <Badge>{user.plan?.name ?? "—"}</Badge>
                   </Td>
                   <Td className="text-right">{user._count.shops}</Td>
-                  <Td className="text-xs text-slate-400">{timeAgo(user.createdAt)}</Td>
+                  <Td className="text-xs text-muted">{timeAgo(user.createdAt)}</Td>
                 </tr>
               ))}
             </tbody>
@@ -206,29 +206,29 @@ export default async function AdminHomePage() {
           <CardHeader
             title="Recent activity"
             action={
-              <Link href="/admin/logs" className="text-xs text-brand-400 hover:text-brand-300">
+              <Link href="/admin/logs" className="text-xs text-accent hover:text-accent">
                 Full log →
               </Link>
             }
           />
-          <div className="divide-y divide-ink-700/40">
+          <div className="divide-y divide-line">
             {recentLogs.map((log) => (
               <div key={log.id} className="px-5 py-3">
                 <div className="flex items-start justify-between gap-3">
-                  <p className="text-sm text-slate-300">{log.message}</p>
+                  <p className="text-sm text-ink-2">{log.message}</p>
                   <span
                     className={`shrink-0 text-[10px] font-semibold uppercase ${
                       log.level === "ERROR"
-                        ? "text-rose-400"
+                        ? "text-rose-700"
                         : log.level === "WARN"
-                          ? "text-amber-400"
-                          : "text-slate-600"
+                          ? "text-amber-700"
+                          : "text-muted-2"
                     }`}
                   >
                     {log.level}
                   </span>
                 </div>
-                <p className="mt-0.5 text-xs text-slate-500">
+                <p className="mt-0.5 text-xs text-muted-2">
                   {log.user?.email ?? "system"} · {log.category.toLowerCase()} ·{" "}
                   {timeAgo(log.createdAt)}
                 </p>
@@ -260,12 +260,12 @@ export default async function AdminHomePage() {
                       <span className="text-sm">{job.shop.name}</span>
                     </div>
                   </Td>
-                  <Td className="text-xs text-slate-400">{job.shop.user.email}</Td>
+                  <Td className="text-xs text-muted">{job.shop.user.email}</Td>
                   <Td>
                     <StatusBadge status={job.status} />
                   </Td>
-                  <Td className="max-w-72 truncate text-xs text-rose-300">{job.message}</Td>
-                  <Td className="text-xs text-slate-400">{timeAgo(job.startedAt)}</Td>
+                  <Td className="max-w-72 truncate text-xs text-rose-700">{job.message}</Td>
+                  <Td className="text-xs text-muted">{timeAgo(job.startedAt)}</Td>
                 </tr>
               ))}
             </tbody>

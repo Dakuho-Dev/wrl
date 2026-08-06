@@ -17,20 +17,20 @@ export default async function AdminSettingsPage() {
 
   return (
     <>
-      <PageHeader title="Platform settings" description="Global configuration for the OwlFlow instance." />
+      <PageHeader title="Platform settings" description="Global configuration for the DKH instance." />
 
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader title="General" description="Branding, signups and sync cadence" />
           <form action={saveSettings} className="grid gap-4 p-5 sm:grid-cols-2">
             <Field label="Site name">
-              <Input name="siteName" defaultValue={settings["site.name"] ?? "OwlFlow"} />
+              <Input name="siteName" defaultValue={settings["site.name"] ?? "DKH"} />
             </Field>
             <Field label="Support email">
               <Input
                 name="supportEmail"
                 type="email"
-                defaultValue={settings["site.supportEmail"] ?? "support@owlflow.io"}
+                defaultValue={settings["site.supportEmail"] ?? "support@dkh.io"}
               />
             </Field>
             <div className="sm:col-span-2">
@@ -51,21 +51,21 @@ export default async function AdminSettingsPage() {
               </Select>
             </Field>
             <div className="space-y-3 pt-6">
-              <label className="flex items-center gap-2.5 text-sm text-slate-300">
+              <label className="flex items-center gap-2.5 text-sm text-ink-2">
                 <input
                   type="checkbox"
                   name="signupEnabled"
                   defaultChecked={settings["signup.enabled"] !== "false"}
-                  className="h-4 w-4 rounded border-ink-600 bg-ink-900"
+                  className="h-4 w-4 rounded border-line bg-paper-2"
                 />
                 Allow new sign-ups
               </label>
-              <label className="flex items-center gap-2.5 text-sm text-slate-300">
+              <label className="flex items-center gap-2.5 text-sm text-ink-2">
                 <input
                   type="checkbox"
                   name="maintenance"
                   defaultChecked={settings["maintenance.enabled"] === "true"}
-                  className="h-4 w-4 rounded border-ink-600 bg-ink-900"
+                  className="h-4 w-4 rounded border-line bg-paper-2"
                 />
                 Maintenance mode
               </label>
@@ -78,16 +78,16 @@ export default async function AdminSettingsPage() {
 
         <Card className="h-fit">
           <CardHeader title="Stored values" description="Raw settings table" />
-          <div className="divide-y divide-ink-700/40">
+          <div className="divide-y divide-line">
             {rows.map((row) => (
               <div key={row.key} className="px-5 py-3">
-                <p className="font-mono text-xs text-brand-300">{row.key}</p>
-                <p className="mt-0.5 text-sm text-slate-300">{row.value}</p>
-                <p className="text-xs text-slate-600">{formatDateTime(row.updatedAt)}</p>
+                <p className="font-mono text-xs text-accent">{row.key}</p>
+                <p className="mt-0.5 text-sm text-ink-2">{row.value}</p>
+                <p className="text-xs text-muted-2">{formatDateTime(row.updatedAt)}</p>
               </div>
             ))}
             {rows.length === 0 ? (
-              <p className="px-5 py-4 text-sm text-slate-500">No settings saved yet.</p>
+              <p className="px-5 py-4 text-sm text-muted-2">No settings saved yet.</p>
             ) : null}
           </div>
         </Card>

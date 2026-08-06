@@ -124,18 +124,18 @@ export default async function AdminLogsPage({
               </thead>
               <tbody>
                 {logs.map((log) => (
-                  <tr key={log.id} className="transition hover:bg-ink-800/30">
-                    <Td className="whitespace-nowrap text-xs text-slate-400">
+                  <tr key={log.id} className="transition hover:bg-paper-2">
+                    <Td className="whitespace-nowrap text-xs text-muted">
                       {formatDateTime(log.createdAt)}
                     </Td>
                     <Td>
                       <span
                         className={`text-xs font-semibold ${
                           log.level === "ERROR"
-                            ? "text-rose-400"
+                            ? "text-rose-700"
                             : log.level === "WARN"
-                              ? "text-amber-400"
-                              : "text-slate-500"
+                              ? "text-amber-700"
+                              : "text-muted-2"
                         }`}
                       >
                         {log.level}
@@ -144,8 +144,8 @@ export default async function AdminLogsPage({
                     <Td>
                       <Badge>{log.category.toLowerCase()}</Badge>
                     </Td>
-                    <Td className="text-sm text-slate-300">{log.message}</Td>
-                    <Td className="text-xs text-slate-500">{log.user?.email ?? "system"}</Td>
+                    <Td className="text-sm text-ink-2">{log.message}</Td>
+                    <Td className="text-xs text-muted-2">{log.user?.email ?? "system"}</Td>
                   </tr>
                 ))}
               </tbody>
@@ -155,8 +155,8 @@ export default async function AdminLogsPage({
           )}
 
           {totalPages > 1 ? (
-            <div className="flex items-center justify-between border-t border-ink-600/40 px-5 py-3">
-              <p className="text-xs text-slate-500">
+            <div className="flex items-center justify-between border-t border-line px-5 py-3">
+              <p className="text-xs text-muted-2">
                 Page {page} of {totalPages}
               </p>
               <div className="flex gap-2">
@@ -177,18 +177,18 @@ export default async function AdminLogsPage({
 
         <Card className="h-fit">
           <CardHeader title="Recent sync jobs" description="Marketplace API runs" />
-          <div className="divide-y divide-ink-700/40">
+          <div className="divide-y divide-line">
             {syncJobs.map((job) => (
               <div key={job.id} className="px-5 py-3">
                 <div className="flex items-center justify-between gap-3">
-                  <p className="truncate text-sm text-slate-200">{job.shop.name}</p>
+                  <p className="truncate text-sm text-ink-2">{job.shop.name}</p>
                   <Badge tone={job.status}>{job.status.toLowerCase()}</Badge>
                 </div>
-                <p className="mt-0.5 text-xs text-slate-500">
+                <p className="mt-0.5 text-xs text-muted-2">
                   {job.type.toLowerCase()} · {job.itemsSaved} saved · {formatDateTime(job.startedAt)}
                 </p>
                 {job.message && job.status === "FAILED" ? (
-                  <p className="mt-1 text-xs text-rose-400">{job.message}</p>
+                  <p className="mt-1 text-xs text-rose-700">{job.message}</p>
                 ) : null}
               </div>
             ))}

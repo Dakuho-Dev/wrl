@@ -76,7 +76,7 @@ export async function GET() {
   );
 
   const csv = [header.join(","), ...rows].join("\r\n");
-  const filename = `owlflow-orders-${new Date().toISOString().slice(0, 10)}.csv`;
+  const filename = `dkh-orders-${new Date().toISOString().slice(0, 10)}.csv`;
 
   return new Response("﻿" + csv, {
     headers: {

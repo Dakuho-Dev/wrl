@@ -17,11 +17,11 @@ function clean(value: string | undefined, fallback: string) {
 
 const DEMO_ACCOUNTS = [
   {
-    email: clean(process.env.DEMO_ADMIN_EMAIL, "admin@owlflow.io"),
+    email: clean(process.env.DEMO_ADMIN_EMAIL, "admin@dkh.io"),
     password: clean(process.env.DEMO_ADMIN_PASSWORD, "Admin123!"),
   },
   {
-    email: clean(process.env.DEMO_SELLER_EMAIL, "seller@owlflow.io"),
+    email: clean(process.env.DEMO_SELLER_EMAIL, "seller@dkh.io"),
     password: clean(process.env.DEMO_SELLER_PASSWORD, "Password123!"),
   },
 ];
@@ -66,10 +66,16 @@ async function main() {
 
   const prisma = new PrismaClient();
 
+  // Escape hatch for rebuilding the demo dataset from scratch. Set SEED_RESET=true
+  // for one deploy, then remove it — the seed truncates every table.
+  const force = (process.env.SEED_RESET ?? "").trim().toLowerCase() === "true";
+
   try {
     const users = await prisma.user.count();
 
-    if (users > 0) {
+    if (users > 0 && force) {
+      console.log(`· bootstrap: SEED_RESET set — rebuilding demo data (${users} users dropped).`);
+    } else if (users > 0) {
       console.log(`· bootstrap: ${users} users present, skipping seed.`);
       await repairEmails(prisma);
       await syncDemoPasswords(prisma);

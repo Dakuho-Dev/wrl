@@ -125,22 +125,22 @@ export default async function AdminOrdersPage({
             </thead>
             <tbody>
               {orders.map((order) => (
-                <tr key={order.id} className="transition hover:bg-ink-800/30">
+                <tr key={order.id} className="transition hover:bg-paper-2">
                   <Td>
-                    <p className="font-medium text-white">{order.orderNumber}</p>
-                    <p className="text-xs text-slate-500">
+                    <p className="font-medium text-ink">{order.orderNumber}</p>
+                    <p className="text-xs text-muted-2">
                       {order.items.length} item{order.items.length === 1 ? "" : "s"}
                     </p>
                   </Td>
-                  <Td className="text-xs text-slate-400">{order.shop.user.email}</Td>
+                  <Td className="text-xs text-muted">{order.shop.user.email}</Td>
                   <Td>
                     <div className="flex items-center gap-2">
                       <PlatformIcon platform={order.shop.platform} />
-                      <span className="text-xs text-slate-400">{order.shop.name}</span>
+                      <span className="text-xs text-muted">{order.shop.name}</span>
                     </div>
                   </Td>
                   <Td className="text-sm">{order.buyerName}</Td>
-                  <Td className="whitespace-nowrap text-xs text-slate-400">
+                  <Td className="whitespace-nowrap text-xs text-muted">
                     {formatDateTime(order.placedAt)}
                   </Td>
                   <Td>
@@ -158,8 +158,8 @@ export default async function AdminOrdersPage({
         )}
 
         {totalPages > 1 ? (
-          <div className="flex items-center justify-between border-t border-ink-600/40 px-5 py-3">
-            <p className="text-xs text-slate-500">
+          <div className="flex items-center justify-between border-t border-line px-5 py-3">
+            <p className="text-xs text-muted-2">
               Page {page} of {totalPages}
             </p>
             <div className="flex gap-2">

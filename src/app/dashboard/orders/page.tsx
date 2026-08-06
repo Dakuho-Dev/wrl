@@ -99,10 +99,10 @@ export default async function OrdersPage({
       <div className="mb-4 flex flex-wrap gap-2">
         <Link href={buildHref({ status: "", page: "1" })}>
           <Badge
-            className={!status ? "bg-brand-600/20 text-brand-200 ring-brand-500/40" : ""}
+            className={!status ? "bg-accent-soft text-accent ring-accent" : ""}
           >
             All
-            <span className="text-slate-500">{formatNumber(statusCounts.reduce((s, e) => s + e._count.status, 0))}</span>
+            <span className="text-muted-2">{formatNumber(statusCounts.reduce((s, e) => s + e._count.status, 0))}</span>
           </Badge>
         </Link>
         {ORDER_STATUSES.map((value) => (
@@ -112,7 +112,7 @@ export default async function OrdersPage({
               className={status === value ? "" : "opacity-70 hover:opacity-100"}
             >
               {value.replaceAll("_", " ").toLowerCase()}
-              <span className="text-slate-500">{formatNumber(countFor(value))}</span>
+              <span className="text-muted-2">{formatNumber(countFor(value))}</span>
             </Badge>
           </Link>
         ))}
@@ -122,7 +122,7 @@ export default async function OrdersPage({
       <Card className="mb-4 p-4">
         <form className="grid gap-3 sm:grid-cols-[1fr_200px_auto]" action="/dashboard/orders">
           <div className="relative">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-2" />
             <Input
               name="q"
               defaultValue={query}
@@ -148,8 +148,8 @@ export default async function OrdersPage({
       {/* Table + bulk actions */}
       <form action={bulkUpdateOrders}>
         <Card>
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ink-600/40 px-5 py-3">
-            <p className="text-xs text-slate-500">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-3">
+            <p className="text-xs text-muted-2">
               Select orders to update them in bulk.
             </p>
             <div className="flex items-center gap-2">
@@ -183,42 +183,42 @@ export default async function OrdersPage({
               </thead>
               <tbody>
                 {orders.map((order) => (
-                  <tr key={order.id} className="transition hover:bg-ink-800/40">
+                  <tr key={order.id} className="transition hover:bg-paper-2">
                     <Td>
                       <input
                         type="checkbox"
                         name="orderIds"
                         value={order.id}
-                        className="h-4 w-4 rounded border-ink-600 bg-ink-900"
+                        className="h-4 w-4 rounded border-line bg-paper-2"
                       />
                     </Td>
                     <Td>
                       <Link
                         href={`/dashboard/orders/${order.id}`}
-                        className="font-medium text-white hover:text-brand-300"
+                        className="font-medium text-ink hover:text-accent"
                       >
                         {order.orderNumber}
                       </Link>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-muted-2">
                         {order.items.length} item{order.items.length === 1 ? "" : "s"}
                         {order.priority === "HIGH" || order.priority === "URGENT" ? (
-                          <span className="ml-2 text-amber-400">● {order.priority.toLowerCase()}</span>
+                          <span className="ml-2 text-amber-700">● {order.priority.toLowerCase()}</span>
                         ) : null}
                       </p>
                     </Td>
                     <Td>
                       <div className="flex items-center gap-2">
                         <PlatformIcon platform={order.shop.platform} />
-                        <span className="text-xs text-slate-400">{order.shop.name}</span>
+                        <span className="text-xs text-muted">{order.shop.name}</span>
                       </div>
                     </Td>
                     <Td>
                       <p className="text-sm">{order.buyerName}</p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-muted-2">
                         {order.shipCity}, {order.shipCountry}
                       </p>
                     </Td>
-                    <Td className="whitespace-nowrap text-xs text-slate-400">
+                    <Td className="whitespace-nowrap text-xs text-muted">
                       {formatDateTime(order.placedAt)}
                     </Td>
                     <Td>
@@ -230,12 +230,12 @@ export default async function OrdersPage({
                           href={order.shipments[0].trackingUrl ?? "#"}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-brand-400 hover:text-brand-300"
+                          className="text-accent hover:text-accent"
                         >
                           {order.shipments[0].carrier} ↗
                         </a>
                       ) : (
-                        <span className="text-slate-600">—</span>
+                        <span className="text-muted-2">—</span>
                       )}
                     </Td>
                     <Td className="whitespace-nowrap text-right font-medium">
@@ -254,8 +254,8 @@ export default async function OrdersPage({
           )}
 
           {totalPages > 1 ? (
-            <div className="flex items-center justify-between border-t border-ink-600/40 px-5 py-3">
-              <p className="text-xs text-slate-500">
+            <div className="flex items-center justify-between border-t border-line px-5 py-3">
+              <p className="text-xs text-muted-2">
                 Page {page} of {totalPages}
               </p>
               <div className="flex gap-2">

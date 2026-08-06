@@ -1,4 +1,4 @@
-# OwlFlow — Order Management & Fulfillment Automation
+# DKH — Order Management & Fulfillment Automation
 
 Nền tảng quản lý đơn hàng đa sàn (Etsy, Shopify, Amazon, TikTok Shop) — bản dựng đầy đủ gồm
 website giới thiệu, dashboard cho người bán, và trang quản trị (admin) hoàn chỉnh.
@@ -29,8 +29,8 @@ Mở http://localhost:3000
 
 | Vai trò | Email | Mật khẩu |
 |---|---|---|
-| Người bán | `seller@owlflow.io` | `Password123!` |
-| Quản trị viên | `admin@owlflow.io` | `Admin123!` |
+| Người bán | `seller@dkh.io` | `Password123!` |
+| Quản trị viên | `admin@dkh.io` | `Admin123!` |
 
 ---
 
@@ -135,7 +135,7 @@ Xem trạng thái cấu hình tại **Admin → Integrations**.
 
 ## 5. Deploy
 
-**Đã deploy:** https://owlflow.vercel.app — Vercel project `tu99s-projects/owlflow`.
+**Đã deploy:** https://dkh.vercel.app — Vercel project `tu99s-projects/dkh`.
 
 Redeploy sau khi sửa code:
 
@@ -178,11 +178,24 @@ Xem hướng dẫn chi tiết kèm nội dung mẫu để điền: [`docs/ETSY-A
 
 ---
 
-## 7. Lưu ý bảo mật trước khi lên production
+## 7. Trạng thái bảo mật
 
-- [ ] Đổi `AUTH_SECRET` thành chuỗi ngẫu nhiên ≥ 32 ký tự
-- [ ] Đổi mật khẩu 2 tài khoản demo, hoặc xóa chúng khỏi seed
-- [ ] Mã hóa `accessToken`/`refreshToken` ở tầng ứng dụng (hiện lưu plaintext trong DB dev)
-- [ ] Chuyển SQLite → PostgreSQL
-- [ ] Thêm rate limiting cho `/api/v1/*` và trang đăng nhập
-- [ ] Bật HTTPS + HSTS (Vercel làm sẵn)
+Đã làm:
+
+- [x] `AUTH_SECRET` / `ENCRYPTION_KEY` sinh ngẫu nhiên 48 byte trên production
+- [x] Token OAuth marketplace mã hoá AES-256-GCM khi lưu DB (`src/lib/crypto.ts`)
+- [x] PostgreSQL (Neon) thay cho SQLite
+- [x] Rate limiting theo IP cho `/api/v1/*`, `/login`, `/register` + security headers (`src/middleware.ts`)
+- [x] Mật khẩu demo sinh ngẫu nhiên, nạp qua biến môi trường
+- [x] HTTPS + HSTS
+
+Còn lại khi có người dùng thật:
+
+- [ ] Đặt `SHOW_DEMO_CREDENTIALS=false` và xoá 2 tài khoản demo
+- [ ] Chuyển rate limit sang Redis/Upstash nếu cần giới hạn toàn cục (hiện đếm theo từng instance)
+- [ ] Chuyển sync sang hàng đợi nền thay vì chạy trong request
+
+### Rebuild dữ liệu demo
+
+Đặt `SEED_RESET=true` trên Vercel rồi deploy một lần — seed sẽ xoá sạch và tạo lại.
+Nhớ gỡ biến này ngay sau đó.

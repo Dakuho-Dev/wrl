@@ -94,7 +94,7 @@ export default async function SettingsPage() {
 
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
-          <CardHeader title="Profile" description="How you appear inside OwlFlow" />
+          <CardHeader title="Profile" description="How you appear inside DKH" />
           <form action={updateProfile} className="space-y-3.5 p-5">
             <Field label="Full name">
               <Input name="name" defaultValue={user.name} required />
@@ -148,17 +148,17 @@ export default async function SettingsPage() {
 
           <Card>
             <CardHeader title="Recent sign-in activity" />
-            <div className="divide-y divide-ink-700/40">
+            <div className="divide-y divide-line">
               {logs.map((log) => (
                 <div key={log.id} className="px-5 py-3">
-                  <p className="text-sm text-slate-300">{log.message}</p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-sm text-ink-2">{log.message}</p>
+                  <p className="text-xs text-muted-2">
                     {formatDateTime(log.createdAt)} · {log.ip ?? "unknown ip"}
                   </p>
                 </div>
               ))}
               {logs.length === 0 ? (
-                <p className="px-5 py-4 text-sm text-slate-500">No activity recorded yet.</p>
+                <p className="px-5 py-4 text-sm text-muted-2">No activity recorded yet.</p>
               ) : null}
             </div>
           </Card>
@@ -168,13 +168,13 @@ export default async function SettingsPage() {
       <Card className="mt-4">
         <CardHeader
           title="Data & privacy"
-          description="Export or permanently delete everything OwlFlow holds about you"
+          description="Export or permanently delete everything DKH holds about you"
         />
         <div className="space-y-4 p-5">
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-ink-600/50 bg-ink-900/50 p-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-none border border-line bg-paper-2 p-4">
             <div>
-              <p className="text-sm font-medium text-white">Export your data</p>
-              <p className="text-xs text-slate-500">
+              <p className="text-sm font-medium text-ink">Export your data</p>
+              <p className="text-xs text-muted-2">
                 {orderCount} orders across {shopCount} shop{shopCount === 1 ? "" : "s"}, as CSV.
               </p>
             </div>

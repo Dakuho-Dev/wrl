@@ -18,7 +18,7 @@ export async function loginAction(_prev: AuthState, formData: FormData): Promise
     return { error: "Incorrect email or password." };
   }
   if (user.status === "SUSPENDED") {
-    return { error: "This account has been suspended. Contact support@owlflow.io." };
+    return { error: "This account has been suspended. Contact support@dkh.io." };
   }
 
   await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
@@ -58,7 +58,7 @@ export async function registerAction(_prev: AuthState, formData: FormData): Prom
   await prisma.notification.create({
     data: {
       userId: user.id,
-      title: "Welcome to OwlFlow",
+      title: "Welcome to DKH",
       body: "Connect your first shop to start importing orders automatically.",
       type: "INFO",
       link: "/dashboard/shops",

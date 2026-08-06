@@ -20,10 +20,10 @@ export const metadata: Metadata = { title: "Tickets · Admin" };
 export const dynamic = "force-dynamic";
 
 const PRIORITY_TONE: Record<string, string> = {
-  HIGH: "text-rose-300",
-  URGENT: "text-rose-300",
-  NORMAL: "text-slate-400",
-  LOW: "text-slate-500",
+  HIGH: "text-rose-700",
+  URGENT: "text-rose-700",
+  NORMAL: "text-muted",
+  LOW: "text-muted-2",
 };
 
 export default async function AdminTicketsPage({
@@ -72,17 +72,17 @@ export default async function AdminTicketsPage({
         {tickets.length ? (
           tickets.map((ticket) => (
             <Card key={ticket.id}>
-              <div className="flex flex-wrap items-start justify-between gap-3 border-b border-ink-600/40 px-5 py-4">
+              <div className="flex flex-wrap items-start justify-between gap-3 border-b border-line px-5 py-4">
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="font-semibold text-white">{ticket.subject}</h3>
+                    <h3 className="font-semibold text-ink">{ticket.subject}</h3>
                     <Badge tone={ticket.status}>{ticket.status.toLowerCase()}</Badge>
                     <Badge>{ticket.category.toLowerCase()}</Badge>
                     <span className={`text-xs font-medium ${PRIORITY_TONE[ticket.priority] ?? ""}`}>
                       {ticket.priority.toLowerCase()} priority
                     </span>
                   </div>
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-1 text-xs text-muted-2">
                     {ticket.name} · {ticket.email}
                     {ticket.user ? " · registered account" : " · guest"} · {timeAgo(ticket.createdAt)}
                   </p>
@@ -90,27 +90,27 @@ export default async function AdminTicketsPage({
               </div>
 
               <div className="space-y-3 p-5">
-                <div className="rounded-xl border border-ink-600/50 bg-ink-900/50 p-4">
-                  <p className="text-sm leading-relaxed text-slate-300">{ticket.message}</p>
-                  <p className="mt-2 text-xs text-slate-600">{formatDateTime(ticket.createdAt)}</p>
+                <div className="rounded-none border border-line bg-paper-2 p-4">
+                  <p className="text-sm leading-relaxed text-ink-2">{ticket.message}</p>
+                  <p className="mt-2 text-xs text-muted-2">{formatDateTime(ticket.createdAt)}</p>
                 </div>
 
                 {ticket.replies.map((reply) => (
                   <div
                     key={reply.id}
-                    className={`rounded-xl border p-4 ${
+                    className={`rounded-none border p-4 ${
                       reply.isStaff
-                        ? "ml-6 border-brand-500/30 bg-brand-500/5"
-                        : "border-ink-600/50 bg-ink-900/50"
+                        ? "ml-6 border-accent bg-accent-soft"
+                        : "border-line bg-paper-2"
                     }`}
                   >
-                    <p className="text-xs font-medium text-brand-300">{reply.authorName}</p>
-                    <p className="mt-1 text-sm leading-relaxed text-slate-300">{reply.message}</p>
-                    <p className="mt-2 text-xs text-slate-600">{formatDateTime(reply.createdAt)}</p>
+                    <p className="text-xs font-medium text-accent">{reply.authorName}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-ink-2">{reply.message}</p>
+                    <p className="mt-2 text-xs text-muted-2">{formatDateTime(reply.createdAt)}</p>
                   </div>
                 ))}
 
-                <form action={replyToTicket} className="space-y-3 border-t border-ink-700/50 pt-4">
+                <form action={replyToTicket} className="space-y-3 border-t border-line pt-4">
                   <input type="hidden" name="ticketId" value={ticket.id} />
                   <Textarea name="message" placeholder="Write a reply…" className="min-h-24" />
                   <div className="flex flex-wrap items-center gap-2">

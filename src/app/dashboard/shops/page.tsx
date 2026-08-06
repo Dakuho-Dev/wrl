@@ -99,22 +99,22 @@ export default async function ShopsPage({
 
         <div className="grid gap-4 p-5 md:grid-cols-2">
           {/* Etsy — real OAuth when configured */}
-          <div className="rounded-2xl border border-ink-600/50 bg-ink-900/50 p-5">
+          <div className="rounded-none border border-line bg-paper-2 p-5">
             <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 text-lg font-bold text-white">
+              <span className="grid h-11 w-11 place-items-center rounded-none bg-gradient-to-br from-orange-500 to-amber-500 text-lg font-bold text-ink">
                 E
               </span>
               <div>
-                <h3 className="font-semibold text-white">Etsy</h3>
-                <p className="text-xs text-slate-500">Etsy Open API v3 · OAuth 2.0 + PKCE</p>
+                <h3 className="font-semibold text-ink">Etsy</h3>
+                <p className="text-xs text-muted-2">Etsy Open API v3 · OAuth 2.0 + PKCE</p>
               </div>
             </div>
 
-            <div className="mt-4 space-y-1.5 text-xs text-slate-400">
+            <div className="mt-4 space-y-1.5 text-xs text-muted">
               {etsy.scopes.map((scope) => (
                 <p key={scope} className="flex items-center gap-2">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
-                  <code className="text-brand-300">{scope}</code>
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-700" />
+                  <code className="text-accent">{scope}</code>
                 </p>
               ))}
             </div>
@@ -127,13 +127,13 @@ export default async function ShopsPage({
                 >
                   <Plug className="h-4 w-4" /> Connect Etsy shop
                 </ButtonLink>
-                <p className="mt-2 text-center text-[11px] text-slate-500">
+                <p className="mt-2 text-center text-[11px] text-muted-2">
                   Redirects to etsy.com to authorize.
                 </p>
               </>
             ) : (
               <>
-                <div className="mt-5 rounded-xl border border-amber-500/25 bg-amber-500/10 p-3 text-xs text-amber-200">
+                <div className="mt-5 rounded-none border border-amber-500/25 bg-amber-500/10 p-3 text-xs text-amber-700">
                   <p className="flex items-start gap-2">
                     <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                     <span>
@@ -159,17 +159,17 @@ export default async function ShopsPage({
               <form
                 key={channel.platform}
                 action={connectDemoShop}
-                className="flex items-center gap-3 rounded-2xl border border-ink-600/50 bg-ink-900/50 p-4"
+                className="flex items-center gap-3 rounded-none border border-line bg-paper-2 p-4"
               >
                 <input type="hidden" name="platform" value={channel.platform} />
                 <span
-                  className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br ${channel.color} text-sm font-bold text-white`}
+                  className={`grid h-10 w-10 shrink-0 place-items-center rounded-none bg-gradient-to-br ${channel.color} text-sm font-bold text-ink`}
                 >
                   {PLATFORM_LABEL[channel.platform][0]}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium text-white">{PLATFORM_LABEL[channel.platform]}</p>
-                  <p className="truncate text-xs text-slate-500">{channel.blurb}</p>
+                  <p className="text-sm font-medium text-ink">{PLATFORM_LABEL[channel.platform]}</p>
+                  <p className="truncate text-xs text-muted-2">{channel.blurb}</p>
                 </div>
                 <Button type="submit" variant="outline" className="shrink-0 py-2 text-xs" disabled={atLimit}>
                   Connect
@@ -177,8 +177,8 @@ export default async function ShopsPage({
               </form>
             ))}
 
-            <details className="rounded-2xl border border-ink-600/50 bg-ink-900/50 p-4">
-              <summary className="cursor-pointer text-sm font-medium text-slate-200">
+            <details className="rounded-none border border-line bg-paper-2 p-4">
+              <summary className="cursor-pointer text-sm font-medium text-ink-2">
                 Connect with a custom name
               </summary>
               <form action={connectDemoShop} className="mt-3 space-y-3">
@@ -195,8 +195,8 @@ export default async function ShopsPage({
         </div>
 
         {atLimit ? (
-          <div className="border-t border-ink-600/40 px-5 py-3">
-            <p className="text-xs text-amber-300">
+          <div className="border-t border-line px-5 py-3">
+            <p className="text-xs text-amber-700">
               You have reached the {shopLimit}-shop limit of your plan.{" "}
               <Link href="/dashboard/billing" className="underline">
                 Upgrade
@@ -226,13 +226,13 @@ export default async function ShopsPage({
             </thead>
             <tbody>
               {shops.map((shop) => (
-                <tr key={shop.id} className="align-top transition hover:bg-ink-800/30">
+                <tr key={shop.id} className="align-top transition hover:bg-paper-2">
                   <Td>
                     <div className="flex items-start gap-3">
                       <PlatformIcon platform={shop.platform} className="mt-0.5" />
                       <div className="min-w-0">
-                        <p className="font-medium text-white">{shop.name}</p>
-                        <p className="text-xs text-slate-500">
+                        <p className="font-medium text-ink">{shop.name}</p>
+                        <p className="text-xs text-muted-2">
                           {PLATFORM_LABEL[shop.platform] ?? shop.platform} · id {shop.externalId}
                           {shop.isDemo ? " · demo" : ""}
                         </p>
@@ -241,7 +241,7 @@ export default async function ShopsPage({
                             href={shop.url}
                             target="_blank"
                             rel="noreferrer"
-                            className="inline-flex items-center gap-1 text-xs text-brand-400 hover:text-brand-300"
+                            className="inline-flex items-center gap-1 text-xs text-accent hover:text-accent"
                           >
                             Open shop <ExternalLink className="h-3 w-3" />
                           </a>
@@ -252,14 +252,14 @@ export default async function ShopsPage({
                   <Td>
                     <Badge tone={shop.status}>{shop.status.toLowerCase()}</Badge>
                     {shop.lastSyncError ? (
-                      <p className="mt-1 max-w-48 text-xs text-rose-400">{shop.lastSyncError}</p>
+                      <p className="mt-1 max-w-48 text-xs text-rose-700">{shop.lastSyncError}</p>
                     ) : null}
                   </Td>
                   <Td>
-                    <p className="text-xs text-slate-300">{timeAgo(shop.lastSyncAt)}</p>
-                    <p className="text-xs text-slate-500">{formatDateTime(shop.lastSyncAt)}</p>
+                    <p className="text-xs text-ink-2">{timeAgo(shop.lastSyncAt)}</p>
+                    <p className="text-xs text-muted-2">{formatDateTime(shop.lastSyncAt)}</p>
                     {shop.syncJobs[0] ? (
-                      <p className="mt-0.5 text-xs text-slate-500">
+                      <p className="mt-0.5 text-xs text-muted-2">
                         {shop.syncJobs[0].itemsSaved} records · {shop.syncJobs[0].status.toLowerCase()}
                       </p>
                     ) : null}
@@ -272,12 +272,12 @@ export default async function ShopsPage({
                       <button
                         type="submit"
                         className={`relative h-6 w-11 rounded-full transition ${
-                          shop.autoSync ? "bg-brand-600" : "bg-ink-700"
+                          shop.autoSync ? "bg-accent" : "bg-paper-3"
                         }`}
                         aria-label="Toggle auto-sync"
                       >
                         <span
-                          className={`absolute top-1 h-4 w-4 rounded-full bg-white transition-all ${
+                          className={`absolute top-1 h-4 w-4 rounded-full bg-surface transition-all ${
                             shop.autoSync ? "left-6" : "left-1"
                           }`}
                         />
@@ -294,7 +294,7 @@ export default async function ShopsPage({
                       </form>
                       <form action={disconnectShop}>
                         <input type="hidden" name="shopId" value={shop.id} />
-                        <Button type="submit" variant="ghost" className="px-2.5 py-1.5 text-xs text-rose-300">
+                        <Button type="submit" variant="ghost" className="px-2.5 py-1.5 text-xs text-rose-700">
                           <Trash2 className="h-3.5 w-3.5" /> Disconnect
                         </Button>
                       </form>
@@ -313,13 +313,13 @@ export default async function ShopsPage({
       </Card>
 
       <Card className="mt-4 p-5">
-        <h3 className="text-sm font-semibold text-white">What happens when you disconnect</h3>
-        <ul className="mt-2 space-y-1 text-sm text-slate-400">
+        <h3 className="text-sm font-semibold text-ink">What happens when you disconnect</h3>
+        <ul className="mt-2 space-y-1 text-sm text-muted">
           <li>• Access and refresh tokens are deleted immediately — syncing stops.</li>
-          <li>• Already-imported orders stay in OwlFlow so you keep your history.</li>
+          <li>• Already-imported orders stay in DKH so you keep your history.</li>
           <li>
             • To erase every order and listing we hold, delete your account from{" "}
-            <Link href="/dashboard/settings" className="text-brand-400 hover:text-brand-300">
+            <Link href="/dashboard/settings" className="text-accent hover:text-accent">
               Settings → Data &amp; privacy
             </Link>
             .

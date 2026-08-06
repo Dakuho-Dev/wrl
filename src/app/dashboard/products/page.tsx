@@ -73,7 +73,7 @@ export default async function ProductsPage({
       <Card className="my-4 p-4">
         <form className="grid gap-3 sm:grid-cols-[1fr_200px_auto]" action="/dashboard/products">
           <div className="relative">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-2" />
             <Input name="q" defaultValue={query} placeholder="Search title or SKU…" className="pl-9" />
           </div>
           <Select name="shop" defaultValue={shopId}>
@@ -109,15 +109,15 @@ export default async function ProductsPage({
               {products.map((product) => {
                 const tags = parseJson<string[]>(product.tags, []);
                 return (
-                  <tr key={product.id} className="transition hover:bg-ink-800/40">
+                  <tr key={product.id} className="transition hover:bg-paper-2">
                     <Td>
-                      <p className="font-medium text-white">{product.title}</p>
-                      <p className="text-xs text-slate-500">SKU {product.sku ?? "—"}</p>
+                      <p className="font-medium text-ink">{product.title}</p>
+                      <p className="text-xs text-muted-2">SKU {product.sku ?? "—"}</p>
                     </Td>
                     <Td>
                       <div className="flex items-center gap-2">
                         <PlatformIcon platform={product.shop.platform} />
-                        <span className="text-xs text-slate-400">{product.shop.name}</span>
+                        <span className="text-xs text-muted">{product.shop.name}</span>
                       </div>
                     </Td>
                     <Td>
@@ -125,7 +125,7 @@ export default async function ProductsPage({
                         {tags.slice(0, 3).map((tag) => (
                           <span
                             key={tag}
-                            className="rounded-md bg-ink-800 px-1.5 py-0.5 text-[11px] text-slate-400"
+                            className="rounded-none bg-paper-2 px-1.5 py-0.5 text-[11px] text-muted"
                           >
                             {tag}
                           </span>
@@ -138,11 +138,11 @@ export default async function ProductsPage({
                       </Badge>
                     </Td>
                     <Td className="text-right">
-                      <span className={product.quantity === 0 ? "text-rose-400" : ""}>
+                      <span className={product.quantity === 0 ? "text-rose-700" : ""}>
                         {formatNumber(product.quantity)}
                       </span>
                     </Td>
-                    <Td className="text-right text-slate-400">{formatNumber(product.views)}</Td>
+                    <Td className="text-right text-muted">{formatNumber(product.views)}</Td>
                     <Td className="text-right font-medium">
                       {formatMoney(product.price, product.currency)}
                     </Td>

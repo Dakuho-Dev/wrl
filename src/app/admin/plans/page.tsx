@@ -38,13 +38,13 @@ export default async function AdminPlansPage() {
         <div className="space-y-4 lg:col-span-2">
           {plans.map((plan) => (
             <Card key={plan.id}>
-              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ink-600/40 px-5 py-4">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-4">
                 <div className="flex items-center gap-3">
-                  <h3 className="font-semibold text-white">{plan.name}</h3>
+                  <h3 className="font-semibold text-ink">{plan.name}</h3>
                   <Badge tone={plan.isPublic ? "ACTIVE" : undefined}>
                     {plan.isPublic ? "public" : "hidden"}
                   </Badge>
-                  <span className="text-xs text-slate-500">
+                  <span className="text-xs text-muted-2">
                     {formatNumber(plan._count.users)} user{plan._count.users === 1 ? "" : "s"}
                   </span>
                 </div>
@@ -53,7 +53,7 @@ export default async function AdminPlansPage() {
                   <Button
                     type="submit"
                     variant="ghost"
-                    className="px-2 py-1.5 text-xs text-rose-300"
+                    className="px-2 py-1.5 text-xs text-rose-700"
                     disabled={plan._count.users > 0}
                     title={plan._count.users > 0 ? "Plan is in use" : "Delete plan"}
                   >
@@ -85,12 +85,12 @@ export default async function AdminPlansPage() {
                 <Field label="Sort order">
                   <Input name="sortOrder" type="number" defaultValue={plan.sortOrder} />
                 </Field>
-                <label className="flex items-end gap-2 pb-2.5 text-sm text-slate-300">
+                <label className="flex items-end gap-2 pb-2.5 text-sm text-ink-2">
                   <input
                     type="checkbox"
                     name="isPublic"
                     defaultChecked={plan.isPublic}
-                    className="h-4 w-4 rounded border-ink-600 bg-ink-900"
+                    className="h-4 w-4 rounded border-line bg-paper-2"
                   />
                   Show on public pricing page
                 </label>
@@ -139,12 +139,12 @@ export default async function AdminPlansPage() {
             <Field label="Sort order">
               <Input name="sortOrder" type="number" defaultValue={plans.length + 1} />
             </Field>
-            <label className="flex items-center gap-2 text-sm text-slate-300">
+            <label className="flex items-center gap-2 text-sm text-ink-2">
               <input
                 type="checkbox"
                 name="isPublic"
                 defaultChecked
-                className="h-4 w-4 rounded border-ink-600 bg-ink-900"
+                className="h-4 w-4 rounded border-line bg-paper-2"
               />
               Public
             </label>
@@ -159,8 +159,8 @@ export default async function AdminPlansPage() {
       </div>
 
       <Card className="mt-4 p-5">
-        <p className="text-sm text-slate-400">
-          Public plans appear on <span className="text-brand-300">/pricing</span> immediately after
+        <p className="text-sm text-muted">
+          Public plans appear on <span className="text-accent">/pricing</span> immediately after
           saving. Quotas ({formatMoney(0)} plans included) are enforced when a seller connects a shop
           or when the monthly order counter is checked.
         </p>

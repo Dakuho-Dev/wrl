@@ -12,7 +12,7 @@ import {
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("→ Seeding OwlFlow database…");
+  console.log("→ Seeding DKH database…");
 
   // ------------------------------------------------------------ Reset
   await prisma.orderEvent.deleteMany();
@@ -107,10 +107,10 @@ async function main() {
 
   const admin = await prisma.user.create({
     data: {
-      email: env("DEMO_ADMIN_EMAIL", "admin@owlflow.io"),
+      email: env("DEMO_ADMIN_EMAIL", "admin@dkh.io"),
       passwordHash: await bcrypt.hash(adminPassword, 10),
       name: "Platform Admin",
-      company: "OwlFlow",
+      company: "DKH",
       country: "VN",
       role: "ADMIN",
       emailVerified: true,
@@ -121,7 +121,7 @@ async function main() {
 
   const seller = await prisma.user.create({
     data: {
-      email: env("DEMO_SELLER_EMAIL", "seller@owlflow.io"),
+      email: env("DEMO_SELLER_EMAIL", "seller@dkh.io"),
       passwordHash: password,
       name: "Hannah Lewis",
       company: "Little Thistle Studio",
@@ -304,8 +304,8 @@ async function main() {
     data: {
       userId: seller.id,
       name: "Production integration",
-      prefix: "owl_live_8f2b",
-      keyHash: await bcrypt.hash("owl_live_8f2b_demo_key", 10),
+      prefix: "dkh_live_8f2b",
+      keyHash: await bcrypt.hash("dkh_live_8f2b_demo_key", 10),
       scopes: JSON.stringify(["read", "write"]),
       lastUsedAt: new Date(Date.now() - 1800000),
     },
@@ -314,7 +314,7 @@ async function main() {
   await prisma.webhookEndpoint.create({
     data: {
       userId: seller.id,
-      url: "https://hooks.littlethistle.co/owlflow",
+      url: "https://hooks.littlethistle.co/dkh",
       events: JSON.stringify(["order.created", "order.shipped", "shop.sync_failed"]),
       secret: "whsec_" + Math.random().toString(36).slice(2, 18),
     },
@@ -336,7 +336,7 @@ async function main() {
         data: {
           ticketId: created.id,
           userId: admin.id,
-          authorName: "OwlFlow Support",
+          authorName: "DKH Support",
           isStaff: true,
           message: "Thanks for reaching out — we've looked into this and pushed a fix. Let us know if it persists.",
         },
@@ -352,7 +352,7 @@ async function main() {
     { category: "ORDER", level: "INFO", message: "Order #2481930 marked as shipped", userId: seller.id },
     { category: "AUTOMATION", level: "INFO", message: 'Automation "Push tracking back to marketplace" ran 12 times', userId: seller.id },
     { category: "ADMIN", level: "INFO", message: "Plan 'Growth' updated by admin", userId: admin.id },
-    { category: "SYSTEM", level: "ERROR", message: "Webhook delivery failed (503) — https://hooks.littlethistle.co/owlflow", userId: seller.id },
+    { category: "SYSTEM", level: "ERROR", message: "Webhook delivery failed (503) — https://hooks.littlethistle.co/dkh", userId: seller.id },
   ];
 
   for (const [index, log] of logs.entries()) {
@@ -372,9 +372,9 @@ async function main() {
   // ------------------------------------------------------------ Settings
   await prisma.setting.createMany({
     data: [
-      { key: "site.name", value: "OwlFlow" },
+      { key: "site.name", value: "DKH" },
       { key: "site.tagline", value: "Automate your entire order lifecycle" },
-      { key: "site.supportEmail", value: "support@owlflow.io" },
+      { key: "site.supportEmail", value: "support@dkh.io" },
       { key: "signup.enabled", value: "true" },
       { key: "sync.intervalMinutes", value: "15" },
       { key: "maintenance.enabled", value: "false" },

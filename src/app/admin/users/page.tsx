@@ -91,7 +91,7 @@ export default async function AdminUsersPage({
       <Card className="my-4 p-4">
         <form className="grid gap-3 sm:grid-cols-[1fr_160px_160px_auto]" action="/admin/users">
           <div className="relative">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-2" />
             <Input name="q" defaultValue={query} placeholder="Search name, email or company…" className="pl-9" />
           </div>
           <Select name="status" defaultValue={status}>
@@ -129,17 +129,17 @@ export default async function AdminUsersPage({
             </thead>
             <tbody>
               {users.map((user) => (
-                <tr key={user.id} className="transition hover:bg-ink-800/30">
+                <tr key={user.id} className="transition hover:bg-paper-2">
                   <Td>
                     <div className="flex items-center gap-3">
-                      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-brand-600/80 text-xs font-semibold text-white">
+                      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-none bg-accent-soft text-xs font-semibold text-ink">
                         {initials(user.name)}
                       </span>
                       <div className="min-w-0">
-                        <p className="font-medium text-white">{user.name}</p>
-                        <p className="truncate text-xs text-slate-500">{user.email}</p>
+                        <p className="font-medium text-ink">{user.name}</p>
+                        <p className="truncate text-xs text-muted-2">{user.email}</p>
                         {user.company ? (
-                          <p className="truncate text-xs text-slate-600">{user.company}</p>
+                          <p className="truncate text-xs text-muted-2">{user.company}</p>
                         ) : null}
                       </div>
                     </div>
@@ -190,10 +190,10 @@ export default async function AdminUsersPage({
                     <Badge tone={user.status}>{user.status.toLowerCase()}</Badge>
                   </Td>
                   <Td className="text-right">{user._count.shops}</Td>
-                  <Td className="whitespace-nowrap text-xs text-slate-400">
+                  <Td className="whitespace-nowrap text-xs text-muted">
                     {timeAgo(user.lastLoginAt)}
                   </Td>
-                  <Td className="whitespace-nowrap text-xs text-slate-400">
+                  <Td className="whitespace-nowrap text-xs text-muted">
                     {formatDate(user.createdAt)}
                   </Td>
                   <Td>
@@ -219,7 +219,7 @@ export default async function AdminUsersPage({
                         <Button
                           type="submit"
                           variant="ghost"
-                          className="px-2 py-1 text-xs text-rose-300"
+                          className="px-2 py-1 text-xs text-rose-700"
                           disabled={user.id === admin.id}
                         >
                           <Trash2 className="h-3.5 w-3.5" />
@@ -236,8 +236,8 @@ export default async function AdminUsersPage({
         )}
 
         {totalPages > 1 ? (
-          <div className="flex items-center justify-between border-t border-ink-600/40 px-5 py-3">
-            <p className="text-xs text-slate-500">
+          <div className="flex items-center justify-between border-t border-line px-5 py-3">
+            <p className="text-xs text-muted-2">
               Page {page} of {totalPages}
             </p>
             <div className="flex gap-2">

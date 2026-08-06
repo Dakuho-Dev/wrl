@@ -4,7 +4,7 @@ import { LegalPage, LegalSection } from "@/components/site/legal";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions",
-  description: "The terms governing your use of the OwlFlow order management platform.",
+  description: "The terms governing your use of the DKH order management platform.",
 };
 
 export default function TermsPage() {
@@ -12,11 +12,11 @@ export default function TermsPage() {
     <LegalPage
       title="Terms & Conditions"
       updated="5 August 2026"
-      intro="These terms form the agreement between OwlFlow and you when you create an account or use the service. Please read them; by signing up you accept them."
+      intro="These terms form the agreement between DKH and you when you create an account or use the service. Please read them; by signing up you accept them."
     >
       <LegalSection heading="1. The service">
         <p>
-          OwlFlow provides software that connects to third-party sales channels, imports order and
+          DKH provides software that connects to third-party sales channels, imports order and
           catalog data, automates fulfillment steps and submits shipping information back to those
           channels. The service is provided on a subscription basis according to the plan you select.
         </p>
@@ -33,10 +33,10 @@ export default function TermsPage() {
 
       <LegalSection heading="3. Connected shops and third-party terms">
         <p>
-          You authorize OwlFlow to access your marketplace accounts using the permissions you grant
+          You authorize DKH to access your marketplace accounts using the permissions you grant
           through each marketplace&apos;s OAuth flow. You remain bound by the terms of those
           marketplaces, including their API and seller policies. You confirm that you have the right
-          to grant this access and to process the buyer data that flows into OwlFlow.
+          to grant this access and to process the buyer data that flows into DKH.
         </p>
         <p>
           Marketplaces may change, restrict or withdraw their APIs at any time. If that happens we
@@ -68,7 +68,7 @@ export default function TermsPage() {
 
       <LegalSection heading="6. Your data">
         <p>
-          You keep all rights to the data you bring into OwlFlow. You grant us a limited licence to
+          You keep all rights to the data you bring into DKH. You grant us a limited licence to
           host, process and transmit it solely to operate the service for you. Our handling of
           personal data is described in the <a href="/privacy">Privacy Policy</a>, which forms part
           of these terms.
@@ -119,7 +119,7 @@ export default function TermsPage() {
 
       <LegalSection heading="12. Contact">
         <p>
-          Questions about these terms: <a href="mailto:legal@owlflow.io">legal@owlflow.io</a>.
+          Questions about these terms: <a href="mailto:legal@dkh.io">legal@dkh.io</a>.
         </p>
       </LegalSection>
     </LegalPage>

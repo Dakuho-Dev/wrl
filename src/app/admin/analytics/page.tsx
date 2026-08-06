@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { AreaChart, BarList, Donut } from "@/components/app/charts";
+import { TrendChart, BarList, SplitBar } from "@/components/app/charts";
 import {
   Card,
   CardHeader,
@@ -76,7 +76,7 @@ export default async function AdminAnalyticsPage() {
     }, {}),
   ).sort((a, b) => b.value - a.value);
 
-  const planColors = ["#38bdf8", "#34d399", "#a78bfa", "#fbbf24"];
+  const planColors = ["#4a7fa5", "#1b5e3f", "#6b5b95", "#c08a2e"];
   const planDistribution = plans.map((plan, index) => ({
     label: plan.name,
     value: plan._count.users,
@@ -98,13 +98,13 @@ export default async function AdminAnalyticsPage() {
         <Card>
           <CardHeader title="GMV — 12 weeks" />
           <div className="p-5">
-            <AreaChart data={weeks} currency="USD" height={220} />
+            <TrendChart data={weeks} currency="USD" height={220} />
           </div>
         </Card>
         <Card>
           <CardHeader title="New accounts — 12 weeks" />
           <div className="p-5">
-            <AreaChart data={signups} height={220} />
+            <TrendChart data={signups} height={220} />
           </div>
         </Card>
       </div>
@@ -119,7 +119,7 @@ export default async function AdminAnalyticsPage() {
         <Card>
           <CardHeader title="Accounts by plan" />
           <div className="p-5">
-            {planDistribution.length ? <Donut data={planDistribution} /> : <EmptyState title="No plans" />}
+            {planDistribution.length ? <SplitBar data={planDistribution} /> : <EmptyState title="No plans" />}
           </div>
         </Card>
       </div>
@@ -138,9 +138,9 @@ export default async function AdminAnalyticsPage() {
           <tbody>
             {topSellers.map((shop) => (
               <tr key={shop.id}>
-                <Td className="font-medium text-white">{shop.name}</Td>
-                <Td className="text-xs text-slate-400">{PLATFORM_LABEL[shop.platform]}</Td>
-                <Td className="text-xs text-slate-400">{shop.user.email}</Td>
+                <Td className="font-medium text-ink">{shop.name}</Td>
+                <Td className="text-xs text-muted">{PLATFORM_LABEL[shop.platform]}</Td>
+                <Td className="text-xs text-muted">{shop.user.email}</Td>
                 <Td className="text-right">{formatNumber(shop._count.orders)}</Td>
               </tr>
             ))}

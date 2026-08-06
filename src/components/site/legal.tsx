@@ -13,11 +13,11 @@ export function LegalPage({
 }) {
   return (
     <>
-      <section className="border-b border-ink-800/80">
+      <section className="border-b border-line">
         <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6">
-          <h1 className="text-4xl font-semibold tracking-tight text-white">{title}</h1>
-          <p className="mt-3 text-sm text-slate-500">Last updated: {updated}</p>
-          <p className="mt-5 leading-relaxed text-slate-400">{intro}</p>
+          <h1 className="text-4xl font-semibold tracking-tight text-ink">{title}</h1>
+          <p className="mt-3 text-sm text-muted-2">Last updated: {updated}</p>
+          <p className="mt-5 leading-relaxed text-muted">{intro}</p>
         </div>
       </section>
 
@@ -39,8 +39,8 @@ export function LegalSection({
 }) {
   return (
     <section id={id} className="scroll-mt-24">
-      <h2 className="text-xl font-semibold text-white">{heading}</h2>
-      <div className="mt-3 space-y-3 text-sm leading-relaxed text-slate-400 [&_a]:text-brand-400 [&_a:hover]:text-brand-300 [&_li]:ml-5 [&_li]:list-disc [&_strong]:text-slate-200">
+      <h2 className="text-xl font-semibold text-ink">{heading}</h2>
+      <div className="mt-3 space-y-3 text-sm leading-relaxed text-muted [&_a]:text-accent [&_a:hover]:text-accent [&_li]:ml-5 [&_li]:list-disc [&_strong]:text-ink-2">
         {children}
       </div>
     </section>

@@ -93,31 +93,32 @@ export const PLATFORM_LABEL: Record<string, string> = {
   TIKTOK: "TikTok Shop",
 };
 
+/** Bordered tag colours, tuned for a light paper background. */
 export function statusTone(status: string) {
   switch (status) {
     case "NEW":
-      return "bg-sky-500/10 text-sky-300 ring-sky-500/30";
+      return "border-sky-800/25 bg-sky-700/10 text-sky-900";
     case "PROCESSING":
-      return "bg-amber-500/10 text-amber-300 ring-amber-500/30";
+      return "border-amber-800/25 bg-amber-600/12 text-amber-900";
     case "ON_HOLD":
-      return "bg-orange-500/10 text-orange-300 ring-orange-500/30";
+      return "border-orange-800/30 bg-orange-600/12 text-orange-900";
     case "SHIPPED":
-      return "bg-violet-500/10 text-violet-300 ring-violet-500/30";
+      return "border-violet-800/25 bg-violet-700/10 text-violet-900";
     case "DELIVERED":
     case "CONNECTED":
     case "SUCCESS":
     case "ACTIVE":
     case "PAID":
     case "RESOLVED":
-      return "bg-emerald-500/10 text-emerald-300 ring-emerald-500/30";
+      return "border-emerald-800/25 bg-emerald-700/10 text-emerald-900";
     case "CANCELLED":
     case "FAILED":
     case "ERROR":
     case "SUSPENDED":
-      return "bg-rose-500/10 text-rose-300 ring-rose-500/30";
+      return "border-rose-800/25 bg-rose-700/10 text-rose-900";
     case "REFUNDED":
-      return "bg-zinc-500/10 text-zinc-300 ring-zinc-500/30";
+      return "border-line bg-paper-3 text-muted";
     default:
-      return "bg-zinc-500/10 text-zinc-300 ring-zinc-500/30";
+      return "border-line bg-paper-2 text-muted";
   }
 }

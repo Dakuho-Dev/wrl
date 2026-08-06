@@ -99,15 +99,15 @@ export default async function ShippingPage() {
               </thead>
               <tbody>
                 {shipments.map((shipment) => (
-                  <tr key={shipment.id} className="transition hover:bg-ink-800/40">
+                  <tr key={shipment.id} className="transition hover:bg-paper-2">
                     <Td>
                       <Link
                         href={`/dashboard/orders/${shipment.orderId}`}
-                        className="font-medium text-white hover:text-brand-300"
+                        className="font-medium text-ink hover:text-accent"
                       >
                         {shipment.order.orderNumber}
                       </Link>
-                      <p className="text-xs text-slate-500">{shipment.order.buyerName}</p>
+                      <p className="text-xs text-muted-2">{shipment.order.buyerName}</p>
                     </Td>
                     <Td className="text-sm">{shipment.carrier}</Td>
                     <Td>
@@ -115,7 +115,7 @@ export default async function ShippingPage() {
                         href={shipment.trackingUrl ?? "#"}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1 font-mono text-xs text-brand-400 hover:text-brand-300"
+                        className="inline-flex items-center gap-1 font-mono text-xs text-accent hover:text-accent"
                       >
                         {shipment.trackingNumber} <ExternalLink className="h-3 w-3" />
                       </a>
@@ -131,7 +131,7 @@ export default async function ShippingPage() {
                         </Badge>
                       </div>
                     </Td>
-                    <Td className="whitespace-nowrap text-xs text-slate-400">
+                    <Td className="whitespace-nowrap text-xs text-muted">
                       {timeAgo(shipment.shippedAt)}
                     </Td>
                   </tr>
@@ -153,23 +153,23 @@ export default async function ShippingPage() {
             action={
               <Link
                 href="/dashboard/orders?status=PROCESSING"
-                className="text-xs text-brand-400 hover:text-brand-300"
+                className="text-xs text-accent hover:text-accent"
               >
                 View all →
               </Link>
             }
           />
-          <div className="divide-y divide-ink-700/40">
+          <div className="divide-y divide-line">
             {unshipped.map((order) => (
               <Link
                 key={order.id}
                 href={`/dashboard/orders/${order.id}`}
-                className="flex items-center gap-3 px-5 py-3.5 transition hover:bg-ink-800/40"
+                className="flex items-center gap-3 px-5 py-3.5 transition hover:bg-paper-2"
               >
                 <PlatformIcon platform={order.shop.platform} />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-white">{order.orderNumber}</p>
-                  <p className="text-xs text-slate-500">
+                  <p className="truncate text-sm font-medium text-ink">{order.orderNumber}</p>
+                  <p className="text-xs text-muted-2">
                     {order.items.length} item{order.items.length === 1 ? "" : "s"} ·{" "}
                     {formatDateTime(order.placedAt)}
                   </p>

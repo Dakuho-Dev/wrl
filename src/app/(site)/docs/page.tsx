@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Documentation",
   description:
-    "How to connect a shop, how the sync works, and the OwlFlow REST API reference for orders, shipments and webhooks.",
+    "How to connect a shop, how the sync works, and the DKH REST API reference for orders, shipments and webhooks.",
 };
 
 const NAV = [
@@ -19,7 +19,7 @@ const NAV = [
 
 function Code({ children }: { children: string }) {
   return (
-    <pre className="scroll-thin mt-3 overflow-x-auto rounded-xl border border-ink-600/50 bg-ink-950 p-4 text-xs leading-relaxed text-slate-300">
+    <pre className="scroll-thin mt-3 overflow-x-auto rounded-none border border-line bg-paper p-4 text-xs leading-relaxed text-ink-2">
       <code>{children}</code>
     </pre>
   );
@@ -27,9 +27,9 @@ function Code({ children }: { children: string }) {
 
 function Doc({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
-    <section id={id} className="scroll-mt-24 border-b border-ink-800/60 pb-10">
-      <h2 className="text-2xl font-semibold tracking-tight text-white">{title}</h2>
-      <div className="mt-4 space-y-3 text-sm leading-relaxed text-slate-400 [&_a]:text-brand-400 [&_code]:rounded [&_code]:bg-ink-900 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-xs [&_code]:text-brand-300 [&_li]:ml-5 [&_li]:list-disc [&_strong]:text-slate-200">
+    <section id={id} className="scroll-mt-24 border-b border-line pb-10">
+      <h2 className="text-2xl font-semibold tracking-tight text-ink">{title}</h2>
+      <div className="mt-4 space-y-3 text-sm leading-relaxed text-muted [&_a]:text-accent [&_code]:rounded [&_code]:bg-paper-2 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-xs [&_code]:text-accent [&_li]:ml-5 [&_li]:list-disc [&_strong]:text-ink-2">
         {children}
       </div>
     </section>
@@ -41,7 +41,7 @@ export default function DocsPage() {
     <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
       <div className="grid gap-10 lg:grid-cols-[220px_1fr]">
         <aside className="lg:sticky lg:top-24 lg:self-start">
-          <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+          <p className="text-xs font-semibold uppercase tracking-widest text-muted-2">
             Documentation
           </p>
           <nav className="mt-4 space-y-1">
@@ -49,7 +49,7 @@ export default function DocsPage() {
               <a
                 key={item.href}
                 href={item.href}
-                className="block rounded-lg px-3 py-2 text-sm text-slate-400 transition hover:bg-ink-850 hover:text-white"
+                className="block rounded-none px-3 py-2 text-sm text-muted transition hover:bg-surface hover:text-ink"
               >
                 {item.label}
               </a>
@@ -59,10 +59,10 @@ export default function DocsPage() {
 
         <div className="space-y-10">
           <div>
-            <h1 className="text-4xl font-semibold tracking-tight text-white">Documentation</h1>
-            <p className="mt-3 text-slate-400">
+            <h1 className="text-4xl font-semibold tracking-tight text-ink">Documentation</h1>
+            <p className="mt-3 text-muted">
               Everything you need to connect a shop, understand the sync pipeline and build on top of
-              the OwlFlow API.
+              the DKH API.
             </p>
           </div>
 
@@ -80,11 +80,11 @@ export default function DocsPage() {
 
           <Doc id="connect-etsy" title="Connect an Etsy shop">
             <p>
-              OwlFlow uses the <strong>Etsy Open API v3</strong> with OAuth 2.0 and PKCE. The flow is:
+              DKH uses the <strong>Etsy Open API v3</strong> with OAuth 2.0 and PKCE. The flow is:
             </p>
             <ol className="ml-5 list-decimal space-y-2">
               <li>
-                You click <strong>Connect Etsy</strong>. OwlFlow generates a PKCE verifier and
+                You click <strong>Connect Etsy</strong>. DKH generates a PKCE verifier and
                 redirects you to <code>https://www.etsy.com/oauth/connect</code>.
               </li>
               <li>
@@ -96,7 +96,7 @@ export default function DocsPage() {
                 <code>/api/integrations/etsy/callback</code> with an authorization code.
               </li>
               <li>
-                OwlFlow exchanges the code for an access token and a refresh token at{" "}
+                DKH exchanges the code for an access token and a refresh token at{" "}
                 <code>https://api.etsy.com/v3/public/oauth/token</code>, then stores them encrypted.
               </li>
               <li>
@@ -156,18 +156,18 @@ ETSY_SCOPES="email_r shops_r shops_w listings_r listings_w transactions_r transa
               Authenticate with an API key from <strong>Dashboard → API keys</strong>. Send it as a
               bearer token.
             </p>
-            <Code>{`curl https://owlflow.io/api/v1/orders?status=NEW&limit=25 \\
-  -H "Authorization: Bearer owl_live_xxxxxxxxxxxx"`}</Code>
-            <div className="mt-5 overflow-hidden rounded-xl border border-ink-600/50">
+            <Code>{`curl https://dkh.io/api/v1/orders?status=NEW&limit=25 \\
+  -H "Authorization: Bearer dkh_live_xxxxxxxxxxxx"`}</Code>
+            <div className="mt-5 overflow-hidden rounded-none border border-line">
               <table className="w-full text-left text-xs">
-                <thead className="bg-ink-900 text-slate-400">
+                <thead className="bg-paper-2 text-muted">
                   <tr>
                     <th className="px-4 py-2.5 font-semibold">Method</th>
                     <th className="px-4 py-2.5 font-semibold">Endpoint</th>
                     <th className="px-4 py-2.5 font-semibold">Description</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-ink-700/50">
+                <tbody className="divide-y divide-line">
                   {[
                     ["GET", "/api/v1/orders", "List orders, filterable by status, shop and date"],
                     ["GET", "/api/v1/orders/{id}", "Retrieve a single order with items and shipments"],
@@ -178,9 +178,9 @@ ETSY_SCOPES="email_r shops_r shops_w listings_r listings_w transactions_r transa
                     ["GET", "/api/v1/products", "List synced listings"],
                   ].map(([method, path, description]) => (
                     <tr key={path + method}>
-                      <td className="px-4 py-2.5 font-mono text-brand-300">{method}</td>
-                      <td className="px-4 py-2.5 font-mono text-slate-300">{path}</td>
-                      <td className="px-4 py-2.5 text-slate-400">{description}</td>
+                      <td className="px-4 py-2.5 font-mono text-accent">{method}</td>
+                      <td className="px-4 py-2.5 font-mono text-ink-2">{path}</td>
+                      <td className="px-4 py-2.5 text-muted">{description}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -191,10 +191,10 @@ ETSY_SCOPES="email_r shops_r shops_w listings_r listings_w transactions_r transa
           <Doc id="webhooks" title="Webhooks">
             <p>
               Register an endpoint in <strong>Dashboard → API keys</strong>. Each delivery is signed
-              with HMAC-SHA256 in the <code>X-OwlFlow-Signature</code> header.
+              with HMAC-SHA256 in the <code>X-DKH-Signature</code> header.
             </p>
-            <Code>{`POST https://your-app.com/hooks/owlflow
-X-OwlFlow-Signature: sha256=...
+            <Code>{`POST https://your-app.com/hooks/dkh
+X-DKH-Signature: sha256=...
 {
   "event": "order.created",
   "created_at": "2026-08-05T09:12:44Z",

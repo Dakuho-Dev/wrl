@@ -38,11 +38,11 @@ export function LoginForm() {
       </Field>
 
       <div className="flex items-center justify-between text-xs">
-        <label className="flex items-center gap-2 text-slate-400">
-          <input type="checkbox" name="remember" className="h-3.5 w-3.5 rounded border-ink-600 bg-ink-900" />
+        <label className="flex items-center gap-2 text-muted">
+          <input type="checkbox" name="remember" className="h-3.5 w-3.5 rounded border-line bg-paper-2" />
           Keep me signed in
         </label>
-        <Link href="/contact" className="text-slate-400 hover:text-brand-300">
+        <Link href="/contact" className="text-muted hover:text-accent">
           Forgot password?
         </Link>
       </div>

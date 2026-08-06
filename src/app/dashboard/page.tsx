@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight, DollarSign, Package, ShoppingBag, Store, Truck } from "lucide-react";
 
-import { AreaChart, BarList, Donut } from "@/components/app/charts";
+import { TrendChart, BarList, SplitBar } from "@/components/app/charts";
 import {
   Badge,
   ButtonLink,
@@ -90,20 +90,20 @@ export default async function DashboardPage() {
   }));
 
   const statusColors: Record<string, string> = {
-    NEW: "#38bdf8",
-    PROCESSING: "#fbbf24",
-    ON_HOLD: "#fb923c",
-    SHIPPED: "#a78bfa",
-    DELIVERED: "#34d399",
-    CANCELLED: "#f43f5e",
-    REFUNDED: "#94a3b8",
+    NEW: "#4a7fa5",
+    PROCESSING: "#c08a2e",
+    ON_HOLD: "#b5622b",
+    SHIPPED: "#6b5b95",
+    DELIVERED: "#1b5e3f",
+    CANCELLED: "#9b3a3a",
+    REFUNDED: "#a39d8c",
   };
 
   const donut = statusCounts
     .map((entry) => ({
       label: entry.status.replaceAll("_", " ").toLowerCase(),
       value: entry._count.status,
-      color: statusColors[entry.status] ?? "#64748b",
+      color: statusColors[entry.status] ?? "#a39d8c",
     }))
     .sort((a, b) => b.value - a.value);
 
@@ -165,11 +165,11 @@ export default async function DashboardPage() {
       {needsAttention > 0 ? (
         <Link href="/dashboard/orders?status=ON_HOLD" className="mt-4 block">
           <Card className="flex items-center justify-between gap-4 border-amber-500/30 bg-amber-500/5 p-4 transition hover:border-amber-500/50">
-            <p className="text-sm text-amber-200">
+            <p className="text-sm text-amber-700">
               <strong>{needsAttention}</strong> order{needsAttention === 1 ? " is" : "s are"} on hold
               and need your attention.
             </p>
-            <ArrowUpRight className="h-4 w-4 text-amber-300" />
+            <ArrowUpRight className="h-4 w-4 text-amber-700" />
           </Card>
         </Link>
       ) : null}
@@ -178,7 +178,7 @@ export default async function DashboardPage() {
         <Card className="lg:col-span-2">
           <CardHeader title="Revenue — last 14 days" description="Across all connected channels" />
           <div className="p-5">
-            <AreaChart data={days} currency="USD" />
+            <TrendChart data={days} currency="USD" />
           </div>
         </Card>
 
@@ -186,7 +186,7 @@ export default async function DashboardPage() {
           <CardHeader title="Order status" description="All time" />
           <div className="p-5">
             {donut.length ? (
-              <Donut data={donut} />
+              <SplitBar data={donut} />
             ) : (
               <EmptyState title="No orders yet" description="Connect a shop to see the breakdown." />
             )}
@@ -199,7 +199,7 @@ export default async function DashboardPage() {
           <CardHeader
             title="Recent orders"
             action={
-              <Link href="/dashboard/orders" className="text-xs text-brand-400 hover:text-brand-300">
+              <Link href="/dashboard/orders" className="text-xs text-accent hover:text-accent">
                 View all →
               </Link>
             }
@@ -217,15 +217,15 @@ export default async function DashboardPage() {
               </thead>
               <tbody>
                 {recentOrders.map((order) => (
-                  <tr key={order.id} className="transition hover:bg-ink-800/40">
+                  <tr key={order.id} className="transition hover:bg-paper-2">
                     <Td>
                       <Link
                         href={`/dashboard/orders/${order.id}`}
-                        className="font-medium text-white hover:text-brand-300"
+                        className="font-medium text-ink hover:text-accent"
                       >
                         {order.orderNumber}
                       </Link>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-muted-2">
                         {order.items.length} item{order.items.length === 1 ? "" : "s"} ·{" "}
                         {timeAgo(order.placedAt)}
                       </p>
@@ -233,7 +233,7 @@ export default async function DashboardPage() {
                     <Td>
                       <div className="flex items-center gap-2">
                         <PlatformIcon platform={order.shop.platform} />
-                        <span className="text-xs text-slate-400">{order.shop.name}</span>
+                        <span className="text-xs text-muted">{order.shop.name}</span>
                       </div>
                     </Td>
                     <Td className="text-sm">{order.buyerName}</Td>
@@ -268,18 +268,18 @@ export default async function DashboardPage() {
             <CardHeader
               title="Connected shops"
               action={
-                <Link href="/dashboard/shops" className="text-xs text-brand-400 hover:text-brand-300">
+                <Link href="/dashboard/shops" className="text-xs text-accent hover:text-accent">
                   Manage →
                 </Link>
               }
             />
-            <div className="divide-y divide-ink-700/40">
+            <div className="divide-y divide-line">
               {shops.slice(0, 5).map((shop) => (
                 <div key={shop.id} className="flex items-center gap-3 px-5 py-3.5">
                   <PlatformIcon platform={shop.platform} />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-white">{shop.name}</p>
-                    <p className="text-xs text-slate-500">Synced {timeAgo(shop.lastSyncAt)}</p>
+                    <p className="truncate text-sm font-medium text-ink">{shop.name}</p>
+                    <p className="text-xs text-muted-2">Synced {timeAgo(shop.lastSyncAt)}</p>
                   </div>
                   <Badge tone={shop.status}>{shop.status.toLowerCase()}</Badge>
                 </div>

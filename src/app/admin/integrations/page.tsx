@@ -96,27 +96,27 @@ export default async function AdminIntegrationsPage() {
             )}
 
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-2">
                 Register this callback URL in your Etsy app
               </p>
-              <div className="mt-2 flex items-center gap-2 rounded-xl border border-ink-600/50 bg-ink-900 px-3 py-2.5">
-                <code className="flex-1 break-all text-xs text-brand-300">{etsy.redirectUri}</code>
-                <Copy className="h-3.5 w-3.5 shrink-0 text-slate-500" />
+              <div className="mt-2 flex items-center gap-2 rounded-none border border-line bg-paper-2 px-3 py-2.5">
+                <code className="flex-1 break-all text-xs text-accent">{etsy.redirectUri}</code>
+                <Copy className="h-3.5 w-3.5 shrink-0 text-muted-2" />
               </div>
-              <p className="mt-1.5 text-xs text-slate-500">
+              <p className="mt-1.5 text-xs text-muted-2">
                 It must match exactly, including protocol and trailing path.
               </p>
             </div>
 
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-2">
                 Requested scopes
               </p>
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {etsy.scopes.map((scope) => (
                   <code
                     key={scope}
-                    className="rounded-lg border border-ink-600/50 bg-ink-900 px-2 py-1 text-xs text-brand-300"
+                    className="rounded-none border border-line bg-paper-2 px-2 py-1 text-xs text-accent"
                   >
                     {scope}
                   </code>
@@ -125,29 +125,29 @@ export default async function AdminIntegrationsPage() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-2">
                 Endpoints used
               </p>
-              <ul className="mt-2 space-y-1 text-xs text-slate-400">
+              <ul className="mt-2 space-y-1 text-xs text-muted">
                 <li>
-                  <code className="text-slate-300">GET</code> etsy.com/oauth/connect — authorization
+                  <code className="text-ink-2">GET</code> etsy.com/oauth/connect — authorization
                 </li>
                 <li>
-                  <code className="text-slate-300">POST</code> /v3/public/oauth/token — token exchange &
+                  <code className="text-ink-2">POST</code> /v3/public/oauth/token — token exchange &
                   refresh
                 </li>
                 <li>
-                  <code className="text-slate-300">GET</code> /v3/application/users/&#123;id&#125;/shops
+                  <code className="text-ink-2">GET</code> /v3/application/users/&#123;id&#125;/shops
                 </li>
                 <li>
-                  <code className="text-slate-300">GET</code> /v3/application/shops/&#123;id&#125;/receipts
+                  <code className="text-ink-2">GET</code> /v3/application/shops/&#123;id&#125;/receipts
                 </li>
                 <li>
-                  <code className="text-slate-300">GET</code>{" "}
+                  <code className="text-ink-2">GET</code>{" "}
                   /v3/application/shops/&#123;id&#125;/listings/active
                 </li>
                 <li>
-                  <code className="text-slate-300">POST</code>{" "}
+                  <code className="text-ink-2">POST</code>{" "}
                   /v3/application/shops/&#123;id&#125;/receipts/&#123;id&#125;/tracking
                 </li>
               </ul>
@@ -157,7 +157,7 @@ export default async function AdminIntegrationsPage() {
               href="https://developers.etsy.com/documentation/"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm text-brand-400 hover:text-brand-300"
+              className="inline-flex items-center gap-1.5 text-sm text-accent hover:text-accent"
             >
               Etsy developer documentation <ExternalLink className="h-3.5 w-3.5" />
             </a>
@@ -167,16 +167,16 @@ export default async function AdminIntegrationsPage() {
         <div className="space-y-4">
           <Card>
             <CardHeader title="Environment checks" description="Configuration required for production" />
-            <div className="divide-y divide-ink-700/40">
+            <div className="divide-y divide-line">
               {checks.map((check) => (
                 <div key={check.label} className="flex items-center gap-3 px-5 py-3">
                   {check.ok ? (
-                    <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-700" />
                   ) : (
-                    <AlertTriangle className="h-4 w-4 shrink-0 text-amber-400" />
+                    <AlertTriangle className="h-4 w-4 shrink-0 text-amber-700" />
                   )}
-                  <code className="text-xs text-slate-300">{check.label}</code>
-                  <span className="ml-auto truncate text-xs text-slate-500">{check.value}</span>
+                  <code className="text-xs text-ink-2">{check.label}</code>
+                  <span className="ml-auto truncate text-xs text-muted-2">{check.value}</span>
                 </div>
               ))}
             </div>
@@ -203,8 +203,8 @@ export default async function AdminIntegrationsPage() {
                       </div>
                     </Td>
                     <Td className="text-right">{entry.total}</Td>
-                    <Td className="text-right text-emerald-400">{entry.connected}</Td>
-                    <Td className="text-right text-rose-400">{entry.errored}</Td>
+                    <Td className="text-right text-emerald-700">{entry.connected}</Td>
+                    <Td className="text-right text-rose-700">{entry.errored}</Td>
                   </tr>
                 ))}
               </tbody>
@@ -237,14 +237,14 @@ export default async function AdminIntegrationsPage() {
                       <span className="text-sm">{job.shop.name}</span>
                     </div>
                   </Td>
-                  <Td className="text-xs text-slate-400">{job.type.toLowerCase()}</Td>
+                  <Td className="text-xs text-muted">{job.type.toLowerCase()}</Td>
                   <Td>
                     <Badge tone={job.status}>{job.status.toLowerCase()}</Badge>
                   </Td>
                   <Td className="text-right">{job.itemsRead}</Td>
                   <Td className="text-right">{job.itemsSaved}</Td>
-                  <Td className="max-w-64 truncate text-xs text-slate-400">{job.message ?? "—"}</Td>
-                  <Td className="whitespace-nowrap text-xs text-slate-400">{timeAgo(job.startedAt)}</Td>
+                  <Td className="max-w-64 truncate text-xs text-muted">{job.message ?? "—"}</Td>
+                  <Td className="whitespace-nowrap text-xs text-muted">{timeAgo(job.startedAt)}</Td>
                 </tr>
               ))}
             </tbody>

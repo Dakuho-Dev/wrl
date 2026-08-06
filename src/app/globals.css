@@ -1,81 +1,121 @@
 @import "tailwindcss";
 
+/* ------------------------------------------------------------------
+   DKH design system — warm paper, hard edges, serif display type.
+   Deliberately not a dark gradient SaaS console.
+------------------------------------------------------------------ */
+
 @theme {
-  --color-ink-950: #06080f;
-  --color-ink-900: #0a0e18;
-  --color-ink-850: #0e1424;
-  --color-ink-800: #131b2e;
-  --color-ink-700: #1c2740;
-  --color-ink-600: #2a3855;
-  --color-brand-50: #eef7ff;
-  --color-brand-100: #d9edff;
-  --color-brand-200: #bce0ff;
-  --color-brand-300: #8ccdff;
-  --color-brand-400: #54b0ff;
-  --color-brand-500: #2a90ff;
-  --color-brand-600: #1470f0;
-  --color-brand-700: #0f59d4;
-  --color-brand-800: #134aab;
-  --color-brand-900: #154186;
+  /* Surfaces */
+  --color-paper: #f7f5ef;
+  --color-paper-2: #efece2;
+  --color-paper-3: #e4e0d2;
+  --color-surface: #ffffff;
+
+  /* Structure */
+  --color-line: #d9d4c4;
+  --color-line-strong: #1a1a14;
+
+  /* Type */
+  --color-ink: #1a1a14;
+  --color-ink-2: #3d3b31;
+  --color-muted: #6d685a;
+  --color-muted-2: #928d7c;
+
+  /* Accent — forest green, with a soft wash and a darker press state */
+  --color-accent: #1b5e3f;
+  --color-accent-2: #14472f;
+  --color-accent-soft: #e2eee7;
+  --color-accent-ink: #10523a;
+
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, ui-serif, serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
 }
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html,
 body {
-  background-color: var(--color-ink-950);
-  color: #e6ecf7;
+  background-color: var(--color-paper);
+  color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
 * {
-  border-color: color-mix(in oklab, var(--color-ink-600) 60%, transparent);
+  border-color: var(--color-line);
+}
+
+/* Serif display type on every heading — the single loudest signal that this
+   is not a stock dashboard template. */
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+  font-weight: 600;
 }
 
 ::selection {
-  background: var(--color-brand-600);
-  color: white;
+  background: var(--color-accent);
+  color: #fff;
 }
 
-/* Thin scrollbars inside dashboard panes */
+/* Small caps mono label used for every section eyebrow and table header. */
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* Hard offset shadow instead of soft blur — the house style for anything
+   that needs to sit "above" the page. */
+@utility shadow-hard {
+  box-shadow: 3px 3px 0 0 var(--color-line-strong);
+}
+
+@utility shadow-hard-sm {
+  box-shadow: 2px 2px 0 0 var(--color-line-strong);
+}
+
+@utility shadow-hard-accent {
+  box-shadow: 3px 3px 0 0 var(--color-accent);
+}
+
 .scroll-thin::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 .scroll-thin::-webkit-scrollbar-thumb {
-  background: var(--color-ink-600);
-  border-radius: 999px;
+  background: var(--color-paper-3);
+  border: 2px solid var(--color-paper);
 }
 .scroll-thin::-webkit-scrollbar-track {
   background: transparent;
 }
 
-/* Reusable primitives ------------------------------------------------- */
-@utility card {
-  border-radius: 1rem;
-  border-width: 1px;
-  border-color: color-mix(in oklab, var(--color-ink-600) 55%, transparent);
-  background-color: color-mix(in oklab, var(--color-ink-850) 85%, transparent);
+/* Ruled paper backdrop — horizontal rules only, like a ledger. */
+@utility surface-rule {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 31px,
+    rgba(26, 26, 20, 0.05) 31px,
+    rgba(26, 26, 20, 0.05) 32px
+  );
 }
 
 @utility surface-grid {
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 44px 44px;
-}
-
-@keyframes float-slow {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-14px); }
-}
-
-.animate-float-slow {
-  animation: float-slow 7s ease-in-out infinite;
+    linear-gradient(to right, rgba(26, 26, 20, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(26, 26, 20, 0.045) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
 
 @keyframes marquee {
@@ -85,4 +125,10 @@ body {
 
 .animate-marquee {
   animation: marquee 28s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
 }

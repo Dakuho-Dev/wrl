@@ -29,7 +29,7 @@ const SECTIONS = [
     eyebrow: "Data synchronization",
     icon: RefreshCw,
     title: "One order queue for every channel",
-    body: "OwlFlow polls each connected marketplace on a schedule and imports orders, buyer details, personalization notes, shipping addresses and payment state. Listings and inventory counts come along for the ride, so you always know what is actually in stock.",
+    body: "DKH polls each connected marketplace on a schedule and imports orders, buyer details, personalization notes, shipping addresses and payment state. Listings and inventory counts come along for the ride, so you always know what is actually in stock.",
     bullets: [
       "Incremental sync — only new and changed records are fetched",
       "Automatic retry with exponential backoff on marketplace rate limits",
@@ -43,7 +43,7 @@ const SECTIONS = [
     eyebrow: "Workflow automation",
     icon: Workflow,
     title: "Rules that do the repetitive work",
-    body: "Describe what should happen when an order arrives and OwlFlow handles it forever. Triggers, conditions and actions are composable, so a rule can be as simple as tagging a VIP order or as involved as routing print files to a specific supplier.",
+    body: "Describe what should happen when an order arrives and DKH handles it forever. Triggers, conditions and actions are composable, so a rule can be as simple as tagging a VIP order or as involved as routing print files to a specific supplier.",
     bullets: [
       "Triggers: order created, order paid, order shipped, sync completed, schedule",
       "Conditions on total, SKU, destination country, channel, personalization",
@@ -83,7 +83,7 @@ const SECTIONS = [
     id: "api",
     eyebrow: "API integrations",
     icon: Cable,
-    title: "Plug OwlFlow into your stack",
+    title: "Plug DKH into your stack",
     body: "Everything the dashboard can do is available over a REST API secured with scoped keys. Signed webhooks push events to your systems the moment they happen, so your ERP or production software stays in step.",
     bullets: [
       "REST endpoints for orders, shipments, products and shops",
@@ -122,16 +122,15 @@ const EXTRAS = [
 export default function FeaturesPage() {
   return (
     <>
-      <section className="relative overflow-hidden border-b border-ink-800/80">
-        <div className="surface-grid pointer-events-none absolute inset-0 opacity-30" />
-        <div className="pointer-events-none absolute -top-32 left-1/2 h-[420px] w-[720px] -translate-x-1/2 rounded-full bg-brand-700/20 blur-[120px]" />
+      <section className="relative overflow-hidden border-b border-line">
+        <div className="surface-rule pointer-events-none absolute inset-0 opacity-70" />
         <div className="relative mx-auto max-w-4xl px-4 py-20 text-center sm:px-6 lg:py-24">
-          <p className="text-sm font-semibold uppercase tracking-widest text-brand-400">Features</p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+          <p className="text-sm font-semibold uppercase tracking-widest text-accent">Features</p>
+          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
             The whole order lifecycle, handled
           </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-400">
-            OwlFlow replaces the manual steps between &ldquo;buyer paid&rdquo; and &ldquo;parcel
+          <p className="mx-auto mt-5 max-w-2xl text-lg text-muted">
+            DKH replaces the manual steps between &ldquo;buyer paid&rdquo; and &ldquo;parcel
             delivered&rdquo; with a single automated pipeline.
           </p>
         </div>
@@ -141,29 +140,29 @@ export default function FeaturesPage() {
         <section
           key={section.id}
           id={section.id}
-          className={`scroll-mt-20 border-b border-ink-800/80 py-20 ${index % 2 === 1 ? "bg-ink-900/40" : ""}`}
+          className={`scroll-mt-20 border-b border-line py-20 ${index % 2 === 1 ? "bg-paper-2" : ""}`}
         >
           <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:items-start lg:px-8">
             <div className={index % 2 === 1 ? "lg:order-2" : ""}>
-              <span className="grid h-12 w-12 place-items-center rounded-xl bg-brand-500/10 text-brand-300 ring-1 ring-brand-500/20">
+              <span className="grid h-12 w-12 place-items-center rounded-none bg-accent-soft text-accent ring-1 ring-accent">
                 <section.icon className="h-6 w-6" />
               </span>
-              <p className="mt-5 text-sm font-semibold uppercase tracking-widest text-brand-400">
+              <p className="mt-5 text-sm font-semibold uppercase tracking-widest text-accent">
                 {section.eyebrow}
               </p>
-              <h2 className="mt-2 text-3xl font-semibold tracking-tight text-white">
+              <h2 className="mt-2 text-3xl font-semibold tracking-tight text-ink">
                 {section.title}
               </h2>
-              <p className="mt-4 leading-relaxed text-slate-400">{section.body}</p>
+              <p className="mt-4 leading-relaxed text-muted">{section.body}</p>
             </div>
 
             <ul className={`space-y-3 ${index % 2 === 1 ? "lg:order-1" : ""}`}>
               {section.bullets.map((bullet) => (
                 <li
                   key={bullet}
-                  className="flex items-start gap-3 rounded-xl border border-ink-600/40 bg-ink-850/50 px-4 py-3.5 text-sm text-slate-300"
+                  className="flex items-start gap-3 rounded-none border border-line bg-surface px-4 py-3.5 text-sm text-ink-2"
                 >
-                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-400" />
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
                   {bullet}
                 </li>
               ))}
@@ -174,15 +173,15 @@ export default function FeaturesPage() {
 
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-semibold tracking-tight text-white">
+          <h2 className="text-2xl font-semibold tracking-tight text-ink">
             And the details that matter
           </h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {EXTRAS.map((extra) => (
-              <div key={extra.title} className="rounded-2xl border border-ink-600/50 bg-ink-850/50 p-5">
-                <extra.icon className="h-5 w-5 text-brand-400" />
-                <h3 className="mt-3 text-sm font-semibold text-white">{extra.title}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-slate-400">{extra.body}</p>
+              <div key={extra.title} className="rounded-none border border-line bg-surface p-5">
+                <extra.icon className="h-5 w-5 text-accent" />
+                <h3 className="mt-3 text-sm font-semibold text-ink">{extra.title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-muted">{extra.body}</p>
               </div>
             ))}
           </div>

@@ -1,4 +1,4 @@
-// OwlFlow – Order management & fulfillment automation platform
+// DKH – Order management & fulfillment automation platform
 // Database schema. PostgreSQL — works with Neon, Vercel Postgres, Supabase or a
 // local container (see docker-compose.yml).
 

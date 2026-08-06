@@ -44,7 +44,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
     <>
       <Link
         href="/dashboard/orders"
-        className="mb-4 inline-flex items-center gap-2 text-sm text-slate-400 transition hover:text-white"
+        className="mb-4 inline-flex items-center gap-2 text-sm text-muted transition hover:text-ink"
       >
         <ArrowLeft className="h-4 w-4" /> Back to orders
       </Link>
@@ -66,31 +66,31 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
               title="Items"
               description={`${order.items.length} line item${order.items.length === 1 ? "" : "s"}`}
             />
-            <div className="divide-y divide-ink-700/40">
+            <div className="divide-y divide-line">
               {order.items.map((item) => (
                 <div key={item.id} className="flex gap-4 px-5 py-4">
-                  <div className="grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-ink-800 text-slate-500">
+                  <div className="grid h-14 w-14 shrink-0 place-items-center rounded-none bg-paper-2 text-muted-2">
                     <Package className="h-5 w-5" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-white">{item.title}</p>
-                    <p className="mt-0.5 text-xs text-slate-500">
+                    <p className="text-sm font-medium text-ink">{item.title}</p>
+                    <p className="mt-0.5 text-xs text-muted-2">
                       SKU {item.sku ?? "—"} · Qty {item.quantity}
                     </p>
                     {item.variation ? (
-                      <p className="mt-1 text-xs text-slate-400">{item.variation}</p>
+                      <p className="mt-1 text-xs text-muted">{item.variation}</p>
                     ) : null}
                     {item.personalization ? (
-                      <p className="mt-1.5 rounded-lg border border-amber-500/25 bg-amber-500/10 px-2.5 py-1.5 text-xs text-amber-200">
+                      <p className="mt-1.5 rounded-none border border-amber-500/25 bg-amber-500/10 px-2.5 py-1.5 text-xs text-amber-700">
                         Personalization: {item.personalization}
                       </p>
                     ) : null}
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-medium text-white">
+                    <p className="text-sm font-medium text-ink">
                       {formatMoney(item.price * item.quantity, order.currency)}
                     </p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-muted-2">
                       {formatMoney(item.price, order.currency)} each
                     </p>
                   </div>
@@ -98,19 +98,19 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
               ))}
             </div>
 
-            <div className="space-y-1.5 border-t border-ink-600/40 px-5 py-4 text-sm">
+            <div className="space-y-1.5 border-t border-line px-5 py-4 text-sm">
               {[
                 ["Subtotal", order.subtotal],
                 ["Shipping", order.shippingCost],
                 ["Tax", order.taxAmount],
                 ...(order.discount ? ([["Discount", -order.discount]] as Array<[string, number]>) : []),
               ].map(([label, value]) => (
-                <div key={label as string} className="flex justify-between text-slate-400">
+                <div key={label as string} className="flex justify-between text-muted">
                   <span>{label as string}</span>
                   <span>{formatMoney(value as number, order.currency)}</span>
                 </div>
               ))}
-              <div className="flex justify-between border-t border-ink-700/50 pt-2 text-base font-semibold text-white">
+              <div className="flex justify-between border-t border-line pt-2 text-base font-semibold text-ink">
                 <span>Total</span>
                 <span>{formatMoney(order.total, order.currency)}</span>
               </div>
@@ -121,28 +121,28 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
           <Card>
             <CardHeader title="Shipments" description="Labels and tracking pushed to the marketplace" />
             {order.shipments.length ? (
-              <div className="divide-y divide-ink-700/40">
+              <div className="divide-y divide-line">
                 {order.shipments.map((shipment) => (
                   <div key={shipment.id} className="flex flex-wrap items-center gap-4 px-5 py-4">
-                    <span className="grid h-10 w-10 place-items-center rounded-xl bg-violet-500/10 text-violet-300">
+                    <span className="grid h-10 w-10 place-items-center rounded-none bg-violet-500/10 text-violet-700">
                       <Truck className="h-5 w-5" />
                     </span>
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-white">
+                      <p className="text-sm font-medium text-ink">
                         {shipment.carrier} · {shipment.service ?? "Standard"}
                       </p>
                       <a
                         href={shipment.trackingUrl ?? "#"}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1 text-xs text-brand-400 hover:text-brand-300"
+                        className="inline-flex items-center gap-1 text-xs text-accent hover:text-accent"
                       >
                         {shipment.trackingNumber} <ExternalLink className="h-3 w-3" />
                       </a>
                     </div>
                     <div className="text-right">
                       <StatusBadge status={shipment.status} />
-                      <p className="mt-1 text-xs text-slate-500">
+                      <p className="mt-1 text-xs text-muted-2">
                         {shipment.pushedToShop ? "Tracking sent to marketplace" : "Not yet uploaded"}
                       </p>
                     </div>
@@ -186,12 +186,12 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
               {order.events.map((event, index) => (
                 <li key={event.id} className="relative flex gap-4 pb-5 last:pb-0">
                   {index < order.events.length - 1 ? (
-                    <span className="absolute left-[7px] top-4 h-full w-px bg-ink-700" />
+                    <span className="absolute left-[7px] top-4 h-full w-px bg-paper-3" />
                   ) : null}
-                  <span className="relative mt-1 h-3.5 w-3.5 shrink-0 rounded-full border-2 border-brand-500 bg-ink-950" />
+                  <span className="relative mt-1 h-3.5 w-3.5 shrink-0 rounded-full border-2 border-accent bg-paper" />
                   <div className="min-w-0">
-                    <p className="text-sm text-slate-200">{event.message}</p>
-                    <p className="mt-0.5 text-xs text-slate-500">
+                    <p className="text-sm text-ink-2">{event.message}</p>
+                    <p className="mt-0.5 text-xs text-muted-2">
                       {formatDateTime(event.createdAt)} · {event.actor}
                     </p>
                   </div>
@@ -224,15 +224,15 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
             <CardHeader title="Buyer" />
             <div className="space-y-3 p-5 text-sm">
               <div className="flex items-start gap-3">
-                <User className="mt-0.5 h-4 w-4 shrink-0 text-slate-500" />
+                <User className="mt-0.5 h-4 w-4 shrink-0 text-muted-2" />
                 <div>
-                  <p className="text-white">{order.buyerName}</p>
-                  <p className="text-xs text-slate-500">{order.buyerEmail ?? "Email not shared"}</p>
+                  <p className="text-ink">{order.buyerName}</p>
+                  <p className="text-xs text-muted-2">{order.buyerEmail ?? "Email not shared"}</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-slate-500" />
-                <address className="not-italic text-xs leading-relaxed text-slate-400">
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-muted-2" />
+                <address className="not-italic text-xs leading-relaxed text-muted">
                   {order.shipName}
                   <br />
                   {order.shipLine1}
@@ -249,7 +249,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
                 </address>
               </div>
               {order.buyerMessage ? (
-                <div className="rounded-lg border border-ink-600/50 bg-ink-900/60 p-3 text-xs italic text-slate-300">
+                <div className="rounded-none border border-line bg-paper-2 p-3 text-xs italic text-ink-2">
                   “{order.buyerMessage}”
                 </div>
               ) : null}
@@ -261,8 +261,8 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
             <div className="flex items-center gap-3 p-5">
               <PlatformIcon platform={order.shop.platform} className="h-9 w-9" />
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-white">{order.shop.name}</p>
-                <p className="text-xs text-slate-500">
+                <p className="truncate text-sm font-medium text-ink">{order.shop.name}</p>
+                <p className="text-xs text-muted-2">
                   Marketplace id {order.externalId ?? "—"}
                 </p>
               </div>
@@ -295,18 +295,18 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
             <CardHeader title="Payment" />
             <div className="space-y-2 p-5 text-sm">
               <div className="flex items-center justify-between">
-                <span className="flex items-center gap-2 text-slate-400">
+                <span className="flex items-center gap-2 text-muted">
                   <Receipt className="h-4 w-4" /> Status
                 </span>
                 <Badge tone={order.paymentStatus}>{order.paymentStatus.toLowerCase()}</Badge>
               </div>
-              <div className="flex items-center justify-between text-slate-400">
+              <div className="flex items-center justify-between text-muted">
                 <span>Paid at</span>
-                <span className="text-slate-200">{formatDateTime(order.paidAt)}</span>
+                <span className="text-ink-2">{formatDateTime(order.paidAt)}</span>
               </div>
-              <div className="flex items-center justify-between text-slate-400">
+              <div className="flex items-center justify-between text-muted">
                 <span>Fulfillment</span>
-                <span className="text-slate-200">{order.fulfillment.toLowerCase()}</span>
+                <span className="text-ink-2">{order.fulfillment.toLowerCase()}</span>
               </div>
             </div>
           </Card>

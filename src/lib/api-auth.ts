@@ -8,13 +8,13 @@ import { parseJson } from "@/lib/utils";
 export type ApiActor = { userId: string; keyId: string; scopes: string[] };
 
 /**
- * Authenticates a REST API request using `Authorization: Bearer owl_live_…`.
+ * Authenticates a REST API request using `Authorization: Bearer dkh_live_…`.
  * Keys are stored hashed, so we compare against every active key of the matching prefix.
  */
 export async function authenticateApiRequest(request: Request): Promise<ApiActor | null> {
   const header = request.headers.get("authorization") ?? "";
   const token = header.replace(/^Bearer\s+/i, "").trim();
-  if (!token.startsWith("owl_")) return null;
+  if (!token.startsWith("dkh_")) return null;
 
   const candidates = await prisma.apiKey.findMany({
     where: { prefix: token.slice(0, 16), revokedAt: null },

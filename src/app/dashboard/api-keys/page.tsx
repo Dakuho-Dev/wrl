@@ -31,7 +31,7 @@ async function createApiKey(formData: FormData) {
   const name = String(formData.get("name") ?? "").trim() || "Untitled key";
   const scope = String(formData.get("scope") ?? "read");
 
-  const secret = `owl_live_${crypto.randomBytes(18).toString("hex")}`;
+  const secret = `dkh_live_${crypto.randomBytes(18).toString("hex")}`;
 
   await prisma.apiKey.create({
     data: {
@@ -112,7 +112,7 @@ export default async function ApiKeysPage() {
     <>
       <PageHeader
         title="API & webhooks"
-        description="Programmatic access to your OwlFlow data. See the docs for endpoints and payloads."
+        description="Programmatic access to your DKH data. See the docs for endpoints and payloads."
       />
 
       <Alert tone="info" title="Keep your keys secret">
@@ -122,7 +122,7 @@ export default async function ApiKeysPage() {
 
       <div className="mt-4 grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardHeader title="API keys" description="Scoped credentials for the OwlFlow REST API" />
+          <CardHeader title="API keys" description="Scoped credentials for the DKH REST API" />
           {keys.length ? (
             <Table>
               <thead>
@@ -138,9 +138,9 @@ export default async function ApiKeysPage() {
               <tbody>
                 {keys.map((key) => (
                   <tr key={key.id} className={key.revokedAt ? "opacity-50" : ""}>
-                    <Td className="font-medium text-white">{key.name}</Td>
+                    <Td className="font-medium text-ink">{key.name}</Td>
                     <Td>
-                      <code className="rounded bg-ink-900 px-2 py-1 font-mono text-xs text-brand-300">
+                      <code className="rounded bg-paper-2 px-2 py-1 font-mono text-xs text-accent">
                         {key.prefix}…
                       </code>
                     </Td>
@@ -151,8 +151,8 @@ export default async function ApiKeysPage() {
                         ))}
                       </div>
                     </Td>
-                    <Td className="text-xs text-slate-400">{timeAgo(key.lastUsedAt)}</Td>
-                    <Td className="text-xs text-slate-400">{formatDate(key.createdAt)}</Td>
+                    <Td className="text-xs text-muted">{timeAgo(key.lastUsedAt)}</Td>
+                    <Td className="text-xs text-muted">{formatDate(key.createdAt)}</Td>
                     <Td className="text-right">
                       {key.revokedAt ? (
                         <Badge tone="CANCELLED">revoked</Badge>
@@ -162,7 +162,7 @@ export default async function ApiKeysPage() {
                           <Button
                             type="submit"
                             variant="ghost"
-                            className="px-2.5 py-1.5 text-xs text-rose-300"
+                            className="px-2.5 py-1.5 text-xs text-rose-700"
                           >
                             <Trash2 className="h-3.5 w-3.5" /> Revoke
                           </Button>
@@ -201,26 +201,26 @@ export default async function ApiKeysPage() {
         <Card className="lg:col-span-2">
           <CardHeader title="Webhook endpoints" description="HMAC-signed event delivery" />
           {webhooks.length ? (
-            <div className="divide-y divide-ink-700/40">
+            <div className="divide-y divide-line">
               {webhooks.map((hook) => (
                 <div key={hook.id} className="flex flex-wrap items-start gap-4 px-5 py-4">
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-ink-800 text-brand-300">
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-none bg-paper-2 text-accent">
                     <Webhook className="h-4 w-4" />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-mono text-sm text-white">{hook.url}</p>
+                    <p className="truncate font-mono text-sm text-ink">{hook.url}</p>
                     <div className="mt-1.5 flex flex-wrap gap-1">
                       {parseJson<string[]>(hook.events, []).map((event) => (
                         <span
                           key={event}
-                          className="rounded-md bg-ink-800 px-1.5 py-0.5 text-[11px] text-slate-400"
+                          className="rounded-none bg-paper-2 px-1.5 py-0.5 text-[11px] text-muted"
                         >
                           {event}
                         </span>
                       ))}
                     </div>
-                    <p className="mt-1.5 text-xs text-slate-500">
-                      Secret <code className="text-slate-400">{hook.secret.slice(0, 14)}…</code> ·{" "}
+                    <p className="mt-1.5 text-xs text-muted-2">
+                      Secret <code className="text-muted">{hook.secret.slice(0, 14)}…</code> ·{" "}
                       {hook.failCount} failures
                     </p>
                   </div>
@@ -230,7 +230,7 @@ export default async function ApiKeysPage() {
                     </Badge>
                     <form action={deleteWebhook}>
                       <input type="hidden" name="webhookId" value={hook.id} />
-                      <Button type="submit" variant="ghost" className="px-2 py-1.5 text-xs text-rose-300">
+                      <Button type="submit" variant="ghost" className="px-2 py-1.5 text-xs text-rose-700">
                         <Trash2 className="h-3.5 w-3.5" />
                       </Button>
                     </form>
@@ -247,21 +247,21 @@ export default async function ApiKeysPage() {
           <CardHeader title="Add endpoint" />
           <form action={createWebhook} className="space-y-3.5 p-5">
             <Field label="Endpoint URL">
-              <Input name="url" type="url" required placeholder="https://your-app.com/hooks/owlflow" />
+              <Input name="url" type="url" required placeholder="https://your-app.com/hooks/dkh" />
             </Field>
             <div>
-              <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-slate-400">
+              <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-muted">
                 Events
               </p>
               <div className="space-y-1.5">
                 {EVENTS.map((event) => (
-                  <label key={event} className="flex items-center gap-2 text-sm text-slate-300">
+                  <label key={event} className="flex items-center gap-2 text-sm text-ink-2">
                     <input
                       type="checkbox"
                       name="events"
                       value={event}
                       defaultChecked={event === "order.created"}
-                      className="h-3.5 w-3.5 rounded border-ink-600 bg-ink-900"
+                      className="h-3.5 w-3.5 rounded border-line bg-paper-2"
                     />
                     <code className="text-xs">{event}</code>
                   </label>

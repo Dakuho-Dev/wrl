@@ -16,9 +16,9 @@ Tài liệu này ghi lại chính xác những gì Etsy yêu cầu và nội dun
 | Security Policy | ✅ `/security` |
 | Cách người dùng xóa dữ liệu | ✅ `/privacy#data-deletion` + Dashboard → Settings |
 | Ghi chú thương hiệu Etsy | ✅ hiển thị ở footer mọi trang |
-| Callback URL (OAuth redirect) | ✅ `https://owlflow.vercel.app/api/integrations/etsy/callback` |
+| Callback URL (OAuth redirect) | ✅ `https://dkh.vercel.app/api/integrations/etsy/callback` |
 
-> Website đã live tại **https://owlflow.vercel.app** — dùng đúng URL này khi điền đơn.
+> Website đã live tại **https://dkh.vercel.app** — dùng đúng URL này khi điền đơn.
 
 ---
 
@@ -28,14 +28,14 @@ Vào https://www.etsy.com/developers/register và điền:
 
 **Application name**
 ```
-OwlFlow
+DKH
 ```
 
 **Application description** (mô tả app làm gì — đây là phần Etsy đọc kỹ nhất)
 ```
-OwlFlow is an order management and fulfillment automation tool for Etsy sellers who also
+DKH is an order management and fulfillment automation tool for Etsy sellers who also
 sell on other channels. After a seller authorizes their shop through Etsy's OAuth screen,
-OwlFlow imports their receipts and active listings into a single operations dashboard,
+DKH imports their receipts and active listings into a single operations dashboard,
 lets them track each order from payment through production to delivery, and uploads the
 tracking number back to Etsy when a shipping label is created — so the buyer is notified
 through Etsy automatically.
@@ -53,19 +53,19 @@ for advertising, and never shared with other sellers. Sellers can disconnect a s
 time, which deletes the stored tokens immediately, and can delete their entire account and
 all imported data from their dashboard.
 
-Website: https://owlflow.vercel.app
-Privacy Policy: https://owlflow.vercel.app/privacy
-Terms: https://owlflow.vercel.app/terms
+Website: https://dkh.vercel.app
+Privacy Policy: https://dkh.vercel.app/privacy
+Terms: https://dkh.vercel.app/terms
 ```
 
 **Website URL**
 ```
-https://owlflow.vercel.app
+https://dkh.vercel.app
 ```
 
 **Callback URL / Redirect URI** — phải khớp tuyệt đối, kể cả dấu `/`
 ```
-https://owlflow.vercel.app/api/integrations/etsy/callback
+https://dkh.vercel.app/api/integrations/etsy/callback
 ```
 
 **Do you plan to charge for this application?** → Yes (có trang `/pricing`) hoặc No, tùy bạn.

@@ -46,19 +46,19 @@ export function RegisterForm() {
         />
       </Field>
 
-      <label className="flex items-start gap-2.5 text-xs leading-relaxed text-slate-400">
+      <label className="flex items-start gap-2.5 text-xs leading-relaxed text-muted">
         <input
           type="checkbox"
           name="terms"
-          className="mt-0.5 h-3.5 w-3.5 shrink-0 rounded border-ink-600 bg-ink-900"
+          className="mt-0.5 h-3.5 w-3.5 shrink-0 rounded border-line bg-paper-2"
         />
         <span>
           I agree to the{" "}
-          <Link href="/terms" className="text-brand-400 hover:text-brand-300">
+          <Link href="/terms" className="text-accent hover:text-accent">
             Terms &amp; Conditions
           </Link>{" "}
           and{" "}
-          <Link href="/privacy" className="text-brand-400 hover:text-brand-300">
+          <Link href="/privacy" className="text-accent hover:text-accent">
             Privacy Policy
           </Link>
           .

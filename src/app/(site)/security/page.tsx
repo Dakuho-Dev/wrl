@@ -5,7 +5,7 @@ import { LegalPage, LegalSection } from "@/components/site/legal";
 export const metadata: Metadata = {
   title: "Security Policy",
   description:
-    "How OwlFlow protects seller accounts, marketplace API credentials and buyer data, and how to report a vulnerability.",
+    "How DKH protects seller accounts, marketplace API credentials and buyer data, and how to report a vulnerability.",
 };
 
 export default function SecurityPage() {
@@ -13,7 +13,7 @@ export default function SecurityPage() {
     <LegalPage
       title="Security Policy"
       updated="5 August 2026"
-      intro="OwlFlow holds marketplace access tokens and buyer order data on behalf of sellers. This page describes the controls we apply and how to report a security issue."
+      intro="DKH holds marketplace access tokens and buyer order data on behalf of sellers. This page describes the controls we apply and how to report a security issue."
     >
       <LegalSection heading="1. Authentication and access">
         <ul className="space-y-1.5">
@@ -73,7 +73,7 @@ export default function SecurityPage() {
       <LegalSection heading="7. Reporting a vulnerability">
         <p>
           Please report suspected vulnerabilities to{" "}
-          <a href="mailto:security@owlflow.io">security@owlflow.io</a>. Include steps to reproduce
+          <a href="mailto:security@dkh.io">security@dkh.io</a>. Include steps to reproduce
           and any proof-of-concept. We acknowledge reports within two business days and aim to remediate
           critical issues within seven days.
         </p>

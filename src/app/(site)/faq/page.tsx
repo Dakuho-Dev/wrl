@@ -12,7 +12,7 @@ const GROUPS = [
     items: [
       {
         q: "What do I need to connect my first shop?",
-        a: "Just an account on the marketplace you sell on. Create a free OwlFlow account, go to Dashboard → Shops → Connect shop, choose your channel and approve the permissions on the marketplace's own authorization screen.",
+        a: "Just an account on the marketplace you sell on. Create a free DKH account, go to Dashboard → Shops → Connect shop, choose your channel and approve the permissions on the marketplace's own authorization screen.",
       },
       {
         q: "How long does the first import take?",
@@ -28,15 +28,15 @@ const GROUPS = [
     title: "Orders & fulfillment",
     items: [
       {
-        q: "Does OwlFlow change anything in my shop automatically?",
-        a: "Only what you ask it to. By default OwlFlow reads data. Write actions — uploading tracking numbers and marking an order shipped — happen when you create a shipment or when you explicitly enable an automation that does it.",
+        q: "Does DKH change anything in my shop automatically?",
+        a: "Only what you ask it to. By default DKH reads data. Write actions — uploading tracking numbers and marking an order shipped — happen when you create a shipment or when you explicitly enable an automation that does it.",
       },
       {
         q: "What happens if a buyer cancels or refunds?",
         a: "The next sync detects the change on the marketplace and updates the order status to Cancelled or Refunded, and any automations you have that watch for those statuses will run.",
       },
       {
-        q: "Can I edit an order in OwlFlow?",
+        q: "Can I edit an order in DKH?",
         a: "You can change internal fields — status, priority, tags and notes — and add shipments. Buyer-facing details such as the shipping address stay under the marketplace's control.",
       },
       {
@@ -58,7 +58,7 @@ const GROUPS = [
       },
       {
         q: "How do I delete my data?",
-        a: "Disconnecting a shop deletes its tokens immediately. Deleting your account from Dashboard → Settings removes all associated shops, orders and shipments within 30 days. You can also email support@owlflow.io.",
+        a: "Disconnecting a shop deletes its tokens immediately. Deleting your account from Dashboard → Settings removes all associated shops, orders and shipments within 30 days. You can also email support@dkh.io.",
       },
       {
         q: "Where is data stored?",
@@ -70,8 +70,8 @@ const GROUPS = [
     title: "Marketplace APIs",
     items: [
       {
-        q: "Is OwlFlow affiliated with Etsy?",
-        a: "No. The term \"Etsy\" is a trademark of Etsy, Inc. OwlFlow uses the Etsy API but is not endorsed or certified by Etsy, Inc.",
+        q: "Is DKH affiliated with Etsy?",
+        a: "No. The term \"Etsy\" is a trademark of Etsy, Inc. DKH uses the Etsy API but is not endorsed or certified by Etsy, Inc.",
       },
       {
         q: "Do you scrape marketplaces?",
@@ -79,7 +79,7 @@ const GROUPS = [
       },
       {
         q: "What happens if I revoke access?",
-        a: "Syncing stops immediately and the shop is marked as disconnected. Already-imported orders stay in your OwlFlow account until you delete them.",
+        a: "Syncing stops immediately and the shop is marked as disconnected. Already-imported orders stay in your DKH account until you delete them.",
       },
       {
         q: "How do you handle rate limits?",
@@ -92,15 +92,15 @@ const GROUPS = [
 export default function FaqPage() {
   return (
     <>
-      <section className="border-b border-ink-800/80">
+      <section className="border-b border-line">
         <div className="mx-auto max-w-4xl px-4 py-20 text-center sm:px-6">
-          <p className="text-sm font-semibold uppercase tracking-widest text-brand-400">FAQ</p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+          <p className="text-sm font-semibold uppercase tracking-widest text-accent">FAQ</p>
+          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
             Frequently asked questions
           </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-400">
+          <p className="mx-auto mt-5 max-w-2xl text-lg text-muted">
             Can&apos;t find what you need?{" "}
-            <Link href="/contact" className="text-brand-400 hover:text-brand-300">
+            <Link href="/contact" className="text-accent hover:text-accent">
               Send us a message
             </Link>{" "}
             and we will get back within one business day.
@@ -112,15 +112,15 @@ export default function FaqPage() {
         <div className="mx-auto max-w-3xl space-y-12 px-4 sm:px-6">
           {GROUPS.map((group) => (
             <div key={group.title}>
-              <h2 className="text-lg font-semibold text-white">{group.title}</h2>
-              <div className="mt-4 divide-y divide-ink-700/50 overflow-hidden rounded-2xl border border-ink-600/50 bg-ink-850/50">
+              <h2 className="text-lg font-semibold text-ink">{group.title}</h2>
+              <div className="mt-4 divide-y divide-line overflow-hidden rounded-none border border-line bg-surface">
                 {group.items.map((item) => (
                   <details key={item.q} className="group px-5 py-4">
-                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-medium text-slate-100">
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-medium text-ink-2">
                       {item.q}
-                      <span className="text-slate-500 transition group-open:rotate-45">＋</span>
+                      <span className="text-muted-2 transition group-open:rotate-45">＋</span>
                     </summary>
-                    <p className="mt-3 text-sm leading-relaxed text-slate-400">{item.a}</p>
+                    <p className="mt-3 text-sm leading-relaxed text-muted">{item.a}</p>
                   </details>
                 ))}
               </div>
