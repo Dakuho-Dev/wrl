@@ -14,3 +14,7 @@ tsconfig.tsbuildinfo
 
 .vercel
 .env*
+
+# Etsy probe artefacts (contain live tokens and shop data)
+scripts/.etsy-token.json
+scripts/etsy-probe-output/
