@@ -26,8 +26,12 @@ export async function connectDemoShop(formData: FormData) {
   const platform = String(formData.get("platform") ?? "ETSY");
   const name = String(formData.get("name") ?? "").trim() || DEMO_NAMES[platform] || "Demo shop";
 
+  // A disconnected shop holds no tokens and syncs nothing, so it must not
+  // consume a slot — otherwise disconnecting leaves the seller with no way out.
   const planShopLimit = user.plan?.shopLimit ?? 1;
-  const current = await prisma.shop.count({ where: { userId: user.id } });
+  const current = await prisma.shop.count({
+    where: { userId: user.id, status: { not: "DISCONNECTED" } },
+  });
   if (current >= planShopLimit) {
     await logActivity({
       userId: user.id,

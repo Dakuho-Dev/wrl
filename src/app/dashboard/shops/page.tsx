@@ -53,13 +53,20 @@ export default async function ShopsPage({
   });
 
   const shopLimit = user.plan?.shopLimit ?? 1;
-  const atLimit = shops.length >= shopLimit;
+  // Disconnected shops keep their history but hold no tokens, so they don't
+  // count against the plan — matching the check in connectDemoShop.
+  const activeShops = shops.filter((shop) => shop.status !== "DISCONNECTED");
+  const atLimit = activeShops.length >= shopLimit;
 
   return (
     <>
       <PageHeader
         title="Shops"
-        description={`${shops.length} of ${shopLimit} shop${shopLimit === 1 ? "" : "s"} connected on the ${user.plan?.name ?? "Starter"} plan.`}
+        description={`${activeShops.length} of ${shopLimit} shop${shopLimit === 1 ? "" : "s"} connected on the ${user.plan?.name ?? "Starter"} plan.${
+          shops.length > activeShops.length
+            ? ` ${shops.length - activeShops.length} disconnected shop${shops.length - activeShops.length === 1 ? "" : "s"} kept for history — they don't use a slot.`
+            : ""
+        }`}
       >
         <ButtonLink href="/docs#connect-etsy" variant="outline">
           Connection guide
@@ -286,18 +293,39 @@ export default async function ShopsPage({
                   </Td>
                   <Td>
                     <div className="flex justify-end gap-2">
-                      <form action={syncShopNow}>
-                        <input type="hidden" name="shopId" value={shop.id} />
-                        <Button type="submit" variant="outline" className="px-2.5 py-1.5 text-xs">
-                          <RefreshCw className="h-3.5 w-3.5" /> Sync
-                        </Button>
-                      </form>
-                      <form action={disconnectShop}>
-                        <input type="hidden" name="shopId" value={shop.id} />
-                        <Button type="submit" variant="ghost" className="px-2.5 py-1.5 text-xs text-rose-700">
-                          <Trash2 className="h-3.5 w-3.5" /> Disconnect
-                        </Button>
-                      </form>
+                      {shop.status === "DISCONNECTED" ? (
+                        <form action={disconnectShop}>
+                          <input type="hidden" name="shopId" value={shop.id} />
+                          <input type="hidden" name="purge" value="on" />
+                          <Button
+                            type="submit"
+                            variant="danger"
+                            className="px-2.5 py-1.5 text-xs"
+                            title="Permanently delete this shop and everything imported from it"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" /> Delete permanently
+                          </Button>
+                        </form>
+                      ) : (
+                        <>
+                          <form action={syncShopNow}>
+                            <input type="hidden" name="shopId" value={shop.id} />
+                            <Button type="submit" variant="outline" className="px-2.5 py-1.5 text-xs">
+                              <RefreshCw className="h-3.5 w-3.5" /> Sync
+                            </Button>
+                          </form>
+                          <form action={disconnectShop}>
+                            <input type="hidden" name="shopId" value={shop.id} />
+                            <Button
+                              type="submit"
+                              variant="ghost"
+                              className="px-2.5 py-1.5 text-xs text-rose-700"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" /> Disconnect
+                            </Button>
+                          </form>
+                        </>
+                      )}
                     </div>
                   </Td>
                 </tr>
