@@ -269,6 +269,55 @@ export async function submitTracking(
   });
 }
 
+/**
+ * Raw passthrough for the admin API explorer: performs the request and returns
+ * the untouched status and body so you can see exactly what Etsy sends back.
+ *
+ * Only relative paths under the v3 application base are allowed — this must not
+ * become a way to make the server fetch arbitrary URLs.
+ */
+export async function rawEtsyRequest(path: string, accessToken?: string) {
+  if (!path.startsWith("/") || path.includes("://")) {
+    throw new Error("Path must be relative, e.g. /shops/12345/receipts?limit=5");
+  }
+
+  const { clientId } = etsyConfig();
+  if (!clientId) throw new Error("ETSY_CLIENT_ID is not configured on this deployment");
+
+  const url = `${ETSY_API_BASE}${path}`;
+  const started = Date.now();
+
+  const res = await fetch(url, {
+    headers: {
+      "x-api-key": clientId,
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+    },
+    cache: "no-store",
+  });
+
+  const text = await res.text();
+  let body: unknown = text;
+  try {
+    body = JSON.parse(text);
+  } catch {
+    // Non-JSON error pages come back as plain text.
+  }
+
+  return {
+    url,
+    status: res.status,
+    ok: res.ok,
+    durationMs: Date.now() - started,
+    rateLimit: {
+      limit: res.headers.get("x-limit-per-day"),
+      remaining: res.headers.get("x-remaining-today"),
+      perSecond: res.headers.get("x-limit-per-second"),
+      remainingPerSecond: res.headers.get("x-remaining-this-second"),
+    },
+    body,
+  };
+}
+
 /** Map an Etsy receipt status onto our internal order status. */
 export function mapReceiptStatus(receipt: EtsyReceipt) {
   if (receipt.status === "Canceled") return "CANCELLED";

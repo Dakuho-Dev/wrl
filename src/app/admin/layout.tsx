@@ -33,6 +33,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       items: [
         { href: "/admin/plans", label: "Plans & pricing", icon: "billing" },
         { href: "/admin/integrations", label: "Integrations", icon: "plug" },
+        { href: "/admin/api-explorer", label: "API explorer", icon: "config" },
         { href: "/admin/tickets", label: "Support tickets", icon: "support", badge: openTickets || undefined },
         { href: "/admin/logs", label: "Activity log", icon: "activity" },
         { href: "/admin/settings", label: "Settings", icon: "settings" },
