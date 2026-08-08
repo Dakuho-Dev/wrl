@@ -16,9 +16,11 @@ export default function TermsPage() {
     >
       <LegalSection heading="1. The service">
         <p>
-          DKH provides software that connects to third-party sales channels, imports order and
-          catalog data, automates fulfillment steps and submits shipping information back to those
-          channels. The service is provided on a subscription basis according to the plan you select.
+          DKH provides software that connects to your Etsy shop through the Etsy Open API, imports
+          your orders and active listings, gives you a queue for working through them, and submits
+          tracking information back to Etsy when you record a shipment. Etsy is the only
+          marketplace DKH integrates with. The service is provided on a subscription basis
+          according to the plan you select.
         </p>
       </LegalSection>
 
@@ -31,17 +33,16 @@ export default function TermsPage() {
         </ul>
       </LegalSection>
 
-      <LegalSection heading="3. Connected shops and third-party terms">
+      <LegalSection heading="3. Connected shops and Etsy's terms">
         <p>
-          You authorize DKH to access your marketplace accounts using the permissions you grant
-          through each marketplace&apos;s OAuth flow. You remain bound by the terms of those
-          marketplaces, including their API and seller policies. You confirm that you have the right
-          to grant this access and to process the buyer data that flows into DKH.
+          You authorise DKH to access your Etsy shop using the scopes you approve on Etsy&apos;s own
+          authorisation screen. You remain bound by Etsy&apos;s terms, including its API Terms of
+          Use and seller policies. You confirm that you have the right to grant this access and to
+          have us process the buyer data that flows into DKH.
         </p>
         <p>
-          Marketplaces may change, restrict or withdraw their APIs at any time. If that happens we
-          will adapt the integration where feasible, but we cannot guarantee continued availability
-          of any third-party channel.
+          Etsy may change, restrict or withdraw its API at any time. If that happens we will adapt
+          where feasible, but we cannot guarantee continued availability of the integration.
         </p>
       </LegalSection>
 
@@ -77,13 +78,37 @@ export default function TermsPage() {
 
       <LegalSection heading="7. Availability">
         <p>
-          We aim for 99.9% monthly availability excluding scheduled maintenance, which we announce in
-          advance where possible. Sync frequency depends on third-party API availability and rate
-          limits and is not guaranteed to be instantaneous.
+          We aim to keep the service continuously available and announce planned maintenance in
+          advance where possible, but we do not offer a contractual uptime guarantee. Sync frequency
+          depends on Etsy&apos;s API availability and rate limits, and is not instantaneous.
         </p>
       </LegalSection>
 
-      <LegalSection heading="8. Warranties and liability">
+      <LegalSection id="etsy-disclaimer" heading="8. Etsy disclaimer">
+        <p>
+          DKH integrates with Etsy through the Etsy Open API. Etsy is not the provider of this
+          service and has no responsibility for it:
+        </p>
+        <p className="border border-line bg-paper-2 p-4 font-mono text-xs uppercase leading-relaxed">
+          DISCLAIMER: THIS APPLICATION IS SOLELY PROVIDED BY DKH (THE &ldquo;APPLICATION
+          DEVELOPER&rdquo;). YOU ACKNOWLEDGE THAT ETSY, INC. AND ITS AFFILIATES ARE NOT THE
+          APPLICATION DEVELOPER, DO NOT PROVIDE THE APPLICATION SERVICE, AND MAKE NO WARRANTIES OF
+          ANY KIND WITH RESPECT TO THE APPLICATION OR DATA ACCESSED THROUGH IT.
+        </p>
+        <p>
+          The term &ldquo;Etsy&rdquo; is a trademark of Etsy, Inc. This Application uses
+          Etsy&rsquo;s API, but is not endorsed or certified by Etsy.
+        </p>
+        <p>
+          In handling data we read from Etsy on your behalf, we act as your service provider and
+          process it only to deliver the features described in these terms and in the{" "}
+          <a href="/privacy">Privacy Policy</a>. DKH does not contact your buyers. When you record
+          a shipment, the tracking number is submitted to Etsy and Etsy notifies the buyer through
+          its own channels.
+        </p>
+      </LegalSection>
+
+      <LegalSection heading="9. Warranties and liability">
         <p>
           The service is provided &ldquo;as is&rdquo;. To the maximum extent permitted by law we
           disclaim implied warranties of merchantability and fitness for a particular purpose. Our
@@ -93,7 +118,7 @@ export default function TermsPage() {
         </p>
       </LegalSection>
 
-      <LegalSection heading="9. Suspension and termination">
+      <LegalSection heading="10. Suspension and termination">
         <p>
           We may suspend or terminate an account that breaches these terms, creates a security risk,
           or has unpaid fees more than 14 days overdue. You may close your account at any time from
@@ -101,7 +126,7 @@ export default function TermsPage() {
         </p>
       </LegalSection>
 
-      <LegalSection heading="10. Changes to these terms">
+      <LegalSection heading="11. Changes to these terms">
         <p>
           We may update these terms; the current version is always on this page. Material changes are
           emailed to account owners at least 14 days before they take effect. Continuing to use the
@@ -109,7 +134,7 @@ export default function TermsPage() {
         </p>
       </LegalSection>
 
-      <LegalSection heading="11. Governing law">
+      <LegalSection heading="12. Governing law">
         <p>
           These terms are governed by the laws of Vietnam. Disputes will be resolved in the competent
           courts of Ho Chi Minh City, without prejudice to mandatory consumer protections in your
@@ -117,7 +142,7 @@ export default function TermsPage() {
         </p>
       </LegalSection>
 
-      <LegalSection heading="12. Contact">
+      <LegalSection heading="13. Contact">
         <p>
           Questions about these terms: <a href="mailto:legal@dkh.io">legal@dkh.io</a>.
         </p>

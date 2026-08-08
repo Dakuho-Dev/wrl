@@ -30,13 +30,17 @@ const TRIGGERS = [
   ["SCHEDULE", "On a schedule"],
 ];
 
+/**
+ * No buyer-facing messaging actions. Etsy's API Terms forbid using the API to
+ * send order, shipping or tracking information to Etsy members — uploading the
+ * tracking number to Etsy is the supported path, and Etsy notifies the buyer.
+ */
 const ACTIONS = [
   ["SET_STATUS", "Change order status"],
   ["SET_PRIORITY", "Set priority"],
   ["ADD_TAG", "Add a tag"],
   ["NOTIFY", "Notify a teammate"],
-  ["PUSH_TRACKING", "Push tracking to marketplace"],
-  ["EMAIL_BUYER", "Email the buyer"],
+  ["PUSH_TRACKING", "Upload tracking to Etsy"],
   ["WEBHOOK", "Call a webhook"],
 ];
 

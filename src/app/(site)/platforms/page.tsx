@@ -1,218 +1,197 @@
 import type { Metadata } from "next";
-import { ArrowRight, CheckCircle2, Lock } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Check, Lock, X } from "lucide-react";
 
 import { ButtonLink } from "@/components/ui";
 
 export const metadata: Metadata = {
-  title: "Platforms",
+  title: "What we access",
   description:
-    "DKH integrates with Etsy, Shopify, Amazon and TikTok Shop through their official APIs, plus carriers and custom endpoints.",
+    "The exact Etsy Open API scopes DKH requests, the endpoints it calls, and the things it deliberately does not do.",
 };
 
-const CHANNELS = [
+const SCOPES = [
   {
-    name: "Etsy",
-    status: "Live",
-    color: "from-orange-500 to-amber-500",
-    summary:
-      "DKH uses the Etsy Open API v3 with OAuth 2.0 (PKCE). After you authorize the connection we import your shop's receipts and active listings, keep order status in sync, and upload tracking numbers back to Etsy so buyers are notified automatically.",
-    scopes: [
-      ["shops_r", "Read your shop profile and settings"],
-      ["listings_r", "Read active listings, SKUs, prices and stock"],
-      ["transactions_r", "Read receipts (orders) and their line items"],
-      ["transactions_w", "Upload tracking numbers and mark orders shipped"],
-      ["email_r", "Read your account email so we can contact you about sync issues"],
-    ],
-    capabilities: [
-      "Import receipts with buyer name, address and personalization",
-      "Sync active listings, SKUs, stock levels and prices",
-      "Push tracking codes back to Etsy (submitTracking)",
-      "Detect cancellations and refunds",
-      "Respect Etsy's rate limits with automatic backoff",
-    ],
+    scope: "shops_r",
+    access: "Read",
+    what: "Your shop id, name, currency and URL",
+    why: "So the connection can be labelled in your dashboard and orders can be attributed to the right shop.",
   },
   {
-    name: "Shopify",
-    status: "Live",
-    color: "from-emerald-500 to-green-600",
-    summary:
-      "Connect a Shopify store through a private or custom app. Orders, products and fulfillments stay aligned with the rest of your channels.",
-    scopes: [
-      ["read_orders", "Import orders and line items"],
-      ["write_fulfillments", "Create fulfillments with tracking"],
-      ["read_products", "Sync product catalog and inventory"],
-    ],
-    capabilities: [
-      "Order and refund sync",
-      "Fulfillment creation with tracking URL",
-      "Product and variant catalog import",
-      "Multi-location inventory awareness",
-    ],
+    scope: "listings_r",
+    access: "Read",
+    what: "Active listings: title, SKU, price, quantity, image",
+    why: "So an order line can be matched to the product it refers to, and so you can see stock levels next to the queue.",
   },
   {
-    name: "Amazon",
-    status: "Beta",
-    color: "from-amber-400 to-yellow-500",
-    summary:
-      "Selling Partner API integration for Seller Central accounts. Order reports are pulled on a schedule and shipping confirmations are submitted back.",
-    scopes: [
-      ["Orders", "Retrieve order and buyer information"],
-      ["Merchant Fulfillment", "Submit shipping confirmations"],
-    ],
-    capabilities: [
-      "Scheduled order report ingestion",
-      "Shipping confirmation upload",
-      "FBM order routing",
-    ],
+    scope: "transactions_r",
+    access: "Read",
+    what: "Receipts: buyer name, shipping address, line items, personalisation, totals, payment and shipment state",
+    why: "This is the order data itself — without it there is nothing to manage.",
   },
   {
-    name: "TikTok Shop",
-    status: "Beta",
-    color: "from-pink-500 to-rose-500",
-    summary:
-      "TikTok Shop Partner API integration covering order sync and shipping label workflows for creator-driven storefronts.",
-    scopes: [
-      ["order.info", "Read orders and buyer details"],
-      ["logistics", "Create shipping labels and submit tracking"],
-    ],
-    capabilities: ["Order sync", "Label creation", "Tracking submission"],
+    scope: "transactions_w",
+    access: "Write",
+    what: "Submit a tracking number against a receipt",
+    why: "When you record a shipment, the carrier and tracking number are sent to Etsy so the order is marked shipped on Etsy.",
   },
+];
+
+const ENDPOINTS = [
+  ["GET", "/v3/application/users/{user_id}/shops", "Identify the shop you authorised"],
+  ["GET", "/v3/application/shops/{shop_id}/listings/active", "Import listings"],
+  ["GET", "/v3/application/shops/{shop_id}/receipts", "Import orders"],
+  ["POST", "/v3/application/shops/{shop_id}/receipts/{receipt_id}/tracking", "Upload tracking"],
+  ["POST", "/v3/public/oauth/token", "Exchange and refresh the access token"],
+];
+
+const NOT_DOING = [
+  "Message your buyers. DKH never emails, texts or otherwise contacts an Etsy member. Uploading the tracking number is the only buyer-visible effect, and Etsy sends that notification, not us.",
+  "Create or edit listings. We hold no write access to your catalogue — listings are read-only.",
+  "Change your shop settings, policies or prices.",
+  "Scrape Etsy. Every call is to the documented Open API v3 with a token you granted.",
+  "Sell, share or repurpose buyer data. It is used to fulfil your orders and nothing else.",
+  "Use Etsy data for analytics products, model training or licensing.",
 ];
 
 export default function PlatformsPage() {
   return (
     <>
-      <section className="relative overflow-hidden border-b border-line">
+      <section className="relative overflow-hidden border-b-2 border-line-strong">
         <div className="surface-rule pointer-events-none absolute inset-0 opacity-70" />
         <div className="relative mx-auto max-w-4xl px-4 py-20 text-center sm:px-6">
-          <p className="text-sm font-semibold uppercase tracking-widest text-accent">Platforms</p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-            Official integrations, least-privilege access
+          <p className="label">What we access</p>
+          <h1 className="mt-4 text-4xl text-ink sm:text-5xl">
+            Four scopes, listed in full
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-lg text-muted">
-            Every connection goes through the marketplace&apos;s own OAuth screen. You see the exact
-            permissions before you approve, and you can revoke them from DKH or from the
-            marketplace at any time.
+            DKH integrates with one marketplace: Etsy, through the Etsy Open API v3. You approve
+            the scopes on Etsy&rsquo;s own authorisation screen, and you can revoke them from Etsy
+            or from DKH at any time.
           </p>
         </div>
       </section>
 
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl space-y-6 px-4 sm:px-6 lg:px-8">
-          {CHANNELS.map((channel) => (
-            <div
-              key={channel.name}
-              className="overflow-hidden rounded-none border border-line bg-surface"
-            >
-              <div className="grid gap-8 p-6 lg:grid-cols-5 lg:p-8">
-                <div className="lg:col-span-2">
-                  <div className="flex items-center gap-3">
-                    <span
-                      className={`grid h-12 w-12 place-items-center rounded-none bg-gradient-to-br ${channel.color} text-lg font-bold text-ink`}
-                    >
-                      {channel.name[0]}
-                    </span>
-                    <div>
-                      <h2 className="text-xl font-semibold text-ink">{channel.name}</h2>
-                      <span
-                        className={`mt-0.5 inline-block rounded-full px-2 py-0.5 text-[11px] font-medium ${
-                          channel.status === "Live"
-                            ? "bg-emerald-500/10 text-emerald-700"
-                            : "bg-amber-500/10 text-amber-700"
-                        }`}
-                      >
-                        {channel.status}
-                      </span>
-                    </div>
-                  </div>
-                  <p className="mt-4 text-sm leading-relaxed text-muted">{channel.summary}</p>
+      <section className="border-b-2 border-line-strong py-16">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <h2 className="flex items-center gap-2 text-2xl text-ink">
+            <Lock className="h-5 w-5 text-accent" /> Requested scopes
+          </h2>
+
+          <div className="mt-6 divide-y-2 divide-line border-y-2 border-line-strong">
+            {SCOPES.map((entry) => (
+              <div key={entry.scope} className="grid gap-4 py-6 sm:grid-cols-3">
+                <div>
+                  <code className="font-mono text-sm text-accent">{entry.scope}</code>
+                  <span
+                    className={`ml-2 border px-2 py-0.5 font-mono text-[11px] uppercase tracking-wider ${
+                      entry.access === "Read"
+                        ? "border-emerald-800/25 bg-emerald-700/10 text-emerald-900"
+                        : "border-amber-800/25 bg-amber-600/12 text-amber-900"
+                    }`}
+                  >
+                    {entry.access}
+                  </span>
                 </div>
-
-                <div className="lg:col-span-3">
-                  <div className="grid gap-6 sm:grid-cols-2">
-                    <div>
-                      <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted">
-                        <Lock className="h-3.5 w-3.5" /> Requested scopes
-                      </h3>
-                      <ul className="mt-3 space-y-2">
-                        {channel.scopes.map(([scope, description]) => (
-                          <li key={scope} className="text-sm">
-                            <code className="rounded bg-paper-2 px-1.5 py-0.5 text-xs text-accent">
-                              {scope}
-                            </code>
-                            <span className="ml-2 text-muted">{description}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div>
-                      <h3 className="text-xs font-semibold uppercase tracking-wide text-muted">
-                        What DKH does
-                      </h3>
-                      <ul className="mt-3 space-y-2">
-                        {channel.capabilities.map((item) => (
-                          <li key={item} className="flex items-start gap-2 text-sm text-ink-2">
-                            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-700" />
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
+                <div className="sm:col-span-2">
+                  <p className="text-sm font-medium text-ink">{entry.what}</p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-muted">{entry.why}</p>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+
+          <p className="mt-6 text-sm leading-relaxed text-muted">
+            That is the complete list. DKH does not request <code>listings_w</code>,{" "}
+            <code>shops_w</code>, <code>email_r</code>, <code>billing_r</code>,{" "}
+            <code>cart_r</code>, <code>favorites_r</code>, <code>feedback_r</code>,{" "}
+            <code>profile_r</code> or <code>recommend_r</code>, because no feature needs them.
+          </p>
         </div>
       </section>
 
-      <section className="border-t border-line bg-paper-2 py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-8 lg:grid-cols-3">
+      <section className="border-b-2 border-line-strong bg-paper-2 py-16">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl text-ink">Endpoints we call</h2>
+          <div className="scroll-thin mt-6 overflow-x-auto">
+            <table className="w-full min-w-[600px] border-collapse text-sm">
+              <thead>
+                <tr>
+                  {["Method", "Endpoint", "Purpose"].map((head) => (
+                    <th key={head} className="label border-y-2 border-line-strong px-4 py-3 text-left">
+                      {head}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {ENDPOINTS.map(([method, endpoint, purpose]) => (
+                  <tr key={endpoint} className="border-b border-line">
+                    <td className="px-4 py-3 font-mono text-xs text-accent">{method}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-ink">{endpoint}</td>
+                    <td className="px-4 py-3 text-muted">{purpose}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b-2 border-line-strong py-16">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl text-ink">What DKH deliberately does not do</h2>
+          <ul className="mt-6 divide-y divide-line border-y border-line">
+            {NOT_DOING.map((item) => (
+              <li key={item} className="flex items-start gap-3 py-4 text-sm leading-relaxed text-ink-2">
+                <X className="mt-0.5 h-4 w-4 shrink-0 text-rose-700" />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="bg-paper-2 py-16">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-8 lg:grid-cols-2">
             <div>
-              <h2 className="text-2xl font-semibold tracking-tight text-ink">
-                Carriers & logistics
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                Compare rates and buy labels without leaving the order screen.
-              </p>
-              <div className="mt-5 flex flex-wrap gap-2">
-                {["USPS", "UPS", "FedEx", "DHL Express", "Royal Mail", "Australia Post", "Canada Post"].map(
-                  (carrier) => (
-                    <span
-                      key={carrier}
-                      className="rounded-none border border-line px-3 py-1.5 text-xs text-ink-2"
-                    >
-                      {carrier}
-                    </span>
-                  ),
-                )}
-              </div>
+              <h2 className="text-2xl text-ink">Revoking access</h2>
+              <ul className="mt-4 space-y-3">
+                {[
+                  "Disconnect the shop in DKH — the stored tokens are deleted immediately and syncing stops.",
+                  "Or revoke DKH from your Etsy account settings, which has the same effect.",
+                  "Orders already imported stay in your DKH account until you delete them or your account.",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2.5 text-sm text-ink-2">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </div>
 
             <div>
-              <h2 className="text-2xl font-semibold tracking-tight text-ink">Your own systems</h2>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                Use the DKH REST API and webhooks to drive your ERP, production software or
-                print-on-demand supplier from the same order data.
-              </p>
-              <ButtonLink href="/docs" variant="outline" className="mt-5">
-                Read the API docs <ArrowRight className="h-4 w-4" />
-              </ButtonLink>
-            </div>
-
-            <div>
-              <h2 className="text-2xl font-semibold tracking-tight text-ink">Need another one?</h2>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                We build custom connectors for marketplaces and suppliers on the Scale plan. Tell us
-                what you sell on and we will scope it.
+              <h2 className="text-2xl text-ink">Other marketplaces</h2>
+              <p className="mt-4 text-sm leading-relaxed text-muted">
+                DKH supports Etsy only. We are not going to list channels we have not built — if
+                you need Shopify, Amazon or TikTok Shop today, DKH is not the tool for you yet.
+                Tell us what you sell on and we will say honestly whether it is on the roadmap.
               </p>
               <ButtonLink href="/contact" variant="outline" className="mt-5">
-                Request an integration <ArrowRight className="h-4 w-4" />
+                Ask about a channel <ArrowRight className="h-4 w-4" />
               </ButtonLink>
             </div>
           </div>
+
+          <p className="mt-12 border-t border-line pt-6 text-xs leading-relaxed text-muted">
+            The term &ldquo;Etsy&rdquo; is a trademark of Etsy, Inc. This Application uses
+            Etsy&rsquo;s API, but is not endorsed or certified by Etsy. See our{" "}
+            <Link href="/terms" className="text-accent underline">
+              Terms
+            </Link>{" "}
+            for the full disclaimer.
+          </p>
         </div>
       </section>
     </>

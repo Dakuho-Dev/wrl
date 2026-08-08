@@ -5,7 +5,7 @@ import { LegalPage, LegalSection } from "@/components/site/legal";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "How DKH collects, uses, stores and deletes data — including data accessed through marketplace APIs such as the Etsy Open API.",
+    "How DKH collects, uses, stores and deletes data — including the data we access through the Etsy Open API.",
 };
 
 export default function PrivacyPage() {
@@ -13,12 +13,12 @@ export default function PrivacyPage() {
     <LegalPage
       title="Privacy Policy"
       updated="5 August 2026"
-      intro="This policy explains what information DKH collects, why we collect it, how we protect it, and the choices you have. It covers both the information you give us directly and the information we access on your behalf through connected marketplace APIs."
+      intro="This policy explains what information DKH collects, why we collect it, how we protect it, and the choices you have. It covers both the information you give us directly and the information we access on your behalf through the Etsy Open API."
     >
       <LegalSection heading="1. Who we are">
         <p>
           DKH (&ldquo;DKH&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) provides an order
-          management and fulfillment automation service for online sellers. For the purposes of the
+          management tool for Etsy sellers. For the purposes of the
           GDPR we act as a <strong>data processor</strong> for the order and buyer data we handle on
           behalf of our customers (the sellers), and as a <strong>data controller</strong> for the
           account data of the sellers themselves.
@@ -36,9 +36,9 @@ export default function PrivacyPage() {
         </ul>
       </LegalSection>
 
-      <LegalSection id="marketplace-data" heading="3. Information we access through marketplace APIs">
+      <LegalSection id="marketplace-data" heading="3. Information we access through the Etsy API">
         <p>
-          When you connect a shop, you authorize DKH through the marketplace&apos;s own OAuth
+          When you connect a shop, you authorise DKH through Etsy&apos;s own OAuth
           screen. We then access only the data covered by the scopes you approved. For Etsy this
           means:
         </p>
@@ -57,24 +57,26 @@ export default function PrivacyPage() {
             and payment state, used to create the order records you manage in DKH.
           </li>
           <li>
-            <strong>Tracking upload</strong> (<code>transactions_w</code>) — we write tracking
-            numbers and shipped status back to the marketplace when you create a shipment.
-          </li>
-          <li>
-            <strong>Account email</strong> (<code>email_r</code>) — used to notify you about sync
-            failures affecting your shop.
+            <strong>Tracking upload</strong> (<code>transactions_w</code>) — we write the tracking
+            number and shipped status back to Etsy when you record a shipment.
           </li>
         </ul>
         <p>
-          We request the minimum scopes needed for these features. We do not read messages between
-          you and your buyers, and we do not access financial or banking information held by the
-          marketplace.
+          Those four scopes are the complete list. We do not request{" "}
+          <code>email_r</code>, <code>listings_w</code> or <code>shops_w</code>. We do not read
+          messages between you and your buyers, and we do not access financial or banking
+          information held by Etsy.
+        </p>
+        <p>
+          <strong>We never contact your buyers.</strong> DKH sends no email, SMS or other message
+          to Etsy members. Uploading a tracking number is the only action that has any buyer-visible
+          effect, and the resulting notification is sent by Etsy, not by us.
         </p>
       </LegalSection>
 
       <LegalSection heading="4. How we use the information">
         <ul className="space-y-1.5">
-          <li>To provide the service: importing orders, running automations, generating labels and pushing tracking back to the marketplace.</li>
+          <li>To provide the service: importing your orders and listings, running your workflow rules, and uploading tracking numbers back to Etsy.</li>
           <li>To secure the service: authentication, fraud prevention, abuse detection and audit logging.</li>
           <li>To support you: answering tickets and diagnosing sync problems.</li>
           <li>To improve the service: aggregated, non-identifying usage statistics.</li>
@@ -99,9 +101,8 @@ export default function PrivacyPage() {
         <p>We share data only with the providers needed to run the service:</p>
         <ul className="space-y-1.5">
           <li>Cloud hosting and managed database providers (EU and US regions).</li>
-          <li>Shipping carriers, when you generate a label — limited to the address on the parcel.</li>
           <li>Payment processor, for subscription billing.</li>
-          <li>Transactional email provider, for account and alert emails.</li>
+          <li>Transactional email provider, for emails to you about your own account. Never to your buyers.</li>
         </ul>
         <p>
           Each sub-processor is bound by a data processing agreement. We will notify customers before
@@ -111,7 +112,7 @@ export default function PrivacyPage() {
 
       <LegalSection heading="7. Retention">
         <ul className="space-y-1.5">
-          <li>OAuth tokens are deleted immediately when you disconnect a shop or revoke access at the marketplace.</li>
+          <li>OAuth tokens are deleted immediately when you disconnect a shop or revoke access from your Etsy account.</li>
           <li>Order and shipment records are kept while your account is active, so you can search your own history.</li>
           <li>When you delete your account, all shops, orders, shipments and buyer data are permanently erased within 30 days.</li>
           <li>Audit logs are retained for 12 months; invoices for 7 years where tax law requires it.</li>
@@ -168,9 +169,8 @@ export default function PrivacyPage() {
 
       <LegalSection heading="13. Trademarks">
         <p>
-          The term &ldquo;Etsy&rdquo; is a trademark of Etsy, Inc. This application uses the Etsy API
-          but is not endorsed or certified by Etsy, Inc. Shopify, Amazon and TikTok Shop are
-          trademarks of their respective owners.
+          The term &ldquo;Etsy&rdquo; is a trademark of Etsy, Inc. This Application uses
+          Etsy&rsquo;s API, but is not endorsed or certified by Etsy.
         </p>
       </LegalSection>
     </LegalPage>

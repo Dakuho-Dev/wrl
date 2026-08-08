@@ -1,33 +1,40 @@
 import type { Metadata } from "next";
-import { Building2, Clock, Mail, MessageSquare, Phone } from "lucide-react";
+import { Clock, LifeBuoy, Mail } from "lucide-react";
 
 import { Card } from "@/components/ui";
+import { siteConfig } from "@/lib/site-config";
 import { ContactForm } from "./contact-form";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Get in touch with the DKH team about integrations, support or partnerships.",
+  description: "Get in touch with the DKH team about the Etsy integration, support or billing.",
 };
 
-const DETAILS = [
-  { icon: Mail, label: "Email", value: "support@dkh.io", hint: "General support & integrations" },
-  { icon: MessageSquare, label: "Sales", value: "sales@dkh.io", hint: "Plans, volume pricing, demos" },
-  { icon: Phone, label: "Phone", value: "+84 28 7300 1234", hint: "Mon–Fri, 09:00–18:00 (GMT+7)" },
-  { icon: Building2, label: "Office", value: "Ho Chi Minh City, Vietnam", hint: "District 1, Nguyen Hue" },
-];
-
 export default function ContactPage() {
+  const details = [
+    {
+      icon: Mail,
+      label: "Support",
+      value: siteConfig.supportEmail,
+      hint: "Monitored mailbox — the fastest way to reach a person",
+    },
+    ...(siteConfig.businessPhone
+      ? [{ icon: LifeBuoy, label: "Phone", value: siteConfig.businessPhone, hint: "Mon–Fri, 09:00–18:00 (GMT+7)" }]
+      : []),
+    ...(siteConfig.businessAddress
+      ? [{ icon: LifeBuoy, label: "Address", value: siteConfig.businessAddress, hint: "Registered address" }]
+      : []),
+  ];
+
   return (
     <>
-      <section className="border-b border-line">
+      <section className="border-b-2 border-line-strong">
         <div className="mx-auto max-w-4xl px-4 py-20 text-center sm:px-6">
-          <p className="text-sm font-semibold uppercase tracking-widest text-accent">Contact</p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-            Talk to a human
-          </h1>
+          <p className="label">Contact</p>
+          <h1 className="mt-4 text-4xl text-ink sm:text-5xl">Talk to a human</h1>
           <p className="mx-auto mt-5 max-w-2xl text-lg text-muted">
-            Questions about connecting a marketplace, migrating from another tool, or a custom
-            integration? Send a message and we will come back to you.
+            Questions about connecting your Etsy shop, something not working, or a feature you
+            need? Send a message and we will come back to you.
           </p>
         </div>
       </section>
@@ -35,16 +42,16 @@ export default function ContactPage() {
       <section className="py-16">
         <div className="mx-auto grid max-w-6xl gap-10 px-4 sm:px-6 lg:grid-cols-5 lg:px-8">
           <div className="lg:col-span-2">
-            <h2 className="text-lg font-semibold text-ink">Ways to reach us</h2>
+            <h2 className="text-lg text-ink">How to reach us</h2>
             <div className="mt-5 space-y-3">
-              {DETAILS.map((detail) => (
+              {details.map((detail) => (
                 <Card key={detail.label} className="flex items-start gap-4 p-4">
-                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-none bg-accent-soft text-accent ring-1 ring-accent">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center border border-line text-accent">
                     <detail.icon className="h-5 w-5" />
                   </span>
-                  <div>
-                    <p className="text-xs uppercase tracking-wide text-muted-2">{detail.label}</p>
-                    <p className="text-sm font-medium text-ink">{detail.value}</p>
+                  <div className="min-w-0">
+                    <p className="label">{detail.label}</p>
+                    <p className="truncate text-sm font-medium text-ink">{detail.value}</p>
                     <p className="text-xs text-muted-2">{detail.hint}</p>
                   </div>
                 </Card>
@@ -55,17 +62,16 @@ export default function ContactPage() {
               <div className="flex items-center gap-2 text-sm font-medium text-ink">
                 <Clock className="h-4 w-4 text-accent" /> Response times
               </div>
-              <ul className="mt-3 space-y-1.5 text-sm text-muted">
-                <li>Starter — within 2 business days</li>
-                <li>Growth — within 1 business day</li>
-                <li>Scale — within 4 business hours</li>
-              </ul>
+              <p className="mt-3 text-sm leading-relaxed text-muted">
+                We aim to answer every message within one business day. If something is broken and
+                orders are not syncing, say so in the subject line and we will look at it first.
+              </p>
             </Card>
           </div>
 
           <div className="lg:col-span-3">
             <Card className="p-6 sm:p-8">
-              <h2 className="text-lg font-semibold text-ink">Send us a message</h2>
+              <h2 className="text-lg text-ink">Send us a message</h2>
               <p className="mt-1 text-sm text-muted">
                 Every submission creates a ticket our support team can track.
               </p>

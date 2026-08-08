@@ -50,7 +50,7 @@ async function main() {
           "1 connected shop",
           "100 orders / month",
           "Order sync every 30 minutes",
-          "Manual tracking upload",
+          "Manual tracking upload to Etsy",
           "Email support",
         ]),
       },
@@ -65,10 +65,10 @@ async function main() {
         features: JSON.stringify([
           "5 connected shops",
           "2,500 orders / month",
-          "Real-time order sync",
-          "Automation workflows",
-          "Bulk label generation",
-          "Tracking pushed back to marketplace",
+          "Order sync every 15 minutes",
+          "Workflow rules",
+          "Tracking upload to Etsy",
+          "CSV export",
           "Priority email support",
         ]),
       },
@@ -83,11 +83,10 @@ async function main() {
         features: JSON.stringify([
           "25 connected shops",
           "25,000 orders / month",
-          "Real-time sync + webhooks",
-          "Unlimited automations",
+          "Order sync every 5 minutes",
+          "Unlimited workflow rules",
           "REST API access",
-          "Custom logistics partners",
-          "Dedicated account manager",
+          "Priority support",
         ]),
       },
     ].map((plan) => prisma.plan.create({ data: plan })),
@@ -160,11 +159,9 @@ async function main() {
   // ------------------------------------------------------------ Shops
   const shopSpecs = [
     { userId: seller.id, platform: "ETSY", name: "LittleThistleStudio", url: "https://www.etsy.com/shop/LittleThistleStudio", orders: 46 },
-    { userId: seller.id, platform: "SHOPIFY", name: "littlethistle.myshopify.com", url: "https://littlethistle.myshopify.com", orders: 18 },
-    { userId: seller.id, platform: "TIKTOK", name: "Little Thistle TikTok", url: "https://shop.tiktok.com/littlethistle", orders: 12 },
     { userId: extraUsers[0].id, platform: "ETSY", name: "CraftBarnGoods", url: "https://www.etsy.com/shop/CraftBarnGoods", orders: 22 },
     { userId: extraUsers[1].id, platform: "ETSY", name: "NorthPrintsCo", url: "https://www.etsy.com/shop/NorthPrintsCo", orders: 14 },
-    { userId: extraUsers[2].id, platform: "AMAZON", name: "Bloom & Wick US", url: "https://sellercentral.amazon.com", orders: 20 },
+    { userId: extraUsers[2].id, platform: "ETSY", name: "BloomAndWickUS", url: "https://www.etsy.com/shop/BloomAndWickUS", orders: 20 },
   ];
 
   for (const spec of shopSpecs) {
@@ -264,11 +261,11 @@ async function main() {
       runCount: 41,
     },
     {
-      name: "Push tracking back to marketplace",
-      description: "Sends tracking numbers to Etsy/Shopify as soon as a label is created.",
+      name: "Upload tracking to Etsy",
+      description: "Uploads the tracking number to Etsy as soon as a shipment is recorded.",
       trigger: "ORDER_SHIPPED",
       conditions: JSON.stringify([]),
-      actions: JSON.stringify([{ type: "PUSH_TRACKING" }, { type: "EMAIL_BUYER" }]),
+      actions: JSON.stringify([{ type: "PUSH_TRACKING" }]),
       runCount: 512,
     },
     {
@@ -276,7 +273,7 @@ async function main() {
       description: "Puts orders on hold when the personalization field is empty.",
       trigger: "ORDER_CREATED",
       conditions: JSON.stringify([{ field: "personalization", op: "is_empty", value: true }]),
-      actions: JSON.stringify([{ type: "SET_STATUS", value: "ON_HOLD" }, { type: "EMAIL_BUYER" }]),
+      actions: JSON.stringify([{ type: "SET_STATUS", value: "ON_HOLD" }, { type: "NOTIFY", value: "production" }]),
       enabled: false,
       runCount: 17,
     },
@@ -373,7 +370,7 @@ async function main() {
   await prisma.setting.createMany({
     data: [
       { key: "site.name", value: "DKH" },
-      { key: "site.tagline", value: "Automate your entire order lifecycle" },
+      { key: "site.tagline", value: "Order management for Etsy sellers" },
       { key: "site.supportEmail", value: "support@dkh.io" },
       { key: "signup.enabled", value: "true" },
       { key: "sync.intervalMinutes", value: "15" },

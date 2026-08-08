@@ -1,17 +1,14 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import {
   BarChart3,
   Bell,
-  Boxes,
   Cable,
-  FileText,
-  Gauge,
-  Layers,
+  Download,
   RefreshCw,
   Search,
   ShieldCheck,
   Truck,
-  Users,
   Workflow,
 } from "lucide-react";
 
@@ -20,118 +17,130 @@ import { ButtonLink } from "@/components/ui";
 export const metadata: Metadata = {
   title: "Features",
   description:
-    "Order synchronization, workflow automation, shipping labels, real-time tracking, API integrations and analytics for multichannel sellers.",
+    "Order synchronisation, a production queue, workflow rules, tracking upload to Etsy, reporting and a REST API — everything DKH does today.",
 };
+
+/**
+ * Ground rule for this page: if it is listed here, it works in the shipping
+ * application. Anything not built yet belongs in the roadmap section at the
+ * bottom, clearly marked as not available.
+ */
 
 const SECTIONS = [
   {
     id: "sync",
-    eyebrow: "Data synchronization",
+    eyebrow: "Order synchronisation",
     icon: RefreshCw,
-    title: "One order queue for every channel",
-    body: "DKH polls each connected marketplace on a schedule and imports orders, buyer details, personalization notes, shipping addresses and payment state. Listings and inventory counts come along for the ride, so you always know what is actually in stock.",
+    title: "Your Etsy orders, imported and kept current",
+    body: "DKH polls your shop on a schedule and on demand, importing receipts with buyer name, shipping address, line items, personalisation text, totals and payment state. Active listings come in read-only so order lines can be matched to a SKU, price and stock level.",
     bullets: [
-      "Incremental sync — only new and changed records are fetched",
-      "Automatic retry with exponential backoff on marketplace rate limits",
-      "Historical import of past orders when you first connect a shop",
-      "Duplicate protection using the marketplace's own record id",
-      "Per-shop sync log so you can see exactly what happened and when",
+      "Records are matched on Etsy's own receipt and listing ids, so re-syncing never duplicates",
+      "Every run is recorded as a sync job with counts, duration and any error",
+      "Access tokens refresh automatically before they expire",
+      "Manual re-sync whenever you want the freshest data",
+      "Failures surface on the Shops page and in the activity log rather than failing silently",
     ],
   },
   {
-    id: "automation",
-    eyebrow: "Workflow automation",
-    icon: Workflow,
-    title: "Rules that do the repetitive work",
-    body: "Describe what should happen when an order arrives and DKH handles it forever. Triggers, conditions and actions are composable, so a rule can be as simple as tagging a VIP order or as involved as routing print files to a specific supplier.",
+    id: "queue",
+    eyebrow: "Production queue",
+    icon: Search,
+    title: "One list of what has to be made",
+    body: "The order list is filterable by status, shop and free-text search across order number, buyer and Etsy receipt id, with pagination and bulk status changes. Each order opens onto its line items, personalisation, shipping address and a full event timeline.",
     bullets: [
-      "Triggers: order created, order paid, order shipped, sync completed, schedule",
-      "Conditions on total, SKU, destination country, channel, personalization",
-      "Actions: change status, set priority, add tag, notify a teammate, call a webhook",
-      "Dry-run preview before you enable a rule on live orders",
-      "Complete run history with duration and outcome per execution",
+      "Statuses you control: new, processing, on hold, shipped, delivered, cancelled, refunded",
+      "Internal priority, tags and notes that live in DKH and never touch your Etsy listing",
+      "Bulk status update across a filtered selection",
+      "Timeline showing every import, status change, note and shipment on the order",
+      "Personalisation text called out so it is not missed during production",
     ],
   },
   {
     id: "shipping",
-    eyebrow: "Order processing & shipping",
+    eyebrow: "Shipping & tracking",
     icon: Truck,
-    title: "From production queue to parcel",
-    body: "Group orders into batches, generate labels in bulk and record tracking numbers in a single pass. Once a shipment exists, the tracking code is pushed back to the marketplace so the buyer gets notified through the channel they bought on.",
+    title: "Record a shipment, Etsy gets the tracking",
+    body: "When an order ships you record the carrier and tracking number. DKH submits it to Etsy against the receipt, which marks the order shipped on Etsy. An order can carry several shipments if it goes out in more than one parcel.",
     bullets: [
-      "Bulk selection with saved filters (unshipped, high priority, by SKU)",
-      "Carrier rate comparison across USPS, UPS, FedEx, DHL and regional partners",
-      "Packing slips and pick lists generated per batch",
-      "Tracking upload back to Etsy, Shopify, Amazon and TikTok Shop",
-      "Split shipments for partially fulfilled orders",
+      "Carrier, service, tracking number and label cost per shipment",
+      "Tracking link generated for the major carriers",
+      "Upload status shown per shipment, so a failed push is visible",
+      "Shipping view listing recent shipments and the orders still waiting",
+      "Etsy sends the buyer notification — DKH never messages your buyers",
     ],
   },
   {
-    id: "tracking",
-    eyebrow: "Real-time tracking",
-    icon: Gauge,
-    title: "Know where every parcel is",
-    body: "Each order carries a unified timeline: imported, paid, in production, label created, in transit, delivered. Carrier exceptions surface as alerts rather than as an angry buyer message three days later.",
+    id: "automation",
+    eyebrow: "Workflow rules",
+    icon: Workflow,
+    title: "Rules for the repetitive decisions",
+    body: "Build trigger-condition-action rules that act on orders as they arrive. Everything a rule touches stays inside DKH: your Etsy listings, prices and shop settings are never modified.",
     bullets: [
-      "Unified event timeline per order across all systems",
-      "Delivery exception and delayed-shipment alerts",
-      "Buyer-facing tracking page you can share",
-      "SLA countdown against the marketplace's ship-by date",
-    ],
-  },
-  {
-    id: "api",
-    eyebrow: "API integrations",
-    icon: Cable,
-    title: "Plug DKH into your stack",
-    body: "Everything the dashboard can do is available over a REST API secured with scoped keys. Signed webhooks push events to your systems the moment they happen, so your ERP or production software stays in step.",
-    bullets: [
-      "REST endpoints for orders, shipments, products and shops",
-      "Scoped API keys with independent read and write permissions",
-      "HMAC-signed webhooks with automatic retry on failure",
-      "Official marketplace APIs only — no scraping, no browser automation",
-      "Sandbox environment for building against before you go live",
+      "Triggers: order created, order paid, order shipped, sync completed, schedule",
+      "Conditions on total, destination country, SKU or personalisation",
+      "Actions: set status, set priority, add a tag, notify a teammate, upload tracking, call your webhook",
+      "Enable, pause, run manually, or delete a rule at any time",
+      "Run history per rule with outcome and duration",
     ],
   },
   {
     id: "analytics",
-    eyebrow: "Optimization & analytics",
+    eyebrow: "Reporting",
     icon: BarChart3,
-    title: "Find the bottleneck",
-    body: "Revenue, order volume, average fulfillment time and channel mix in one place. Spot the SKU that always ships late or the channel that quietly became your biggest earner.",
+    title: "Your own numbers, not benchmarks",
+    body: "Revenue and order volume over time, average order value, and how long orders take to go from paid to shipped — all computed from your own imported data.",
     bullets: [
-      "Revenue and volume by channel, SKU and time period",
-      "Average time from paid to shipped, per shop and per product",
-      "Backlog ageing report to catch orders stuck in production",
-      "CSV export for accounting and inventory planning",
+      "Revenue and order counts by week over the last quarter",
+      "Average time from paid to tracking uploaded",
+      "Breakdown by destination country and carrier",
+      "Top products by revenue and units",
+      "CSV export of your orders and shipments",
+    ],
+  },
+  {
+    id: "api",
+    eyebrow: "REST API",
+    icon: Cable,
+    title: "Your data, programmatically",
+    body: "Everything DKH imports is available over a REST API secured with scoped keys you generate yourself, so your own production software can read the queue and post shipments back.",
+    bullets: [
+      "GET /api/v1/orders — list and filter your orders",
+      "GET /api/v1/orders/{id} — one order with items, shipments and events",
+      "PATCH /api/v1/orders/{id} — update status, priority, tags or notes",
+      "POST /api/v1/orders/{id}/shipments — record a shipment and upload tracking",
+      "GET /api/v1/shops, /api/v1/products — connected shops and synced listings",
+      "Keys are scoped read or read-write, and can be revoked instantly",
     ],
   },
 ];
 
 const EXTRAS = [
-  { icon: Users, title: "Team accounts", body: "Invite staff with role-based access to orders and shipping only." },
-  { icon: Bell, title: "Smart notifications", body: "Email and in-app alerts for failed syncs, refunds and SLA risks." },
-  { icon: Search, title: "Universal search", body: "Find any order by number, buyer, SKU or tracking code instantly." },
-  { icon: FileText, title: "Documents", body: "Packing slips, invoices and customs declarations generated per order." },
-  { icon: Layers, title: "Bulk actions", body: "Update status, priority or tags across hundreds of orders at once." },
-  { icon: Boxes, title: "Inventory view", body: "Live stock counts pulled from every connected listing." },
-  { icon: ShieldCheck, title: "Audit log", body: "Every action recorded with actor, timestamp and IP address." },
-  { icon: RefreshCw, title: "Manual re-sync", body: "Force an immediate pull whenever you need the freshest data." },
+  { icon: Bell, title: "Notifications", body: "In-app alerts for imports, failed syncs and plan limits." },
+  { icon: ShieldCheck, title: "Activity log", body: "Every action recorded with actor, category and timestamp." },
+  { icon: Download, title: "CSV export", body: "Download your orders and shipments whenever you want." },
+  { icon: RefreshCw, title: "Manual re-sync", body: "Force an immediate pull from Etsy per shop." },
+];
+
+/** Stated plainly so nobody buys on the strength of something that isn't built. */
+const NOT_YET = [
+  "Buying shipping labels or comparing carrier rates — you record tracking from your own carrier account",
+  "Packing slips, pick lists, invoices or customs documents",
+  "Outbound webhook delivery — you can register an endpoint, but DKH does not send to it yet",
+  "Team accounts and per-staff permissions",
+  "Marketplaces other than Etsy",
 ];
 
 export default function FeaturesPage() {
   return (
     <>
-      <section className="relative overflow-hidden border-b border-line">
+      <section className="relative overflow-hidden border-b-2 border-line-strong">
         <div className="surface-rule pointer-events-none absolute inset-0 opacity-70" />
-        <div className="relative mx-auto max-w-4xl px-4 py-20 text-center sm:px-6 lg:py-24">
-          <p className="text-sm font-semibold uppercase tracking-widest text-accent">Features</p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-            The whole order lifecycle, handled
-          </h1>
+        <div className="relative mx-auto max-w-4xl px-4 py-20 text-center sm:px-6">
+          <p className="label">Features</p>
+          <h1 className="mt-4 text-4xl text-ink sm:text-5xl">Everything DKH does today</h1>
           <p className="mx-auto mt-5 max-w-2xl text-lg text-muted">
-            DKH replaces the manual steps between &ldquo;buyer paid&rdquo; and &ldquo;parcel
-            delivered&rdquo; with a single automated pipeline.
+            Six areas, all working against the Etsy Open API right now. What is not built yet is
+            listed at the bottom of this page rather than left to your imagination.
           </p>
         </div>
       </section>
@@ -140,29 +149,22 @@ export default function FeaturesPage() {
         <section
           key={section.id}
           id={section.id}
-          className={`scroll-mt-20 border-b border-line py-20 ${index % 2 === 1 ? "bg-paper-2" : ""}`}
+          className={`scroll-mt-20 border-b-2 border-line-strong py-16 ${index % 2 === 1 ? "bg-paper-2" : ""}`}
         >
           <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:items-start lg:px-8">
             <div className={index % 2 === 1 ? "lg:order-2" : ""}>
-              <span className="grid h-12 w-12 place-items-center rounded-none bg-accent-soft text-accent ring-1 ring-accent">
+              <span className="grid h-12 w-12 place-items-center border border-line-strong text-accent">
                 <section.icon className="h-6 w-6" />
               </span>
-              <p className="mt-5 text-sm font-semibold uppercase tracking-widest text-accent">
-                {section.eyebrow}
-              </p>
-              <h2 className="mt-2 text-3xl font-semibold tracking-tight text-ink">
-                {section.title}
-              </h2>
+              <p className="label mt-5">{section.eyebrow}</p>
+              <h2 className="mt-2 text-3xl text-ink">{section.title}</h2>
               <p className="mt-4 leading-relaxed text-muted">{section.body}</p>
             </div>
 
-            <ul className={`space-y-3 ${index % 2 === 1 ? "lg:order-1" : ""}`}>
+            <ul className={`divide-y divide-line border-y border-line ${index % 2 === 1 ? "lg:order-1" : ""}`}>
               {section.bullets.map((bullet) => (
-                <li
-                  key={bullet}
-                  className="flex items-start gap-3 rounded-none border border-line bg-surface px-4 py-3.5 text-sm text-ink-2"
-                >
-                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                <li key={bullet} className="flex items-start gap-3 py-3.5 text-sm text-ink-2">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 bg-accent" />
                   {bullet}
                 </li>
               ))}
@@ -171,29 +173,55 @@ export default function FeaturesPage() {
         </section>
       ))}
 
-      <section className="py-20">
+      <section className="border-b-2 border-line-strong py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-semibold tracking-tight text-ink">
-            And the details that matter
-          </h2>
+          <h2 className="text-2xl text-ink">And the smaller things</h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {EXTRAS.map((extra) => (
-              <div key={extra.title} className="rounded-none border border-line bg-surface p-5">
+              <div key={extra.title} className="border border-line bg-surface p-5">
                 <extra.icon className="h-5 w-5 text-accent" />
-                <h3 className="mt-3 text-sm font-semibold text-ink">{extra.title}</h3>
+                <h3 className="mt-3 text-base text-ink">{extra.title}</h3>
                 <p className="mt-1.5 text-sm leading-relaxed text-muted">{extra.body}</p>
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          <div className="mt-12 flex flex-wrap justify-center gap-3">
+      <section className="bg-paper-2 py-16">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6">
+          <h2 className="text-2xl text-ink">Not built yet</h2>
+          <p className="mt-3 text-sm leading-relaxed text-muted">
+            Tools in this category often advertise things they intend to build. These are ours, and
+            they do not work today:
+          </p>
+          <ul className="mt-6 divide-y divide-line border-y-2 border-line-strong">
+            {NOT_YET.map((item) => (
+              <li key={item} className="flex items-start gap-3 py-3.5 text-sm text-ink-2">
+                <span className="mt-1 font-mono text-[11px] uppercase tracking-wider text-rose-800">
+                  no
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-10 flex flex-wrap justify-center gap-3">
             <ButtonLink href="/register" className="px-6 py-3">
               Start free
             </ButtonLink>
-            <ButtonLink href="/pricing" variant="outline" className="px-6 py-3">
-              See pricing
+            <ButtonLink href="/platforms" variant="secondary" className="px-6 py-3">
+              What we access
             </ButtonLink>
           </div>
+
+          <p className="mt-10 border-t border-line pt-6 text-center text-xs text-muted">
+            Missing something you need?{" "}
+            <Link href="/contact" className="text-accent underline">
+              Tell us
+            </Link>{" "}
+            and we will say honestly whether it is planned.
+          </p>
         </div>
       </section>
     </>

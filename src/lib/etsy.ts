@@ -18,15 +18,17 @@ export const ETSY_AUTH_URL = "https://www.etsy.com/oauth/connect";
 export const ETSY_TOKEN_URL = "https://api.etsy.com/v3/public/oauth/token";
 export const ETSY_API_BASE = "https://openapi.etsy.com/v3/application";
 
-export const DEFAULT_SCOPES = [
-  "email_r",
-  "shops_r",
-  "shops_w",
-  "listings_r",
-  "listings_w",
-  "transactions_r",
-  "transactions_w",
-];
+/**
+ * Exactly the scopes the code uses, and nothing more. Etsy's API Terms prohibit
+ * requesting "more than the minimum amount of data needed", so every entry here
+ * must map to a call this application actually makes:
+ *
+ *   shops_r        getMyShop
+ *   listings_r     listActiveListings
+ *   transactions_r listReceipts
+ *   transactions_w submitTracking
+ */
+export const DEFAULT_SCOPES = ["shops_r", "listings_r", "transactions_r", "transactions_w"];
 
 export function etsyConfig() {
   const clientId = cleanEnv(process.env.ETSY_CLIENT_ID);

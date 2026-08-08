@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 
 const LINKS = [
   { href: "/features", label: "Features" },
-  { href: "/platforms", label: "Platforms" },
+  { href: "/platforms", label: "What we access" },
   { href: "/pricing", label: "Pricing" },
   { href: "/docs", label: "Docs" },
   { href: "/support", label: "Support" },
@@ -26,8 +26,8 @@ export function SiteNav({ signedIn }: { signedIn: boolean }) {
       {/* Ticker strip — sets the "operations desk" tone before the nav itself. */}
       <div className="hidden border-b border-line bg-ink px-4 py-1.5 text-white sm:block">
         <div className="mx-auto flex max-w-7xl items-center justify-between font-mono text-[10px] uppercase tracking-[0.18em]">
-          <span>Etsy · Shopify · Amazon · TikTok Shop</span>
-          <span className="text-paper-3">Official marketplace APIs · No scraping</span>
+          <span>Order management for Etsy sellers</span>
+          <span className="text-paper-3">Etsy Open API v3 · No scraping</span>
         </div>
       </div>
 

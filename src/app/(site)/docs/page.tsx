@@ -89,7 +89,7 @@ export default function DocsPage() {
               </li>
               <li>
                 Etsy shows you the requested scopes:{" "}
-                <code>shops_r listings_r transactions_r transactions_w email_r</code>.
+                <code>shops_r listings_r transactions_r transactions_w</code>.
               </li>
               <li>
                 After you approve, Etsy redirects back to{" "}
@@ -113,7 +113,7 @@ export default function DocsPage() {
             <Code>{`ETSY_CLIENT_ID="your-keystring"
 ETSY_CLIENT_SECRET="your-shared-secret"
 ETSY_REDIRECT_URI="https://yourdomain.com/api/integrations/etsy/callback"
-ETSY_SCOPES="email_r shops_r shops_w listings_r listings_w transactions_r transactions_w"`}</Code>
+ETSY_SCOPES="shops_r listings_r transactions_r transactions_w"`}</Code>
             <p>
               Without credentials the platform runs in <strong>demo mode</strong>: connecting a shop
               creates a simulated channel with realistic data so the workflow can be reviewed
@@ -146,8 +146,8 @@ ETSY_SCOPES="email_r shops_r shops_w listings_r listings_w transactions_r transa
               Supported triggers: <code>ORDER_CREATED</code>, <code>ORDER_PAID</code>,{" "}
               <code>ORDER_SHIPPED</code>, <code>SYNC_COMPLETED</code>, <code>SCHEDULE</code>.
               Supported actions: <code>SET_STATUS</code>, <code>SET_PRIORITY</code>,{" "}
-              <code>ADD_TAG</code>, <code>NOTIFY</code>, <code>PUSH_TRACKING</code>,{" "}
-              <code>EMAIL_BUYER</code>, <code>WEBHOOK</code>.
+              <code>ADD_TAG</code>, <code>NOTIFY</code>, <code>PUSH_TRACKING</code> and{" "}
+              <code>WEBHOOK</code>.
             </p>
           </Doc>
 
@@ -188,22 +188,19 @@ ETSY_SCOPES="email_r shops_r shops_w listings_r listings_w transactions_r transa
             </div>
           </Doc>
 
-          <Doc id="webhooks" title="Webhooks">
-            <p>
-              Register an endpoint in <strong>Dashboard → API keys</strong>. Each delivery is signed
-              with HMAC-SHA256 in the <code>X-DKH-Signature</code> header.
+          <Doc id="webhooks" title="Webhooks — not available yet">
+            <p className="border border-line border-l-4 border-l-amber-600 bg-amber-500/10 px-4 py-3 text-amber-900">
+              <strong>Outbound webhooks are not implemented.</strong> You can register an endpoint
+              in <strong>Dashboard → API keys</strong> and it will be stored against your account,
+              but DKH does not deliver events to it today. Poll{" "}
+              <code>GET /api/v1/orders</code> instead until this ships.
             </p>
-            <Code>{`POST https://your-app.com/hooks/dkh
-X-DKH-Signature: sha256=...
-{
-  "event": "order.created",
-  "created_at": "2026-08-05T09:12:44Z",
-  "data": { "id": "ord_9f2b", "order_number": "#2481930", "total": 84.50 }
-}`}</Code>
             <p>
-              Events: <code>order.created</code>, <code>order.updated</code>,{" "}
-              <code>order.shipped</code>, <code>shipment.delivered</code>,{" "}
-              <code>shop.sync_failed</code>. Failed deliveries are retried five times with backoff.
+              When it does ship, deliveries will be signed with HMAC-SHA256 in an{" "}
+              <code>X-DKH-Signature</code> header and cover{" "}
+              <code>order.created</code>, <code>order.updated</code>, <code>order.shipped</code> and{" "}
+              <code>shop.sync_failed</code>. We will announce it here and by email before enabling
+              it.
             </p>
           </Doc>
 

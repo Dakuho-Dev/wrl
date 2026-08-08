@@ -27,12 +27,6 @@ import { connectDemoShop, disconnectShop, syncShopNow, toggleAutoSync } from "./
 export const metadata: Metadata = { title: "Shops" };
 export const dynamic = "force-dynamic";
 
-const CHANNELS = [
-  { platform: "ETSY", blurb: "Etsy Open API v3 · OAuth 2.0 + PKCE", color: "from-orange-500 to-amber-500" },
-  { platform: "SHOPIFY", blurb: "Admin API · custom app", color: "from-emerald-500 to-green-600" },
-  { platform: "AMAZON", blurb: "Selling Partner API", color: "from-amber-400 to-yellow-500" },
-  { platform: "TIKTOK", blurb: "TikTok Shop Partner API", color: "from-pink-500 to-rose-500" },
-];
 
 export default async function ShopsPage({
   searchParams,
@@ -160,29 +154,19 @@ export default async function ShopsPage({
             )}
           </div>
 
-          {/* Other channels */}
+          {/* Etsy is the only integration. We do not advertise channels we have not built. */}
           <div className="space-y-3">
-            {CHANNELS.filter((channel) => channel.platform !== "ETSY").map((channel) => (
-              <form
-                key={channel.platform}
-                action={connectDemoShop}
-                className="flex items-center gap-3 rounded-none border border-line bg-paper-2 p-4"
-              >
-                <input type="hidden" name="platform" value={channel.platform} />
-                <span
-                  className={`grid h-10 w-10 shrink-0 place-items-center rounded-none bg-gradient-to-br ${channel.color} text-sm font-bold text-ink`}
-                >
-                  {PLATFORM_LABEL[channel.platform][0]}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium text-ink">{PLATFORM_LABEL[channel.platform]}</p>
-                  <p className="truncate text-xs text-muted-2">{channel.blurb}</p>
-                </div>
-                <Button type="submit" variant="outline" className="shrink-0 py-2 text-xs" disabled={atLimit}>
-                  Connect
-                </Button>
-              </form>
-            ))}
+            <div className="border border-line bg-paper-2 p-4">
+              <p className="label">Other marketplaces</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted">
+                DKH supports Etsy only. Shopify, Amazon and TikTok Shop are not implemented — if
+                you need them,{" "}
+                <Link href="/contact" className="text-accent underline">
+                  tell us
+                </Link>{" "}
+                and we will say honestly whether they are planned.
+              </p>
+            </div>
 
             <details className="rounded-none border border-line bg-paper-2 p-4">
               <summary className="cursor-pointer text-sm font-medium text-ink-2">
