@@ -12,7 +12,7 @@ import {
   Workflow,
 } from "lucide-react";
 
-import { EtsyTrademarkBanner } from "@/components/site/etsy-trademark-banner";
+import { EtsyTrademarkBanner, EtsyTrademarkCard } from "@/components/site/etsy-trademark-banner";
 import { ButtonLink } from "@/components/ui";
 
 /**
@@ -299,7 +299,12 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="mt-10 grid gap-4 sm:grid-cols-2">
+          {/* Second required-notice placement, mid-page and high contrast. */}
+          <div className="mt-10">
+            <EtsyTrademarkCard />
+          </div>
+
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
             {SCOPES.map(([scope, access, purpose]) => (
               <div
                 key={scope}
