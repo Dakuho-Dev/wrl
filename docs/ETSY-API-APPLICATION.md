@@ -1,61 +1,111 @@
-# Hướng dẫn nộp đơn xin Etsy Open API v3
+# Nộp lại đơn xin Etsy Open API v3
 
-Tài liệu này ghi lại chính xác những gì Etsy yêu cầu và nội dung mẫu bạn có thể dùng,
-đã khớp với những gì website này thực sự làm.
+Lần một bị từ chối. Tài liệu này ghi lại nguyên nhân, những gì đã sửa, và nội dung
+để điền khi nộp lại.
 
 ---
 
-## Bước 0 — Chuẩn bị trước khi nộp
+## Vì sao lần một trượt
 
-| Yêu cầu | Trạng thái trong dự án này |
+Thư từ chối của Etsy nêu ba khả năng: mô tả use case không rõ, trông như nộp hộ sản
+phẩm của bên thứ ba, hoặc không đáp ứng yêu cầu. Đối chiếu website với
+[API Terms of Use](https://www.etsy.com/legal/api/), nguyên nhân thực chất là **website
+mô tả một sản phẩm không tồn tại đúng như mô tả**:
+
+| Vấn đề | Điều khoản bị vi phạm |
 |---|---|
-| Tài khoản Etsy đã xác minh | Bạn tự chuẩn bị |
-| Website công khai mô tả ứng dụng | ✅ `/` , `/features`, `/platforms` |
-| Privacy Policy | ✅ `/privacy` — mô tả rõ dữ liệu Etsy API nào được truy cập và vì sao |
-| Terms of Service | ✅ `/terms` |
-| Security Policy | ✅ `/security` |
-| Cách người dùng xóa dữ liệu | ✅ `/privacy#data-deletion` + Dashboard → Settings |
-| Ghi chú thương hiệu Etsy | ✅ hiển thị ở footer mọi trang |
-| Callback URL (OAuth redirect) | ✅ `https://dkh-io.vercel.app/api/integrations/etsy/callback` |
-
-> Website đã live tại **https://dkh-io.vercel.app** — dùng đúng URL này khi điền đơn.
+| Trang chủ ghi 4.6M đơn, 12.400 shop, 99.95% uptime — đều bịa | §2 "accurate, true and complete" |
+| Quảng cáo Shopify/Amazon/TikTok, chưa hề xây | §3 "fully functional", §5 Quality Standards |
+| 10 tính năng không có trong code (mua label, so giá cước, packing slip, trang tracking cho người mua, SLA countdown, team accounts, sandbox, dry-run, chứng từ hải quan, in label hàng loạt) | §5 "operate as described to Etsy or as advertised" |
+| Docs mô tả webhook có ký HMAC và retry — chưa có dòng code nào gửi | §5 Quality Standards |
+| Quảng cáo gửi email/thông báo cho người mua | §5 Prohibited: cấm dùng API để gửi order/shipping/tracking cho Etsy member |
+| Xin 7 scope nhưng chỉ dùng 4 | §5 Prohibited: "Request more than the minimum amount of data needed" |
+| Thiếu DISCLAIMER bắt buộc trong Terms | §3 Application Terms |
+| Câu tuyên bố thương hiệu diễn đạt lại, không đúng nguyên văn | §1 Etsy's Trademarks |
+| Email hỗ trợ, số điện thoại, địa chỉ đều không có thật | §3 "monitored email address" |
 
 ---
 
-## Bước 1 — Đăng ký app
+## Đã sửa những gì
 
-Vào https://www.etsy.com/developers/register và điền:
+- Xoá toàn bộ số liệu bịa
+- Bỏ Shopify/Amazon/TikTok khỏi website, dashboard và dữ liệu mẫu — DKH chỉ còn Etsy
+- Bỏ 10 tính năng không tồn tại; thêm hẳn mục **"Not built yet"** ở `/features` liệt kê
+  công khai những gì chưa làm được
+- Đánh dấu webhook là chưa triển khai thay vì mô tả như đang chạy
+- Bỏ mọi tuyên bố nhắn tin cho người mua và bỏ action `EMAIL_BUYER`
+- Rút scope từ 7 xuống **4**: `shops_r listings_r transactions_r transactions_w`
+- Thêm DISCLAIMER nguyên văn vào `/terms` §8 và câu trademark đúng chữ ở footer
+- Thay số điện thoại/địa chỉ bịa bằng biến môi trường; không hiển thị nếu chưa đặt
+
+---
+
+## ⚠️ Phải làm trước khi nộp lại
+
+**Đặt một hòm thư thật.** §3 bắt buộc app phải công bố "a monitored email address that
+Etsy sellers can use to contact your Application for support". Hiện đang là placeholder
+`support@dkh.io` — domain chưa sở hữu, reviewer gửi thử sẽ bounce và trượt tiếp.
+
+```bash
+vercel env add SUPPORT_EMAIL production --force --value "hom-thu-that-cua-ban@gmail.com"
+```
+
+```bash
+vercel deploy --prod --yes
+```
+
+Có thể đặt thêm `BUSINESS_PHONE` và `BUSINESS_ADDRESS` nếu có thật — bỏ trống thì trang
+sẽ không hiển thị, tốt hơn là bịa.
+
+---
+
+## Nội dung điền khi nộp lại
 
 **Application name**
 ```
 DKH
 ```
 
-**Application description** (mô tả app làm gì — đây là phần Etsy đọc kỹ nhất)
+**Application description**
 ```
-DKH is an order management and fulfillment automation tool for Etsy sellers who also
-sell on other channels. After a seller authorizes their shop through Etsy's OAuth screen,
-DKH imports their receipts and active listings into a single operations dashboard,
-lets them track each order from payment through production to delivery, and uploads the
-tracking number back to Etsy when a shipping label is created — so the buyer is notified
-through Etsy automatically.
+DKH is an order management tool for a single marketplace: Etsy. It is aimed at sellers
+who make items to order and need a production queue that their whole workshop can work
+from, rather than the Etsy seller dashboard alone.
 
-We use the Etsy Open API v3 exclusively (no scraping, no browser automation) with the
-following scopes:
-  - shops_r          read the shop profile so we can label the connection
-  - listings_r       read active listings, SKUs, price and stock to match order lines
-  - transactions_r   read receipts to create the seller's order queue
-  - transactions_w   upload tracking numbers and mark receipts as shipped
-  - email_r          contact the seller if a sync fails
+After a seller authorises their shop on Etsy's own OAuth screen, DKH:
+  - imports their receipts (buyer name, shipping address, line items, personalisation
+    text, totals, payment state) into a filterable order queue;
+  - reads their active listings so order lines can be matched to a SKU, price and stock
+    level;
+  - lets them move orders through their own production stages with internal status,
+    priority, tags and notes that exist only inside DKH;
+  - submits the carrier and tracking number back to Etsy when a shipment is recorded,
+    so the order is marked shipped on Etsy;
+  - reports on their own revenue, order volume and time-to-ship, with CSV export.
 
-Buyer data is used only to fulfill the seller's own orders. It is never sold, never used
-for advertising, and never shared with other sellers. Sellers can disconnect a shop at any
-time, which deletes the stored tokens immediately, and can delete their entire account and
-all imported data from their dashboard.
+We request exactly four scopes, which is the complete set the features above need:
+  shops_r         read shop id, name and currency to label the connection
+  listings_r      read active listings to match order lines to products
+  transactions_r  read receipts — this is the order data being managed
+  transactions_w  submit a tracking number against a receipt
+
+DKH does not create or edit listings, does not change shop settings or prices, and does
+not contact buyers. Uploading a tracking number is the only action with any buyer-visible
+effect, and the resulting notification is sent by Etsy, not by us. We do not scrape Etsy:
+every call is to the documented Open API v3 using a token the seller granted.
+
+Buyer data is used solely to fulfil that seller's own orders. It is never sold, never used
+for advertising or model training, and never shared with other sellers. Tokens are
+encrypted at rest and deleted the moment a shop is disconnected. Sellers can export or
+erase everything from their dashboard.
+
+DKH integrates with Etsy only. Features we have not built are listed publicly at
+https://dkh-io.vercel.app/features so nobody signs up expecting them.
 
 Website: https://dkh-io.vercel.app
 Privacy Policy: https://dkh-io.vercel.app/privacy
-Terms: https://dkh-io.vercel.app/terms
+Terms (incl. required Etsy disclaimer): https://dkh-io.vercel.app/terms
+Scopes and endpoints in detail: https://dkh-io.vercel.app/platforms
 ```
 
 **Website URL**
@@ -63,70 +113,31 @@ Terms: https://dkh-io.vercel.app/terms
 https://dkh-io.vercel.app
 ```
 
-**Callback URL / Redirect URI** — phải khớp tuyệt đối, kể cả dấu `/`
+**Callback URL**
 ```
 https://dkh-io.vercel.app/api/integrations/etsy/callback
 ```
 
-**Do you plan to charge for this application?** → Yes (có trang `/pricing`) hoặc No, tùy bạn.
+**App type** → Seller Tools (không tick Buyer Tools)
+**Users** → The general public
+**Commercial** → Yes
+**Will your app do any of the following?** → chỉ tick **Read sales data**
 
 ---
 
-## Bước 2 — Sau khi được cấp key
+## Nếu bị từ chối lần nữa
 
-Etsy trả về **Keystring** (client id) và **Shared secret**.
+Trả lời thư từ chối và hỏi thẳng điều gì chưa đạt — địa chỉ `developer@etsy.com`. §2 cho
+phép Etsy yêu cầu thêm thông tin, nên hỏi lại là hợp lệ.
 
-Nạp vào Vercel (`ETSY_REDIRECT_URI` đã đặt sẵn đúng giá trị):
-
-```bash
-printf '%s' 'keystring-cua-ban' | vercel env add ETSY_CLIENT_ID production --force
-```
-
-```bash
-printf '%s' 'shared-secret-cua-ban' | vercel env add ETSY_CLIENT_SECRET production --force
-```
-
-```bash
-vercel deploy --prod --yes
-```
-
-Dùng `printf` chứ đừng dùng `echo` — một số shell thêm ký tự BOM vào đầu giá trị và
-Etsy sẽ từ chối `client_id`.
-
-Sau khi redeploy, vào **Admin → Integrations** để xác nhận mọi biến môi trường đã "ok",
-và nút Connect Etsy shop trong Dashboard → Shops chuyển sang chế độ live.
+Phương án dự phòng: giữ **Personal Access** đang có, dùng cho chính shop của bạn, tích luỹ
+sử dụng thật rồi xin commercial sau — lúc đó có dữ liệu vận hành thật để chứng minh, thay
+vì chỉ có lời hứa.
 
 ---
 
-## Bước 3 — Kiểm tra luồng OAuth
+## Rate limit
 
-1. Đăng nhập với tài khoản seller
-2. Dashboard → Shops → **Connect Etsy shop**
-3. Etsy hiện màn hình xin quyền → Allow
-4. Quay lại `/dashboard/shops?connected=<tên shop>`
-5. Listings và receipts được import; xem log tại Admin → Integrations → Recent sync jobs
-
-Nếu lỗi, thông báo cụ thể hiện ngay trên trang Shops và được ghi vào Activity log.
-
----
-
-## Những lỗi khiến đơn bị từ chối
-
-| Lỗi | Cách dự án này xử lý |
-|---|---|
-| Website chỉ là landing page trống | Có 11 trang public + dashboard + admin hoạt động thật |
-| Không có Privacy Policy | Có, và nêu đích danh từng scope Etsy |
-| Không nói rõ dùng scope nào để làm gì | Nêu ở `/platforms`, `/privacy` §3, và Admin → Integrations |
-| Xin quá nhiều scope | Chỉ xin 5 scope cần thiết cho chức năng đã mô tả |
-| Không có cách xóa dữ liệu | `/privacy#data-deletion` + nút xóa tài khoản thật trong Settings |
-| Thiếu ghi chú thương hiệu Etsy | Có ở footer mọi trang |
-| Redirect URI không khớp | Admin → Integrations hiển thị URI chính xác để copy |
-
----
-
-## Rate limit của Etsy
-
-- 10 requests/giây, 10.000 requests/ngày cho mỗi app
-- `src/lib/sync.ts` đồng bộ tuần tự theo từng shop và ghi lại mọi lần chạy vào bảng `SyncJob`
-- Khi lên production nên chuyển sync sang hàng đợi nền (cron / queue) thay vì chạy đồng bộ
-  trong request, và thêm backoff khi gặp HTTP 429
+10 request/giây, 10.000 request/ngày mỗi app. `src/lib/sync.ts` đồng bộ tuần tự theo từng
+shop và ghi mọi lần chạy vào bảng `SyncJob`. Khi có nhiều seller nên chuyển sync sang hàng
+đợi nền và thêm backoff khi gặp HTTP 429.
