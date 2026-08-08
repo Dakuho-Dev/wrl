@@ -35,7 +35,9 @@ mô tả một sản phẩm không tồn tại đúng như mô tả**:
 - Đánh dấu webhook là chưa triển khai thay vì mô tả như đang chạy
 - Bỏ mọi tuyên bố nhắn tin cho người mua và bỏ action `EMAIL_BUYER`
 - Rút scope từ 7 xuống **4**: `shops_r listings_r transactions_r transactions_w`
-- Thêm DISCLAIMER nguyên văn vào `/terms` §8 và câu trademark đúng chữ ở footer
+- Thêm DISCLAIMER nguyên văn vào `/terms` §8
+- Câu trademark dùng **đúng nguyên văn của Etsy**, hiển thị ở banner ngay đầu trang chủ
+  (trên màn hình đầu tiên, không cần cuộn) và ở footer mọi trang
 - Thay số điện thoại/địa chỉ bịa bằng biến môi trường; không hiển thị nếu chưa đặt
 
 ---
