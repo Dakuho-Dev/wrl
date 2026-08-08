@@ -16,6 +16,9 @@ export const siteConfig = {
   businessPhone: cleanEnv(process.env.BUSINESS_PHONE, ""),
 } as const;
 
-/** The exact notice Etsy's API Terms §1 require the application to display. */
+/**
+ * The notice Etsy's API Terms §1 require the application to display, word for
+ * word as Etsy publishes it. Do not paraphrase or reflow this string.
+ */
 export const ETSY_TRADEMARK_NOTICE =
-  "The term “Etsy” is a trademark of Etsy, Inc. This Application uses Etsy’s API, but is not endorsed or certified by Etsy.";
+  "The term 'Etsy' is a trademark of Etsy, Inc. This application uses the Etsy API but is not endorsed or certified by Etsy, Inc.";

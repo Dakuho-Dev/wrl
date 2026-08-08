@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 
+import { EtsyTrademarkBanner } from "@/components/site/etsy-trademark-banner";
 import { ButtonLink } from "@/components/ui";
 
 /**
@@ -101,6 +102,9 @@ const COMMITMENTS = [
 export default function HomePage() {
   return (
     <>
+      {/* Required by Etsy API Terms §1 — kept first so it cannot be missed. */}
+      <EtsyTrademarkBanner />
+
       {/* ------------------------------------------------------------ Hero */}
       <section className="border-b-2 border-line-strong">
         <div className="mx-auto grid max-w-7xl gap-0 px-4 sm:px-6 lg:grid-cols-12 lg:px-8">
