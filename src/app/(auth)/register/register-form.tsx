@@ -50,7 +50,7 @@ export function RegisterForm() {
         <input
           type="checkbox"
           name="terms"
-          className="mt-0.5 h-3.5 w-3.5 shrink-0 rounded border-line bg-paper-2"
+          className="mt-0.5 h-4 w-4 shrink-0 rounded border-line accent-[#1668d8]"
         />
         <span>
           I agree to the{" "}

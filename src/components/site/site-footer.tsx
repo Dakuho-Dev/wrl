@@ -50,22 +50,22 @@ export function SiteFooter() {
   ] as Array<[string, string]>;
 
   return (
-    <footer className="border-t-2 border-line-strong bg-paper-2">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <footer className="bg-navy text-slate-300">
+      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-4">
-            <Logo />
-            <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted">
+            <Logo onDark />
+            <p className="mt-5 max-w-sm text-sm leading-relaxed text-slate-400">
               DKH is an order management tool for Etsy sellers. It reads your orders through the
               Etsy Open API, gives you a production queue, and uploads tracking numbers back to
               Etsy when you ship.
             </p>
 
-            <dl className="mt-6 divide-y divide-line border-y border-line">
+            <dl className="mt-6 divide-y divide-white/10 border-y border-white/10">
               {contact.map(([label, value]) => (
-                <div key={label} className="flex items-baseline justify-between gap-4 py-2">
-                  <dt className="label">{label}</dt>
-                  <dd className="text-sm text-ink-2">{value}</dd>
+                <div key={label} className="flex items-baseline justify-between gap-4 py-2.5">
+                  <dt className="label !text-sky-400">{label}</dt>
+                  <dd className="text-sm text-slate-200">{value}</dd>
                 </div>
               ))}
             </dl>
@@ -74,13 +74,13 @@ export function SiteFooter() {
           <div className="grid gap-8 sm:grid-cols-4 lg:col-span-8">
             {COLUMNS.map((column) => (
               <div key={column.title}>
-                <h4 className="label border-b border-line pb-2">{column.title}</h4>
-                <ul className="mt-3 space-y-2">
+                <h4 className="label !text-sky-400">{column.title}</h4>
+                <ul className="mt-4 space-y-2.5">
                   {column.links.map((link) => (
                     <li key={link.href + link.label}>
                       <Link
                         href={link.href}
-                        className="text-sm text-ink-2 underline decoration-transparent underline-offset-4 transition hover:decoration-accent"
+                        className="text-sm text-slate-400 transition hover:text-white"
                       >
                         {link.label}
                       </Link>
@@ -92,21 +92,23 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-10 space-y-3 border-t-2 border-line-strong pt-5">
+        <div className="mt-12 space-y-4 border-t border-white/10 pt-6">
           {/* Wording fixed by Etsy's API Terms §1 — do not paraphrase. */}
-          <p className="max-w-4xl text-xs leading-relaxed text-muted">{ETSY_TRADEMARK_NOTICE}</p>
+          <p className="max-w-4xl rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-xs leading-relaxed text-slate-300">
+            {ETSY_TRADEMARK_NOTICE}
+          </p>
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-2">
+            <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-slate-500">
               © {new Date().getFullYear()} dkh.io — All rights reserved
             </p>
-            <div className="flex gap-5 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-2">
-              <Link href="/terms" className="hover:text-ink">
+            <div className="flex gap-5 font-mono text-[11px] uppercase tracking-[0.14em] text-slate-500">
+              <Link href="/terms" className="transition hover:text-white">
                 Terms
               </Link>
-              <Link href="/privacy" className="hover:text-ink">
+              <Link href="/privacy" className="transition hover:text-white">
                 Privacy
               </Link>
-              <Link href="/security" className="hover:text-ink">
+              <Link href="/security" className="transition hover:text-white">
                 Security
               </Link>
             </div>

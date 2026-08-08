@@ -1,5 +1,16 @@
 import Link from "next/link";
-import { ArrowRight, Check } from "lucide-react";
+import {
+  ArrowRight,
+  BarChart3,
+  Check,
+  KeyRound,
+  ListChecks,
+  RefreshCw,
+  ShieldCheck,
+  Tags,
+  Truck,
+  Workflow,
+} from "lucide-react";
 
 import { EtsyTrademarkBanner } from "@/components/site/etsy-trademark-banner";
 import { ButtonLink } from "@/components/ui";
@@ -22,31 +33,37 @@ const FACTS = [
 const CAPABILITIES = [
   {
     n: "01",
+    icon: RefreshCw,
     title: "Order synchronisation",
     body: "Receipts are imported from your Etsy shop with buyer name, shipping address, line items, personalisation text and payment state, then kept up to date on every sync.",
   },
   {
     n: "02",
+    icon: ListChecks,
     title: "Production queue",
     body: "One list of what has to be made and shipped, with status, priority, internal notes and tags that live in DKH — your Etsy listings and orders are never altered.",
   },
   {
     n: "03",
+    icon: Tags,
     title: "Listing reference",
     body: "Active listings are pulled in read-only so order lines can be matched to a SKU, price and stock level. DKH does not create or edit listings.",
   },
   {
     n: "04",
+    icon: Truck,
     title: "Tracking upload",
     body: "When you record a shipment, the tracking number and carrier are submitted to Etsy against the receipt. Etsy marks the order shipped and handles notifying the buyer.",
   },
   {
     n: "05",
+    icon: Workflow,
     title: "Workflow rules",
     body: "Trigger-condition-action rules that set status, priority or tags, alert a teammate, or call your own webhook. Everything they touch stays inside DKH.",
   },
   {
     n: "06",
+    icon: BarChart3,
     title: "Reporting",
     body: "Revenue, order volume and time-to-ship across your own shop, with CSV export of your own data whenever you want it.",
   },
@@ -91,6 +108,14 @@ const MANIFEST = [
   ["#2481926", "On hold"],
 ];
 
+const STATE_TONE: Record<string, string> = {
+  Shipped: "bg-sky-100 text-sky-800",
+  "In production": "bg-amber-100 text-amber-800",
+  New: "bg-slate-100 text-slate-700",
+  Delivered: "bg-emerald-100 text-emerald-800",
+  "On hold": "bg-rose-100 text-rose-800",
+};
+
 const COMMITMENTS = [
   "We request four scopes — the exact set the features above need, and nothing more",
   "Buyer data is used only to fulfil your own orders: never sold, never used for advertising, never shared with other sellers",
@@ -106,62 +131,89 @@ export default function HomePage() {
       <EtsyTrademarkBanner />
 
       {/* ------------------------------------------------------------ Hero */}
-      <section className="border-b-2 border-line-strong">
-        <div className="mx-auto grid max-w-7xl gap-0 px-4 sm:px-6 lg:grid-cols-12 lg:px-8">
-          <div className="py-14 lg:col-span-7 lg:border-r lg:border-line lg:py-20 lg:pr-12">
-            <p className="label">Order management for Etsy sellers</p>
+      <section className="bg-brand-sweep relative overflow-hidden text-white">
+        <div className="surface-dots absolute inset-0 opacity-60" aria-hidden />
+        <div
+          className="absolute -right-24 -top-24 h-[420px] w-[420px] rounded-full bg-sky-400/20 blur-3xl"
+          aria-hidden
+        />
 
-            <h1 className="mt-5 text-[2.6rem] leading-[1.05] text-ink sm:text-6xl">
+        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-12 lg:px-8 lg:py-24">
+          <div className="animate-rise lg:col-span-7">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.16em] text-sky-100 backdrop-blur">
+              <ShieldCheck className="h-3.5 w-3.5" />
+              Order management for Etsy sellers
+            </span>
+
+            <h1 className="mt-6 text-[2.7rem] font-bold leading-[1.06] tracking-tight sm:text-6xl">
               Your Etsy orders,
               <br />
-              in a queue built
-              <br />
-              <span className="text-accent">for making things.</span>
+              in a queue built{" "}
+              <span className="bg-gradient-to-r from-sky-300 to-cyan-200 bg-clip-text text-transparent">
+                for making things.
+              </span>
             </h1>
 
-            <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted">
+            <p className="mt-7 max-w-xl text-lg leading-relaxed text-slate-200">
               DKH reads the orders from your Etsy shop into one production board, lets you track
               each one from paid to packed, and uploads the tracking number back to Etsy when it
               ships. That is the whole job.
             </p>
 
             <div className="mt-9 flex flex-wrap items-center gap-3">
-              <ButtonLink href="/register" className="px-6 py-3 text-base">
+              <Link
+                href="/register"
+                className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3.5 text-base font-semibold text-accent shadow-lg shadow-black/20 transition-all hover:-translate-y-0.5 hover:bg-sky-50"
+              >
                 Create free account
                 <ArrowRight className="h-4 w-4" />
-              </ButtonLink>
-              <ButtonLink href="/platforms" variant="secondary" className="px-6 py-3 text-base">
+              </Link>
+              <Link
+                href="/platforms"
+                className="inline-flex items-center gap-2 rounded-xl border border-white/30 px-6 py-3.5 text-base font-semibold text-white transition-all hover:-translate-y-0.5 hover:border-white hover:bg-white/10"
+              >
                 What we access
-              </ButtonLink>
+              </Link>
             </div>
 
-            <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-2">
+            <p className="mt-7 font-mono text-[11px] uppercase tracking-[0.14em] text-slate-400">
               Free tier · No card required · Disconnect anytime
             </p>
           </div>
 
-          <div className="border-t border-line py-10 lg:col-span-5 lg:border-t-0 lg:py-20 lg:pl-12">
-            <div className="border-2 border-line-strong bg-surface">
-              <div className="flex items-baseline justify-between border-b-2 border-line-strong px-4 py-2.5">
-                <span className="label !text-ink">The queue</span>
-                <span className="font-mono text-[11px] text-muted-2">Sample view</span>
-              </div>
+          {/* Sample queue — labelled, so nobody mistakes it for real trading data. */}
+          <div className="animate-rise lg:col-span-5">
+            <div className="rounded-2xl border border-white/15 bg-white/8 p-2 shadow-2xl shadow-black/40 backdrop-blur">
+              <div className="overflow-hidden rounded-xl bg-surface">
+                <div className="flex items-center justify-between border-b border-line px-4 py-3">
+                  <span className="label">The queue</span>
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-muted-2">
+                    Sample view
+                  </span>
+                </div>
 
-              <table className="w-full border-collapse text-sm">
-                <tbody>
-                  {MANIFEST.map(([id, state]) => (
-                    <tr key={id} className="border-b border-line last:border-b-0">
-                      <td className="px-4 py-2.5 font-mono text-[13px] text-ink">{id}</td>
-                      <td className="px-4 py-2.5 text-right text-[13px] text-ink-2">{state}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                <table className="w-full border-collapse text-sm">
+                  <tbody>
+                    {MANIFEST.map(([id, state]) => (
+                      <tr key={id} className="border-b border-line last:border-b-0">
+                        <td className="px-4 py-3 font-mono text-[13px] text-ink">{id}</td>
+                        <td className="px-4 py-3 text-right">
+                          <span
+                            className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${STATE_TONE[state]}`}
+                          >
+                            {state}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
 
-              <div className="border-t-2 border-line-strong px-4 py-3">
-                <p className="font-mono text-[11px] leading-relaxed text-muted">
-                  Illustration of the order list. Figures are not real trading data.
-                </p>
+                <div className="border-t border-line bg-paper-2/60 px-4 py-3">
+                  <p className="font-mono text-[10.5px] leading-relaxed text-muted">
+                    Illustration of the order list. Figures are not real trading data.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -169,17 +221,14 @@ export default function HomePage() {
       </section>
 
       {/* ------------------------------------------------------------ Facts */}
-      <section className="border-b-2 border-line-strong bg-ink text-white">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 px-4 sm:px-6 lg:grid-cols-4 lg:px-8">
-          {FACTS.map(([value, label], index) => (
-            <div
-              key={label}
-              className={`px-2 py-7 ${index < 3 ? "lg:border-r lg:border-white/15" : ""} ${
-                index % 2 === 0 ? "border-r border-white/15 lg:border-r" : ""
-              }`}
-            >
-              <p className="font-display text-2xl leading-tight">{value}</p>
-              <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-3">
+      <section className="border-b border-line bg-surface">
+        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px px-4 sm:px-6 lg:grid-cols-4 lg:px-8">
+          {FACTS.map(([value, label]) => (
+            <div key={label} className="px-3 py-8 text-center lg:px-5">
+              <p className="text-brand-sweep font-display text-xl leading-tight sm:text-2xl">
+                {value}
+              </p>
+              <p className="mt-2 font-mono text-[10px] uppercase leading-relaxed tracking-[0.16em] text-muted">
                 {label}
               </p>
             </div>
@@ -188,146 +237,151 @@ export default function HomePage() {
       </section>
 
       {/* ------------------------------------------------------------ Capabilities */}
-      <section id="features" className="border-b-2 border-line-strong">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-end justify-between gap-4 border-b-2 border-line-strong pb-5">
-            <div>
-              <p className="label">Section I</p>
-              <h2 className="mt-2 text-4xl text-ink">What DKH does</h2>
-            </div>
-            <p className="max-w-md text-sm leading-relaxed text-muted">
-              Six things, all of them working today against the Etsy Open API. Nothing here is
-              planned or in beta.
+      <section id="features" className="bg-paper">
+        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="label">What DKH does</p>
+            <h2 className="mt-3 text-4xl text-ink sm:text-[2.75rem]">
+              Six things, all working today
+            </h2>
+            <p className="mt-4 leading-relaxed text-muted">
+              Everything below runs against the Etsy Open API right now. Nothing here is planned,
+              in beta, or coming soon.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2">
-            {CAPABILITIES.map((item, index) => (
-              <article
-                key={item.n}
-                className={`border-b border-line py-7 md:py-8 ${
-                  index % 2 === 0 ? "md:border-r md:pr-10" : "md:pl-10"
-                }`}
-              >
-                <div className="flex gap-5">
-                  <span className="font-display text-2xl leading-none text-muted-2">{item.n}</span>
-                  <div>
-                    <h3 className="text-xl text-ink">{item.title}</h3>
-                    <p className="mt-2 text-[15px] leading-relaxed text-muted">{item.body}</p>
+          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {CAPABILITIES.map((item) => {
+              const Icon = item.icon;
+              return (
+                <article
+                  key={item.n}
+                  className="shadow-card group relative overflow-hidden rounded-2xl border border-line bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30 hover:shadow-hard"
+                >
+                  <span
+                    className="bg-azure-sweep absolute inset-x-0 top-0 h-1 origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100"
+                    aria-hidden
+                  />
+                  <div className="flex items-center justify-between">
+                    <span className="bg-accent-soft grid h-11 w-11 place-items-center rounded-xl text-accent transition group-hover:bg-accent group-hover:text-white">
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    <span className="font-mono text-xs text-muted-2">{item.n}</span>
                   </div>
-                </div>
-              </article>
-            ))}
+                  <h3 className="mt-5 text-lg text-ink">{item.title}</h3>
+                  <p className="mt-2.5 text-[14.5px] leading-relaxed text-muted">{item.body}</p>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* ------------------------------------------------------------ Pipeline */}
-      <section className="border-b-2 border-line-strong bg-paper-2">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <p className="label">Section II</p>
-          <h2 className="mt-2 text-4xl text-ink">How an order moves</h2>
+      {/* ---------------------------------------------- Scopes (azure band) */}
+      <section id="platforms" className="bg-azure-sweep relative overflow-hidden text-white">
+        <div className="surface-dots absolute inset-0 opacity-40" aria-hidden />
 
-          <div className="mt-9 grid border-y-2 border-line-strong md:grid-cols-4">
-            {PIPELINE.map(([step, title, body], index) => (
+        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <div className="max-w-2xl">
+              <p className="label !text-sky-100">Exactly what we access</p>
+              <h2 className="mt-3 text-4xl sm:text-[2.75rem]">Four scopes. That is the list.</h2>
+              <p className="mt-4 leading-relaxed text-sky-100">
+                You see them on Etsy&rsquo;s own authorisation screen before you approve anything —
+                and you can revoke them from your Etsy account at any time.
+              </p>
+            </div>
+            <Link
+              href="/platforms"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/40 px-5 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:border-white hover:bg-white/10"
+            >
+              Full detail <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          <div className="mt-10 grid gap-4 sm:grid-cols-2">
+            {SCOPES.map(([scope, access, purpose]) => (
               <div
-                key={step}
-                className={`px-5 py-7 ${index < 3 ? "border-b border-line md:border-b-0 md:border-r" : ""}`}
+                key={scope}
+                className="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur transition hover:border-white/35 hover:bg-white/15"
               >
-                <span className="font-display text-4xl leading-none text-accent">{step}</span>
-                <h3 className="mt-4 text-lg text-ink">{title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{body}</p>
+                <div className="flex items-center justify-between gap-3">
+                  <code className="flex items-center gap-2 font-mono text-[15px] font-semibold text-white">
+                    <KeyRound className="h-4 w-4 text-sky-200" />
+                    {scope}
+                  </code>
+                  <span
+                    className={`rounded-full px-2.5 py-0.5 font-mono text-[10.5px] uppercase tracking-wider ${
+                      access === "Read"
+                        ? "bg-emerald-400/20 text-emerald-50"
+                        : "bg-amber-400/25 text-amber-50"
+                    }`}
+                  >
+                    {access}
+                  </span>
+                </div>
+                <p className="mt-3 text-sm leading-relaxed text-sky-100">{purpose}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ------------------------------------------------------------ Scopes */}
-      <section id="platforms" className="border-b-2 border-line-strong">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="label">Section III</p>
-              <h2 className="mt-2 text-4xl text-ink">Exactly what we access</h2>
-              <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">
-                These four scopes are the complete list. You see them on Etsy&rsquo;s authorisation
-                screen before you approve anything.
-              </p>
-            </div>
-            <ButtonLink href="/platforms" variant="outline">
-              Full detail <ArrowRight className="h-4 w-4" />
-            </ButtonLink>
+      {/* ------------------------------------------------------------ Pipeline */}
+      <section className="bg-surface">
+        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="label">How an order moves</p>
+            <h2 className="mt-3 text-4xl text-ink sm:text-[2.75rem]">From paid to packed</h2>
           </div>
 
-          <div className="scroll-thin mt-8 overflow-x-auto">
-            <table className="w-full min-w-[620px] border-collapse text-sm">
-              <thead>
-                <tr>
-                  {["Scope", "Access", "Used for"].map((head) => (
-                    <th
-                      key={head}
-                      className="label border-y-2 border-line-strong px-4 py-3 text-left"
-                    >
-                      {head}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {SCOPES.map(([scope, access, purpose]) => (
-                  <tr key={scope} className="border-b border-line">
-                    <td className="px-4 py-4 font-mono text-[13px] text-accent">{scope}</td>
-                    <td className="px-4 py-4">
-                      <span
-                        className={`border px-2 py-0.5 font-mono text-[11px] uppercase tracking-wider ${
-                          access === "Read"
-                            ? "border-emerald-800/25 bg-emerald-700/10 text-emerald-900"
-                            : "border-amber-800/25 bg-amber-600/12 text-amber-900"
-                        }`}
-                      >
-                        {access}
-                      </span>
-                    </td>
-                    <td className="px-4 py-4 text-muted">{purpose}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="relative mt-14 grid gap-8 md:grid-cols-4">
+            {/* Connector rail behind the numbered steps. */}
+            <div
+              className="absolute left-0 right-0 top-6 hidden h-px bg-gradient-to-r from-accent/10 via-accent/40 to-accent/10 md:block"
+              aria-hidden
+            />
+            {PIPELINE.map(([step, title, body]) => (
+              <div key={step} className="relative">
+                <span className="bg-azure-sweep shadow-hard-accent relative z-10 grid h-12 w-12 place-items-center rounded-xl font-display text-lg text-white">
+                  {step}
+                </span>
+                <h3 className="mt-5 text-lg text-ink">{title}</h3>
+                <p className="mt-2 text-[14.5px] leading-relaxed text-muted">{body}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* ------------------------------------------------------------ Commitments */}
-      <section className="border-b-2 border-line-strong bg-paper-2">
-        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:px-8">
+      <section className="bg-paper">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:px-8">
           <div>
-            <p className="label">Section IV</p>
-            <h2 className="mt-2 text-4xl text-ink">How we handle your data</h2>
+            <p className="label">How we handle your data</p>
+            <h2 className="mt-3 text-4xl text-ink sm:text-[2.75rem]">
+              Your seller data stays yours
+            </h2>
             <p className="mt-5 max-w-lg leading-relaxed text-muted">
               DKH acts as a service provider to you, the seller. Everything read from Etsy is used
               to fulfil your own orders and for nothing else.
             </p>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <Link
-                href="/privacy"
-                className="border border-line-strong px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink transition-all hover:shadow-hard-sm"
-              >
+            <div className="mt-8 flex flex-wrap gap-3">
+              <ButtonLink href="/privacy" variant="secondary" className="px-5 py-2.5">
                 Privacy Policy
-              </Link>
-              <Link
-                href="/security"
-                className="border border-line-strong px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink transition-all hover:shadow-hard-sm"
-              >
+              </ButtonLink>
+              <ButtonLink href="/security" variant="secondary" className="px-5 py-2.5">
                 Security Policy
-              </Link>
+              </ButtonLink>
             </div>
           </div>
 
-          <ul className="divide-y divide-line border-y-2 border-line-strong">
+          <ul className="shadow-card space-y-4 rounded-2xl border border-line bg-surface p-7">
             {COMMITMENTS.map((item) => (
-              <li key={item} className="flex items-start gap-3 py-4 text-[15px] text-ink-2">
-                <Check className="mt-1 h-4 w-4 shrink-0 text-accent" />
+              <li key={item} className="flex items-start gap-3.5 text-[14.5px] leading-relaxed text-ink-2">
+                <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-emerald-100 text-emerald-700">
+                  <Check className="h-3.5 w-3.5" strokeWidth={3} />
+                </span>
                 {item}
               </li>
             ))}
@@ -336,14 +390,15 @@ export default function HomePage() {
       </section>
 
       {/* ------------------------------------------------------------ CTA */}
-      <section className="bg-ink text-white">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <section className="bg-brand-sweep relative overflow-hidden text-white">
+        <div className="surface-dots absolute inset-0 opacity-50" aria-hidden />
+        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-end justify-between gap-8">
             <div>
-              <h2 className="max-w-2xl text-4xl leading-tight">
+              <h2 className="max-w-2xl text-4xl leading-tight sm:text-[2.75rem]">
                 Get your orders out of the browser tab.
               </h2>
-              <p className="mt-4 max-w-xl text-paper-3">
+              <p className="mt-4 max-w-xl text-slate-300">
                 Create a free account, authorise your Etsy shop, and your orders are in the queue a
                 minute later.
               </p>
@@ -351,13 +406,14 @@ export default function HomePage() {
             <div className="flex flex-wrap gap-3">
               <Link
                 href="/register"
-                className="border border-white bg-white px-6 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-ink transition hover:bg-paper-2"
+                className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3.5 text-base font-semibold text-accent shadow-lg shadow-black/20 transition-all hover:-translate-y-0.5 hover:bg-sky-50"
               >
                 Create free account
+                <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href="/contact"
-                className="border border-white/40 px-6 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-white transition hover:border-white"
+                className="inline-flex items-center rounded-xl border border-white/30 px-6 py-3.5 text-base font-semibold text-white transition-all hover:-translate-y-0.5 hover:border-white hover:bg-white/10"
               >
                 Contact support
               </Link>

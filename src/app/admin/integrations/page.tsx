@@ -99,7 +99,7 @@ export default async function AdminIntegrationsPage() {
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-2">
                 Register this callback URL in your Etsy app
               </p>
-              <div className="mt-2 flex items-center gap-2 rounded-none border border-line bg-paper-2 px-3 py-2.5">
+              <div className="mt-2 flex items-center gap-2 rounded-xl border border-line bg-paper-2 px-3 py-2.5">
                 <code className="flex-1 break-all text-xs text-accent">{etsy.redirectUri}</code>
                 <Copy className="h-3.5 w-3.5 shrink-0 text-muted-2" />
               </div>
@@ -116,7 +116,7 @@ export default async function AdminIntegrationsPage() {
                 {etsy.scopes.map((scope) => (
                   <code
                     key={scope}
-                    className="rounded-none border border-line bg-paper-2 px-2 py-1 text-xs text-accent"
+                    className="rounded-xl border border-line bg-paper-2 px-2 py-1 text-xs text-accent"
                   >
                     {scope}
                   </code>

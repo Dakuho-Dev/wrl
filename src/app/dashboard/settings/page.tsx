@@ -171,7 +171,7 @@ export default async function SettingsPage() {
           description="Export or permanently delete everything DKH holds about you"
         />
         <div className="space-y-4 p-5">
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-none border border-line bg-paper-2 p-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-paper-2 p-4">
             <div>
               <p className="text-sm font-medium text-ink">Export your data</p>
               <p className="text-xs text-muted-2">

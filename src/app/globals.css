@@ -1,35 +1,39 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------
-   DKH design system — warm paper, hard edges, serif display type.
-   Deliberately not a dark gradient SaaS console.
+   DKH design system — deep navy + azure, rounded surfaces, soft
+   elevation. Modern SaaS rather than editorial print.
 ------------------------------------------------------------------ */
 
 @theme {
-  /* Surfaces */
-  --color-paper: #f7f5ef;
-  --color-paper-2: #efece2;
-  --color-paper-3: #e4e0d2;
+  /* Surfaces — cool, near-white page with a tinted second layer */
+  --color-paper: #f4f7fc;
+  --color-paper-2: #e9eff8;
+  --color-paper-3: #dae4f2;
   --color-surface: #ffffff;
 
   /* Structure */
-  --color-line: #d9d4c4;
-  --color-line-strong: #1a1a14;
+  --color-line: #dde5f0;
+  --color-line-strong: #c3d1e4;
 
-  /* Type */
-  --color-ink: #1a1a14;
-  --color-ink-2: #3d3b31;
-  --color-muted: #6d685a;
-  --color-muted-2: #928d7c;
+  /* Type — navy instead of black, so nothing on the page reads harsh */
+  --color-ink: #0d1f38;
+  --color-ink-2: #2c4460;
+  --color-muted: #5d738f;
+  --color-muted-2: #8b9db5;
 
-  /* Accent — forest green, with a soft wash and a darker press state */
-  --color-accent: #1b5e3f;
-  --color-accent-2: #14472f;
-  --color-accent-soft: #e2eee7;
-  --color-accent-ink: #10523a;
+  /* Accent — azure, with a deeper press state and a soft wash */
+  --color-accent: #1668d8;
+  --color-accent-2: #1150ab;
+  --color-accent-soft: #e7f0fe;
+  --color-accent-ink: #0f4899;
+
+  /* Deep field used for the hero, the stat strip and the footer */
+  --color-navy: #0b1b33;
+  --color-navy-2: #12294a;
 
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, ui-serif, serif;
+  --font-display: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
 }
 
@@ -49,15 +53,14 @@ body {
   border-color: var(--color-line);
 }
 
-/* Serif display type on every heading — the single loudest signal that this
-   is not a stock dashboard template. */
+/* Tight, heavy sans on headings — the product-site voice. */
 h1,
 h2,
 h3,
 .font-display {
   font-family: var(--font-display);
-  letter-spacing: -0.015em;
-  font-weight: 600;
+  letter-spacing: -0.025em;
+  font-weight: 700;
 }
 
 ::selection {
@@ -71,21 +74,51 @@ h3,
   font-size: 0.6875rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: var(--color-accent);
+  font-weight: 600;
 }
 
-/* Hard offset shadow instead of soft blur — the house style for anything
-   that needs to sit "above" the page. */
+/* ---------------------------------------------------------- Elevation
+   Soft, tinted with the brand navy so shadows never look grey. */
+
 @utility shadow-hard {
-  box-shadow: 3px 3px 0 0 var(--color-line-strong);
+  box-shadow:
+    0 1px 2px rgba(13, 31, 56, 0.06),
+    0 12px 28px -8px rgba(13, 31, 56, 0.16);
 }
 
 @utility shadow-hard-sm {
-  box-shadow: 2px 2px 0 0 var(--color-line-strong);
+  box-shadow:
+    0 1px 2px rgba(13, 31, 56, 0.06),
+    0 6px 16px -6px rgba(13, 31, 56, 0.18);
 }
 
 @utility shadow-hard-accent {
-  box-shadow: 3px 3px 0 0 var(--color-accent);
+  box-shadow: 0 10px 24px -8px rgba(22, 104, 216, 0.5);
+}
+
+@utility shadow-card {
+  box-shadow:
+    0 1px 2px rgba(13, 31, 56, 0.05),
+    0 4px 14px -6px rgba(13, 31, 56, 0.1);
+}
+
+/* ---------------------------------------------------------- Fields */
+
+/* The signature azure sweep — hero, platform band, CTA. */
+@utility bg-brand-sweep {
+  background-image: linear-gradient(135deg, #0b1b33 0%, #123c7c 45%, #1668d8 100%);
+}
+
+@utility bg-azure-sweep {
+  background-image: linear-gradient(135deg, #1150ab 0%, #1668d8 55%, #35a7ea 100%);
+}
+
+@utility text-brand-sweep {
+  background-image: linear-gradient(100deg, #1668d8 0%, #35a7ea 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
 .scroll-thin::-webkit-scrollbar {
@@ -95,27 +128,33 @@ h3,
 .scroll-thin::-webkit-scrollbar-thumb {
   background: var(--color-paper-3);
   border: 2px solid var(--color-paper);
+  border-radius: 999px;
 }
 .scroll-thin::-webkit-scrollbar-track {
   background: transparent;
 }
 
-/* Ruled paper backdrop — horizontal rules only, like a ledger. */
 @utility surface-rule {
   background-image: repeating-linear-gradient(
     to bottom,
     transparent,
     transparent 31px,
-    rgba(26, 26, 20, 0.05) 31px,
-    rgba(26, 26, 20, 0.05) 32px
+    rgba(13, 31, 56, 0.04) 31px,
+    rgba(13, 31, 56, 0.04) 32px
   );
 }
 
 @utility surface-grid {
   background-image:
-    linear-gradient(to right, rgba(26, 26, 20, 0.045) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(26, 26, 20, 0.045) 1px, transparent 1px);
+    linear-gradient(to right, rgba(13, 31, 56, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(13, 31, 56, 0.04) 1px, transparent 1px);
   background-size: 32px 32px;
+}
+
+/* Faint dot field for dark sections, so the navy is never flat. */
+@utility surface-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1px);
+  background-size: 22px 22px;
 }
 
 @keyframes marquee {
@@ -127,8 +166,18 @@ h3,
   animation: marquee 28s linear infinite;
 }
 
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-rise {
+  animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .animate-marquee {
+  .animate-marquee,
+  .animate-rise {
     animation: none;
   }
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHero } from "@/components/site/page-hero";
 import { Clock, LifeBuoy, Mail } from "lucide-react";
 
 import { Card } from "@/components/ui";
@@ -28,16 +29,10 @@ export default function ContactPage() {
 
   return (
     <>
-      <section className="border-b-2 border-line-strong">
-        <div className="mx-auto max-w-4xl px-4 py-20 text-center sm:px-6">
-          <p className="label">Contact</p>
-          <h1 className="mt-4 text-4xl text-ink sm:text-5xl">Talk to a human</h1>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-muted">
-            Questions about connecting your Etsy shop, something not working, or a feature you
-            need? Send a message and we will come back to you.
-          </p>
-        </div>
-      </section>
+      <PageHero eyebrow="Contact" title="Talk to a human">
+        Questions about connecting your Etsy shop, something not working, or a feature you need?
+        Send a message and we will come back to you.
+      </PageHero>
 
       <section className="py-16">
         <div className="mx-auto grid max-w-6xl gap-10 px-4 sm:px-6 lg:grid-cols-5 lg:px-8">

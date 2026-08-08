@@ -19,7 +19,7 @@ const NAV = [
 
 function Code({ children }: { children: string }) {
   return (
-    <pre className="scroll-thin mt-3 overflow-x-auto rounded-none border border-line bg-paper p-4 text-xs leading-relaxed text-ink-2">
+    <pre className="scroll-thin mt-3 overflow-x-auto rounded-xl border border-line bg-paper p-4 text-xs leading-relaxed text-ink-2">
       <code>{children}</code>
     </pre>
   );
@@ -49,7 +49,7 @@ export default function DocsPage() {
               <a
                 key={item.href}
                 href={item.href}
-                className="block rounded-none px-3 py-2 text-sm text-muted transition hover:bg-surface hover:text-ink"
+                className="block rounded-xl px-3 py-2 text-sm text-muted transition hover:bg-surface hover:text-ink"
               >
                 {item.label}
               </a>
@@ -158,7 +158,7 @@ ETSY_SCOPES="shops_r listings_r transactions_r transactions_w"`}</Code>
             </p>
             <Code>{`curl https://dkh.io/api/v1/orders?status=NEW&limit=25 \\
   -H "Authorization: Bearer dkh_live_xxxxxxxxxxxx"`}</Code>
-            <div className="mt-5 overflow-hidden rounded-none border border-line">
+            <div className="mt-5 overflow-hidden rounded-xl border border-line">
               <table className="w-full text-left text-xs">
                 <thead className="bg-paper-2 text-muted">
                   <tr>

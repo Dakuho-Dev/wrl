@@ -39,7 +39,7 @@ export default async function RegisterPage() {
         </ul>
       </div>
 
-      <div className="rounded-none border border-line bg-surface p-7">
+      <div className="shadow-hard rounded-2xl border border-line bg-surface p-7">
         <h1 className="text-2xl font-semibold tracking-tight text-ink">Create your account</h1>
         <p className="mt-1.5 text-sm text-muted">Start on the free Starter plan.</p>
 

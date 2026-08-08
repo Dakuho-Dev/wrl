@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHero } from "@/components/site/page-hero";
 import Link from "next/link";
 import { AlertTriangle, BookOpen, LifeBuoy, MessageSquare, PlugZap, RefreshCw } from "lucide-react";
 
@@ -58,26 +59,26 @@ const ISSUES = [
 export default function SupportPage() {
   return (
     <>
-      <section className="border-b border-line">
-        <div className="mx-auto max-w-4xl px-4 py-20 text-center sm:px-6">
-          <p className="text-sm font-semibold uppercase tracking-widest text-accent">Support</p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-            Support center
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-muted">
-            Start with the guides below. If none of them cover it, open a ticket and a human will
-            answer.
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <ButtonLink href="/contact" className="px-5 py-2.5">
-              <MessageSquare className="h-4 w-4" /> Open a ticket
-            </ButtonLink>
-            <ButtonLink href="/docs" variant="outline" className="px-5 py-2.5">
-              Read the docs
-            </ButtonLink>
-          </div>
+      <PageHero eyebrow="Support" title="Support center">
+        <p>
+          Start with the guides below. If none of them cover it, open a ticket and a human will
+          answer.
+        </p>
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <Link
+            href="/contact"
+            className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-accent transition-all hover:-translate-y-0.5 hover:bg-sky-50"
+          >
+            <MessageSquare className="h-4 w-4" /> Open a ticket
+          </Link>
+          <Link
+            href="/docs"
+            className="inline-flex items-center rounded-xl border border-white/30 px-5 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:border-white hover:bg-white/10"
+          >
+            Read the docs
+          </Link>
         </div>
-      </section>
+      </PageHero>
 
       <section className="py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">

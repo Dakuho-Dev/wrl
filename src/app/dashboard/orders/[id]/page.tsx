@@ -69,7 +69,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
             <div className="divide-y divide-line">
               {order.items.map((item) => (
                 <div key={item.id} className="flex gap-4 px-5 py-4">
-                  <div className="grid h-14 w-14 shrink-0 place-items-center rounded-none bg-paper-2 text-muted-2">
+                  <div className="grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-paper-2 text-muted-2">
                     <Package className="h-5 w-5" />
                   </div>
                   <div className="min-w-0 flex-1">
@@ -81,7 +81,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
                       <p className="mt-1 text-xs text-muted">{item.variation}</p>
                     ) : null}
                     {item.personalization ? (
-                      <p className="mt-1.5 rounded-none border border-amber-500/25 bg-amber-500/10 px-2.5 py-1.5 text-xs text-amber-700">
+                      <p className="mt-1.5 rounded-xl border border-amber-500/25 bg-amber-500/10 px-2.5 py-1.5 text-xs text-amber-700">
                         Personalization: {item.personalization}
                       </p>
                     ) : null}
@@ -124,7 +124,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
               <div className="divide-y divide-line">
                 {order.shipments.map((shipment) => (
                   <div key={shipment.id} className="flex flex-wrap items-center gap-4 px-5 py-4">
-                    <span className="grid h-10 w-10 place-items-center rounded-none bg-violet-500/10 text-violet-700">
+                    <span className="grid h-10 w-10 place-items-center rounded-xl bg-violet-500/10 text-violet-700">
                       <Truck className="h-5 w-5" />
                     </span>
                     <div className="min-w-0 flex-1">
@@ -249,7 +249,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
                 </address>
               </div>
               {order.buyerMessage ? (
-                <div className="rounded-none border border-line bg-paper-2 p-3 text-xs italic text-ink-2">
+                <div className="rounded-xl border border-line bg-paper-2 p-3 text-xs italic text-ink-2">
                   “{order.buyerMessage}”
                 </div>
               ) : null}

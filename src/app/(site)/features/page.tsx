@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHero } from "@/components/site/page-hero";
 import Link from "next/link";
 import {
   BarChart3,
@@ -133,27 +134,20 @@ const NOT_YET = [
 export default function FeaturesPage() {
   return (
     <>
-      <section className="relative overflow-hidden border-b-2 border-line-strong">
-        <div className="surface-rule pointer-events-none absolute inset-0 opacity-70" />
-        <div className="relative mx-auto max-w-4xl px-4 py-20 text-center sm:px-6">
-          <p className="label">Features</p>
-          <h1 className="mt-4 text-4xl text-ink sm:text-5xl">Everything DKH does today</h1>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-muted">
-            Six areas, all working against the Etsy Open API right now. What is not built yet is
-            listed at the bottom of this page rather than left to your imagination.
-          </p>
-        </div>
-      </section>
+      <PageHero eyebrow="Features" title="Everything DKH does today">
+        Six areas, all working against the Etsy Open API right now. What is not built yet is
+        listed at the bottom of this page rather than left to your imagination.
+      </PageHero>
 
       {SECTIONS.map((section, index) => (
         <section
           key={section.id}
           id={section.id}
-          className={`scroll-mt-20 border-b-2 border-line-strong py-16 ${index % 2 === 1 ? "bg-paper-2" : ""}`}
+          className={`scroll-mt-20 border-b border-line py-16 ${index % 2 === 1 ? "bg-paper-2" : ""}`}
         >
           <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:items-start lg:px-8">
             <div className={index % 2 === 1 ? "lg:order-2" : ""}>
-              <span className="grid h-12 w-12 place-items-center border border-line-strong text-accent">
+              <span className="bg-azure-sweep shadow-hard-accent grid h-12 w-12 place-items-center rounded-xl text-white">
                 <section.icon className="h-6 w-6" />
               </span>
               <p className="label mt-5">{section.eyebrow}</p>
@@ -173,7 +167,7 @@ export default function FeaturesPage() {
         </section>
       ))}
 
-      <section className="border-b-2 border-line-strong py-16">
+      <section className="border-b border-line py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl text-ink">And the smaller things</h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -195,7 +189,7 @@ export default function FeaturesPage() {
             Tools in this category often advertise things they intend to build. These are ours, and
             they do not work today:
           </p>
-          <ul className="mt-6 divide-y divide-line border-y-2 border-line-strong">
+          <ul className="mt-6 divide-y divide-line border-y border-line">
             {NOT_YET.map((item) => (
               <li key={item} className="flex items-start gap-3 py-3.5 text-sm text-ink-2">
                 <span className="mt-1 font-mono text-[11px] uppercase tracking-wider text-rose-800">

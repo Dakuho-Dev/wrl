@@ -125,7 +125,7 @@ export default async function ProductsPage({
                         {tags.slice(0, 3).map((tag) => (
                           <span
                             key={tag}
-                            className="rounded-none bg-paper-2 px-1.5 py-0.5 text-[11px] text-muted"
+                            className="rounded-xl bg-paper-2 px-1.5 py-0.5 text-[11px] text-muted"
                           >
                             {tag}
                           </span>

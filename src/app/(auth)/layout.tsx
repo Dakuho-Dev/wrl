@@ -5,9 +5,13 @@ import { Logo } from "@/components/logo";
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative flex min-h-screen flex-col">
-      <div className="surface-rule pointer-events-none absolute inset-0 opacity-70" />
+      {/* Soft azure wash behind the form, so signing in feels part of the product. */}
+      <div
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(60rem_32rem_at_50%_-10%,rgba(22,104,216,0.16),transparent)]"
+        aria-hidden
+      />
 
-      <header className="relative border-b border-line">
+      <header className="relative border-b border-line bg-surface/70 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
           <Logo />
           <Link href="/" className="text-sm text-muted transition hover:text-ink">

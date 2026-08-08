@@ -66,7 +66,7 @@ export default async function NotificationsPage() {
                   notification.read ? "opacity-60" : ""
                 }`}
               >
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-none bg-paper-2 text-accent">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-paper-2 text-accent">
                   <Bell className="h-4 w-4" />
                 </span>
                 <div className="min-w-0 flex-1">

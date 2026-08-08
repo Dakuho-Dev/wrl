@@ -85,7 +85,7 @@ export default async function AdminAutomationsPage() {
                         (action, index) => (
                           <span
                             key={index}
-                            className="rounded-none bg-paper-2 px-1.5 py-0.5 text-[11px] text-emerald-700"
+                            className="rounded-xl bg-paper-2 px-1.5 py-0.5 text-[11px] text-emerald-700"
                           >
                             {action.type}
                           </span>

@@ -131,11 +131,11 @@ export function SplitBar({ data }: { data: Array<Point & { color: string }> }) {
 
   return (
     <div>
-      <div className="flex h-8 w-full overflow-hidden border border-line-strong">
+      <div className="flex h-8 w-full overflow-hidden rounded-lg border border-line">
         {data.map((slice) => (
           <div
             key={slice.label}
-            className="h-full border-r border-line-strong last:border-r-0"
+            className="h-full border-r border-line last:border-r-0"
             style={{ width: `${(slice.value / total) * 100}%`, background: slice.color }}
             title={`${slice.label}: ${slice.value}`}
           />
@@ -146,7 +146,7 @@ export function SplitBar({ data }: { data: Array<Point & { color: string }> }) {
         {data.map((slice) => (
           <div key={slice.label} className="flex items-center gap-3 py-2">
             <span
-              className="h-3 w-3 shrink-0 border border-line-strong"
+              className="h-3 w-3 shrink-0 rounded-sm border border-line"
               style={{ background: slice.color }}
             />
             <dt className="flex-1 truncate text-sm capitalize text-ink-2">{slice.label}</dt>

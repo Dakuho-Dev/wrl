@@ -9,11 +9,11 @@ export function EtsyTrademarkBanner() {
   return (
     <aside
       aria-label="Etsy trademark notice"
-      className="border-b-2 border-line-strong bg-[#fbf1c7]"
+      className="border-b border-amber-300/70 bg-[#fdf5da]"
     >
-      <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
-        <p className="text-center text-[13px] leading-relaxed text-ink sm:text-sm">
-          <span className="font-semibold">Note:</span> {ETSY_TRADEMARK_NOTICE}
+      <div className="mx-auto max-w-7xl px-4 py-3.5 sm:px-6 lg:px-8">
+        <p className="text-center text-[13px] leading-relaxed text-amber-950 sm:text-sm">
+          <span className="font-bold">Note:</span> {ETSY_TRADEMARK_NOTICE}
         </p>
       </div>
     </aside>

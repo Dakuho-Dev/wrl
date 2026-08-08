@@ -24,7 +24,7 @@ export default async function LoginPage() {
 
   return (
     <div className="w-full max-w-md">
-      <div className="rounded-none border border-line bg-surface p-7">
+      <div className="shadow-hard rounded-2xl border border-line bg-surface p-7">
         <h1 className="text-2xl font-semibold tracking-tight text-ink">Welcome back</h1>
         <p className="mt-1.5 text-sm text-muted">
           Sign in to your DKH operations console.
@@ -43,7 +43,7 @@ export default async function LoginPage() {
       </div>
 
       {showDemoCredentials ? (
-        <div className="mt-4 rounded-none border border-line bg-paper-2 p-4">
+        <div className="mt-4 rounded-xl border border-line bg-paper-2 p-4">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted-2">
             Demo accounts
           </p>

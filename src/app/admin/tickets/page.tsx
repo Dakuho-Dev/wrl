@@ -90,7 +90,7 @@ export default async function AdminTicketsPage({
               </div>
 
               <div className="space-y-3 p-5">
-                <div className="rounded-none border border-line bg-paper-2 p-4">
+                <div className="rounded-xl border border-line bg-paper-2 p-4">
                   <p className="text-sm leading-relaxed text-ink-2">{ticket.message}</p>
                   <p className="mt-2 text-xs text-muted-2">{formatDateTime(ticket.createdAt)}</p>
                 </div>
@@ -98,7 +98,7 @@ export default async function AdminTicketsPage({
                 {ticket.replies.map((reply) => (
                   <div
                     key={reply.id}
-                    className={`rounded-none border p-4 ${
+                    className={`rounded-xl border p-4 ${
                       reply.isStaff
                         ? "ml-6 border-accent bg-accent-soft"
                         : "border-line bg-paper-2"

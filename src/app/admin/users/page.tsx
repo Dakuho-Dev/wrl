@@ -132,7 +132,7 @@ export default async function AdminUsersPage({
                 <tr key={user.id} className="transition hover:bg-paper-2">
                   <Td>
                     <div className="flex items-center gap-3">
-                      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-none bg-accent-soft text-xs font-semibold text-ink">
+                      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-accent-soft text-xs font-semibold text-ink">
                         {initials(user.name)}
                       </span>
                       <div className="min-w-0">

@@ -39,7 +39,7 @@ export function LoginForm() {
 
       <div className="flex items-center justify-between text-xs">
         <label className="flex items-center gap-2 text-muted">
-          <input type="checkbox" name="remember" className="h-3.5 w-3.5 rounded border-line bg-paper-2" />
+          <input type="checkbox" name="remember" className="h-4 w-4 rounded border-line accent-[#1668d8]" />
           Keep me signed in
         </label>
         <Link href="/contact" className="text-muted hover:text-accent">

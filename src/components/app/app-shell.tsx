@@ -81,8 +81,8 @@ export function AppShell({
     groups.flatMap((group) => group.items).find((item) => isActive(item.href))?.label ?? "";
 
   const sidebar = (
-    <div className="flex h-full flex-col bg-paper-2">
-      <div className="flex h-[68px] shrink-0 items-center justify-between border-b-2 border-line-strong px-5">
+    <div className="flex h-full flex-col bg-surface">
+      <div className="flex h-[68px] shrink-0 items-center justify-between border-b border-line px-5">
         <Logo href={variant === "admin" ? "/admin" : "/dashboard"} subtitle={false} />
         <button
           type="button"
@@ -103,8 +103,8 @@ export function AppShell({
       <nav className="scroll-thin flex-1 overflow-y-auto py-2">
         {groups.map((group) => (
           <div key={group.title} className="mb-1">
-            <p className="label border-b border-line px-5 py-2">{group.title}</p>
-            <div>
+            <p className="label !text-muted-2 px-5 pb-1.5 pt-3">{group.title}</p>
+            <div className="space-y-0.5 px-3">
               {group.items.map((item) => {
                 const Icon = ICONS[item.icon] ?? Home;
                 const active = isActive(item.href);
@@ -114,18 +114,19 @@ export function AppShell({
                     href={item.href}
                     onClick={() => setOpen(false)}
                     className={cn(
-                      "flex items-center gap-3 border-l-[3px] px-4 py-2.5 text-sm transition",
+                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition",
                       active
-                        ? "border-accent bg-surface font-medium text-ink"
-                        : "border-transparent text-ink-2 hover:bg-surface/60 hover:text-ink",
+                        ? "bg-accent-soft font-semibold text-accent"
+                        : "text-ink-2 hover:bg-paper-2 hover:text-ink",
                     )}
                   >
                     <Icon
                       className={cn("h-4 w-4 shrink-0", active ? "text-accent" : "text-muted-2")}
+                      aria-hidden
                     />
                     <span className="flex-1">{item.label}</span>
                     {item.badge ? (
-                      <span className="border border-line-strong px-1.5 font-mono text-[10px] text-ink">
+                      <span className="rounded border border-line px-1.5 font-mono text-[10px] text-ink">
                         {item.badge}
                       </span>
                     ) : null}
@@ -151,25 +152,25 @@ export function AppShell({
 
   return (
     <div className="flex min-h-screen bg-paper">
-      <aside className="hidden w-64 shrink-0 border-r-2 border-line-strong lg:block">
+      <aside className="hidden w-64 shrink-0 border-r border-line lg:block">
         <div className="sticky top-0 h-screen">{sidebar}</div>
       </aside>
 
       {open ? (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-ink/40" onClick={() => setOpen(false)} />
-          <aside className="absolute inset-y-0 left-0 w-72 border-r-2 border-line-strong">
+          <aside className="absolute inset-y-0 left-0 w-72 border-r border-line">
             {sidebar}
           </aside>
         </div>
       ) : null}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-40 flex h-[68px] items-center gap-3 border-b-2 border-line-strong bg-paper px-4 sm:px-6">
+        <header className="sticky top-0 z-40 flex h-[68px] items-center gap-3 border-b border-line bg-surface/85 px-4 backdrop-blur sm:px-6">
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="grid h-9 w-9 place-items-center border border-line-strong text-ink lg:hidden"
+            className="grid h-9 w-9 place-items-center rounded-lg border border-line bg-surface text-ink lg:hidden"
             aria-label="Open menu"
           >
             <Menu className="h-5 w-5" />
@@ -184,12 +185,12 @@ export function AppShell({
 
           <Link
             href={variant === "admin" ? "/admin/logs" : "/dashboard/notifications"}
-            className="relative grid h-9 w-9 place-items-center border border-line text-muted transition hover:border-line-strong hover:text-ink"
+            className="relative grid h-9 w-9 place-items-center rounded-lg border border-line text-muted transition hover:border-accent hover:text-accent"
             aria-label="Notifications"
           >
             <Bell className="h-4 w-4" />
             {notifications ? (
-              <span className="absolute -right-2 -top-2 grid h-4.5 min-w-4.5 place-items-center bg-accent px-1 font-mono text-[10px] text-white">
+              <span className="absolute -right-2 -top-2 grid h-4.5 min-w-4.5 place-items-center rounded-full bg-accent px-1 font-mono text-[10px] text-white">
                 {notifications}
               </span>
             ) : null}
@@ -199,7 +200,7 @@ export function AppShell({
             <button
               type="button"
               onClick={() => setMenuOpen((value) => !value)}
-              className="flex items-center gap-2.5 border border-line py-1.5 pl-1.5 pr-3 transition hover:border-line-strong"
+              className="flex items-center gap-2.5 rounded-lg border border-line py-1.5 pl-1.5 pr-3 transition hover:border-accent"
             >
               <span className="grid h-7 w-7 place-items-center bg-ink font-mono text-[10px] font-bold text-white">
                 {initials(user.name)}
@@ -216,7 +217,7 @@ export function AppShell({
             {menuOpen ? (
               <>
                 <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
-                <div className="absolute right-0 z-20 mt-2 w-60 border-2 border-line-strong bg-surface shadow-hard">
+                <div className="absolute right-0 z-20 mt-2 w-60 border border-line bg-surface shadow-hard">
                   <div className="border-b border-line px-4 py-3">
                     <p className="text-sm font-medium text-ink">{user.name}</p>
                     <p className="truncate font-mono text-[11px] text-muted">{user.email}</p>

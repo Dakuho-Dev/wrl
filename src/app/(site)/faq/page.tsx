@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHero } from "@/components/site/page-hero";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -92,28 +93,20 @@ const GROUPS = [
 export default function FaqPage() {
   return (
     <>
-      <section className="border-b border-line">
-        <div className="mx-auto max-w-4xl px-4 py-20 text-center sm:px-6">
-          <p className="text-sm font-semibold uppercase tracking-widest text-accent">FAQ</p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-            Frequently asked questions
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-muted">
-            Can&apos;t find what you need?{" "}
-            <Link href="/contact" className="text-accent hover:text-accent">
-              Send us a message
-            </Link>{" "}
-            and we will get back within one business day.
-          </p>
-        </div>
-      </section>
+      <PageHero eyebrow="FAQ" title="Frequently asked questions">
+        Can&apos;t find what you need?{" "}
+        <Link href="/contact" className="font-semibold text-sky-300 underline underline-offset-4">
+          Send us a message
+        </Link>{" "}
+        and we will get back within one business day.
+      </PageHero>
 
       <section className="py-16">
         <div className="mx-auto max-w-3xl space-y-12 px-4 sm:px-6">
           {GROUPS.map((group) => (
             <div key={group.title}>
               <h2 className="text-lg font-semibold text-ink">{group.title}</h2>
-              <div className="mt-4 divide-y divide-line overflow-hidden rounded-none border border-line bg-surface">
+              <div className="mt-4 divide-y divide-line overflow-hidden rounded-xl border border-line bg-surface">
                 {group.items.map((item) => (
                   <details key={item.q} className="group px-5 py-4">
                     <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-medium text-ink-2">

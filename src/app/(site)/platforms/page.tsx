@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHero } from "@/components/site/page-hero";
 import Link from "next/link";
 import { ArrowRight, Check, Lock, X } from "lucide-react";
 
@@ -57,28 +58,19 @@ const NOT_DOING = [
 export default function PlatformsPage() {
   return (
     <>
-      <section className="relative overflow-hidden border-b-2 border-line-strong">
-        <div className="surface-rule pointer-events-none absolute inset-0 opacity-70" />
-        <div className="relative mx-auto max-w-4xl px-4 py-20 text-center sm:px-6">
-          <p className="label">What we access</p>
-          <h1 className="mt-4 text-4xl text-ink sm:text-5xl">
-            Four scopes, listed in full
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-muted">
-            DKH integrates with one marketplace: Etsy, through the Etsy Open API v3. You approve
-            the scopes on Etsy&rsquo;s own authorisation screen, and you can revoke them from Etsy
-            or from DKH at any time.
-          </p>
-        </div>
-      </section>
+      <PageHero eyebrow="What we access" title="Four scopes, listed in full">
+        DKH integrates with one marketplace: Etsy, through the Etsy Open API v3. You approve the
+        scopes on Etsy&rsquo;s own authorisation screen, and you can revoke them from Etsy or from
+        DKH at any time.
+      </PageHero>
 
-      <section className="border-b-2 border-line-strong py-16">
+      <section className="border-b border-line py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <h2 className="flex items-center gap-2 text-2xl text-ink">
             <Lock className="h-5 w-5 text-accent" /> Requested scopes
           </h2>
 
-          <div className="mt-6 divide-y-2 divide-line border-y-2 border-line-strong">
+          <div className="mt-6 divide-y divide-line border-y border-line">
             {SCOPES.map((entry) => (
               <div key={entry.scope} className="grid gap-4 py-6 sm:grid-cols-3">
                 <div>
@@ -110,7 +102,7 @@ export default function PlatformsPage() {
         </div>
       </section>
 
-      <section className="border-b-2 border-line-strong bg-paper-2 py-16">
+      <section className="border-b border-line bg-paper-2 py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl text-ink">Endpoints we call</h2>
           <div className="scroll-thin mt-6 overflow-x-auto">
@@ -118,7 +110,7 @@ export default function PlatformsPage() {
               <thead>
                 <tr>
                   {["Method", "Endpoint", "Purpose"].map((head) => (
-                    <th key={head} className="label border-y-2 border-line-strong px-4 py-3 text-left">
+                    <th key={head} className="label border-y border-line px-4 py-3 text-left">
                       {head}
                     </th>
                   ))}
@@ -138,7 +130,7 @@ export default function PlatformsPage() {
         </div>
       </section>
 
-      <section className="border-b-2 border-line-strong py-16">
+      <section className="border-b border-line py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl text-ink">What DKH deliberately does not do</h2>
           <ul className="mt-6 divide-y divide-line border-y border-line">

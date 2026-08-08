@@ -11,13 +11,13 @@ export default function NotFound() {
       <div className="mt-7 flex gap-3">
         <Link
           href="/"
-          className="rounded-none bg-accent px-5 py-2.5 text-sm font-medium text-ink transition hover:bg-accent"
+          className="rounded-xl bg-accent px-5 py-2.5 text-sm font-medium text-ink transition hover:bg-accent"
         >
           Back to home
         </Link>
         <Link
           href="/dashboard"
-          className="rounded-none border border-line px-5 py-2.5 text-sm font-medium text-ink-2 transition hover:border-accent"
+          className="rounded-xl border border-line px-5 py-2.5 text-sm font-medium text-ink-2 transition hover:border-accent"
         >
           Go to dashboard
         </Link>

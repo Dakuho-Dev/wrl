@@ -7,7 +7,10 @@ import { cn, statusTone } from "@/lib/utils";
 
 export function Card({ className, children, ...props }: ComponentProps<"div">) {
   return (
-    <div className={cn("border border-line bg-surface", className)} {...props}>
+    <div
+      className={cn("shadow-card overflow-hidden rounded-2xl border border-line bg-surface", className)}
+      {...props}
+    >
       {children}
     </div>
   );
@@ -27,7 +30,7 @@ export function CardHeader({
   return (
     <div
       className={cn(
-        "flex flex-wrap items-start justify-between gap-3 border-b border-line bg-paper-2/60 px-5 py-3.5",
+        "flex flex-wrap items-start justify-between gap-3 border-b border-line bg-paper-2/50 px-5 py-3.5",
         className,
       )}
     >
@@ -50,7 +53,7 @@ export function PageHeader({
   children?: ReactNode;
 }) {
   return (
-    <div className="mb-6 border-b-2 border-line-strong pb-4">
+    <div className="mb-6 border-b border-line pb-4">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl text-ink">{title}</h1>
@@ -68,17 +71,17 @@ type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "outline";
 
 const buttonStyles: Record<ButtonVariant, string> = {
   primary:
-    "border border-accent bg-accent text-white hover:bg-accent-2 hover:shadow-hard-sm active:translate-x-px active:translate-y-px active:shadow-none",
+    "border border-transparent bg-accent text-white shadow-hard-accent hover:bg-accent-2 hover:-translate-y-px active:translate-y-0 active:shadow-none",
   secondary:
-    "border border-line-strong bg-surface text-ink hover:shadow-hard-sm active:translate-x-px active:translate-y-px active:shadow-none",
-  ghost: "border border-transparent text-ink-2 hover:bg-paper-2 hover:text-ink",
+    "border border-line bg-surface text-ink shadow-card hover:border-accent/40 hover:text-accent hover:-translate-y-px active:translate-y-0",
+  ghost: "border border-transparent text-ink-2 hover:bg-accent-soft hover:text-accent",
   danger:
-    "border border-rose-700 bg-rose-700 text-white hover:bg-rose-800 hover:shadow-hard-sm active:translate-x-px active:translate-y-px active:shadow-none",
-  outline: "border border-line text-ink-2 hover:border-line-strong hover:text-ink",
+    "border border-transparent bg-rose-600 text-white hover:bg-rose-700 hover:-translate-y-px active:translate-y-0",
+  outline: "border border-line text-ink-2 hover:border-accent hover:text-accent hover:bg-accent-soft",
 };
 
 const buttonBase =
-  "inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium transition-all disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper";
+  "inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none disabled:translate-y-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper";
 
 export function Button({
   variant = "primary",
@@ -120,7 +123,7 @@ export function Field({
 }
 
 const controlBase =
-  "w-full border border-line bg-surface px-3 py-2.5 text-sm text-ink placeholder:text-muted-2 focus:border-line-strong focus:outline-none focus:ring-0";
+  "w-full rounded-lg border border-line bg-surface px-3.5 py-2.5 text-sm text-ink transition placeholder:text-muted-2 focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/12";
 
 export function Input({ className, ...props }: ComponentProps<"input">) {
   return <input className={cn(controlBase, className)} {...props} />;
@@ -140,7 +143,7 @@ export function Select({ className, children, ...props }: ComponentProps<"select
 
 // ------------------------------------------------------------------ Data display
 
-/** Square, mono, bordered — reads as a data tag rather than a pill. */
+/** Mono, bordered pill — reads as a data tag, not decoration. */
 export function Badge({
   children,
   tone,
@@ -153,7 +156,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 border px-2 py-0.5 font-mono text-[11px] uppercase tracking-wider",
+        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-wider",
         tone ? statusTone(tone) : "border-line bg-paper-2 text-muted",
         className,
       )}
@@ -179,7 +182,7 @@ export function Th({ children, className }: { children?: ReactNode; className?: 
   return (
     <th
       className={cn(
-        "label border-b-2 border-line-strong px-4 py-2.5 text-left align-bottom",
+        "label border-b border-line bg-paper-2/50 px-4 py-2.5 text-left align-bottom !text-muted",
         className,
       )}
     >
@@ -214,7 +217,7 @@ export function EmptyState({
   );
 }
 
-/** Ledger-style figure: mono label above a large serif number. */
+/** Metric tile: mono label above a large figure. */
 export function StatCard({
   label,
   value,
@@ -230,17 +233,21 @@ export function StatCard({
 }) {
   const positive = delta?.startsWith("+");
   return (
-    <div className="border border-line bg-surface p-5">
+    <div className="shadow-card rounded-2xl border border-line bg-surface p-5 transition hover:-translate-y-0.5 hover:shadow-hard-sm">
       <div className="flex items-start justify-between gap-3">
-        <p className="label">{label}</p>
-        {icon ? <span className="text-muted-2">{icon}</span> : null}
+        <p className="label !text-muted">{label}</p>
+        {icon ? (
+          <span className="grid h-8 w-8 place-items-center rounded-lg bg-accent-soft text-accent">
+            {icon}
+          </span>
+        ) : null}
       </div>
-      <p className="mt-3 font-display text-[28px] leading-none text-ink">{value}</p>
+      <p className="mt-3 font-display text-[30px] leading-none tracking-tight text-ink">{value}</p>
       <div className="mt-2 flex items-center gap-2">
         {delta ? (
           <span
             className={cn(
-              "border px-1.5 py-0.5 font-mono text-[11px]",
+              "rounded-full border px-2 py-0.5 font-mono text-[11px]",
               positive
                 ? "border-emerald-700/30 bg-emerald-700/10 text-emerald-800"
                 : "border-rose-700/30 bg-rose-700/10 text-rose-800",
@@ -271,7 +278,7 @@ export function Alert({
     danger: "border-l-rose-700 bg-rose-700/8 text-rose-900",
   };
   return (
-    <div className={cn("border border-line border-l-4 px-4 py-3", tones[tone])}>
+    <div className={cn("rounded-xl border border-line border-l-4 px-4 py-3", tones[tone])}>
       {title ? <p className="mb-1 font-display text-[15px]">{title}</p> : null}
       <div className="text-[13px] leading-relaxed">{children}</div>
     </div>
@@ -280,7 +287,7 @@ export function Alert({
 
 export function PlatformIcon({ platform, className }: { platform: string; className?: string }) {
   const map: Record<string, { label: string; bg: string }> = {
-    ETSY: { label: "ET", bg: "bg-[#8a4b1f]" },
+    ETSY: { label: "ET", bg: "bg-[#d5641c]" },
     SHOPIFY: { label: "SH", bg: "bg-[#2b5f3a]" },
     AMAZON: { label: "AZ", bg: "bg-[#7a5c12]" },
     TIKTOK: { label: "TT", bg: "bg-[#7a2447]" },
@@ -289,7 +296,7 @@ export function PlatformIcon({ platform, className }: { platform: string; classN
   return (
     <span
       className={cn(
-        "grid h-6 w-7 shrink-0 place-items-center font-mono text-[10px] font-bold tracking-tight text-white",
+        "grid h-6 w-7 shrink-0 place-items-center rounded-md font-mono text-[10px] font-bold tracking-tight text-white",
         item.bg,
         className,
       )}

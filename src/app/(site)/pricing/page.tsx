@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHero } from "@/components/site/page-hero";
 import { Check } from "lucide-react";
 
 import { ButtonLink } from "@/components/ui";
@@ -39,19 +40,10 @@ export default async function PricingPage() {
 
   return (
     <>
-      <section className="relative overflow-hidden border-b border-line">
-        <div className="surface-rule pointer-events-none absolute inset-0 opacity-70" />
-        <div className="relative mx-auto max-w-4xl px-4 py-20 text-center sm:px-6">
-          <p className="text-sm font-semibold uppercase tracking-widest text-accent">Pricing</p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-            Pay for the volume you actually ship
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-muted">
-            Every plan includes order sync, the automation engine and tracking upload. You only move
-            up when you outgrow the limits.
-          </p>
-        </div>
-      </section>
+      <PageHero eyebrow="Pricing" title="Pay for the volume you actually ship">
+        Every plan includes order sync, the automation engine and tracking upload. You only move up
+        when you outgrow the limits.
+      </PageHero>
 
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -62,7 +54,7 @@ export default async function PricingPage() {
               return (
                 <div
                   key={plan.id}
-                  className={`relative flex flex-col rounded-none border p-7 ${
+                  className={`relative flex flex-col rounded-xl border p-7 ${
                     highlighted
                       ? "border-accent bg-gradient-to-b from-accent to-paper-2"
                       : "border-line bg-surface"
@@ -87,7 +79,7 @@ export default async function PricingPage() {
                       : "Free forever"}
                   </p>
 
-                  <div className="mt-5 grid grid-cols-2 gap-3 rounded-none border border-line bg-paper-2 p-3 text-center">
+                  <div className="mt-5 grid grid-cols-2 gap-3 rounded-xl border border-line bg-paper-2 p-3 text-center">
                     <div>
                       <p className="text-lg font-semibold text-ink">
                         {formatNumber(plan.orderLimit)}
@@ -123,7 +115,7 @@ export default async function PricingPage() {
             })}
           </div>
 
-          <div className="mt-8 rounded-none border border-line bg-surface p-6 text-center">
+          <div className="mt-8 rounded-xl border border-line bg-surface p-6 text-center">
             <h3 className="font-semibold text-ink">Enterprise & custom volume</h3>
             <p className="mx-auto mt-2 max-w-2xl text-sm text-muted">
               Above 25,000 orders a month, or need a private connector, dedicated infrastructure or
@@ -141,7 +133,7 @@ export default async function PricingPage() {
           <h2 className="text-2xl font-semibold tracking-tight text-ink">Billing questions</h2>
           <div className="mt-8 space-y-4">
             {FAQS.map((faq) => (
-              <div key={faq.q} className="rounded-none border border-line bg-surface p-5">
+              <div key={faq.q} className="rounded-xl border border-line bg-surface p-5">
                 <h3 className="font-medium text-ink">{faq.q}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{faq.a}</p>
               </div>

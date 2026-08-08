@@ -133,7 +133,7 @@ export default async function AutomationsPage() {
                       <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-2">
                         Trigger
                       </p>
-                      <p className="mt-1.5 rounded-none bg-paper-2 px-2.5 py-1.5 text-xs text-accent">
+                      <p className="mt-1.5 rounded-xl bg-paper-2 px-2.5 py-1.5 text-xs text-accent">
                         {automation.trigger}
                       </p>
                     </div>
@@ -146,13 +146,13 @@ export default async function AutomationsPage() {
                           conditions.map((condition, index) => (
                             <p
                               key={index}
-                              className="rounded-none bg-paper-2 px-2.5 py-1.5 text-xs text-ink-2"
+                              className="rounded-xl bg-paper-2 px-2.5 py-1.5 text-xs text-ink-2"
                             >
                               {condition.field} {condition.op} {String(condition.value)}
                             </p>
                           ))
                         ) : (
-                          <p className="rounded-none bg-paper-2 px-2.5 py-1.5 text-xs text-muted-2">
+                          <p className="rounded-xl bg-paper-2 px-2.5 py-1.5 text-xs text-muted-2">
                             always
                           </p>
                         )}
@@ -166,7 +166,7 @@ export default async function AutomationsPage() {
                         {actions.map((action, index) => (
                           <p
                             key={index}
-                            className="rounded-none bg-paper-2 px-2.5 py-1.5 text-xs text-emerald-700"
+                            className="rounded-xl bg-paper-2 px-2.5 py-1.5 text-xs text-emerald-700"
                           >
                             {action.type}
                             {action.value ? ` → ${action.value}` : ""}

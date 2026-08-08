@@ -204,7 +204,7 @@ export default async function ApiKeysPage() {
             <div className="divide-y divide-line">
               {webhooks.map((hook) => (
                 <div key={hook.id} className="flex flex-wrap items-start gap-4 px-5 py-4">
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-none bg-paper-2 text-accent">
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-paper-2 text-accent">
                     <Webhook className="h-4 w-4" />
                   </span>
                   <div className="min-w-0 flex-1">
@@ -213,7 +213,7 @@ export default async function ApiKeysPage() {
                       {parseJson<string[]>(hook.events, []).map((event) => (
                         <span
                           key={event}
-                          className="rounded-none bg-paper-2 px-1.5 py-0.5 text-[11px] text-muted"
+                          className="rounded-xl bg-paper-2 px-1.5 py-0.5 text-[11px] text-muted"
                         >
                           {event}
                         </span>

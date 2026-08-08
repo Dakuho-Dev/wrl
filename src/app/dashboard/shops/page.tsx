@@ -100,9 +100,9 @@ export default async function ShopsPage({
 
         <div className="grid gap-4 p-5 md:grid-cols-2">
           {/* Etsy — real OAuth when configured */}
-          <div className="rounded-none border border-line bg-paper-2 p-5">
+          <div className="rounded-xl border border-line bg-paper-2 p-5">
             <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-none bg-gradient-to-br from-orange-500 to-amber-500 text-lg font-bold text-ink">
+              <span className="grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 text-lg font-bold text-ink">
                 E
               </span>
               <div>
@@ -134,7 +134,7 @@ export default async function ShopsPage({
               </>
             ) : (
               <>
-                <div className="mt-5 rounded-none border border-amber-500/25 bg-amber-500/10 p-3 text-xs text-amber-700">
+                <div className="mt-5 rounded-xl border border-amber-500/25 bg-amber-500/10 p-3 text-xs text-amber-700">
                   <p className="flex items-start gap-2">
                     <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                     <span>
@@ -168,7 +168,7 @@ export default async function ShopsPage({
               </p>
             </div>
 
-            <details className="rounded-none border border-line bg-paper-2 p-4">
+            <details className="rounded-xl border border-line bg-paper-2 p-4">
               <summary className="cursor-pointer text-sm font-medium text-ink-2">
                 Connect with a custom name
               </summary>
