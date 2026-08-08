@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { LegalPage, LegalSection } from "@/components/site/legal";
+import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Security Policy",
@@ -73,7 +74,7 @@ export default function SecurityPage() {
       <LegalSection heading="7. Reporting a vulnerability">
         <p>
           Please report suspected vulnerabilities to{" "}
-          <a href="mailto:security@dkh.io">security@dkh.io</a>. Include steps to reproduce
+          <a href={`mailto:${siteConfig.securityEmail}`}>{siteConfig.securityEmail}</a>. Include steps to reproduce
           and any proof-of-concept. We acknowledge reports within two business days and aim to remediate
           critical issues within seven days.
         </p>

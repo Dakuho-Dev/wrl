@@ -15,13 +15,15 @@ function clean(value: string | undefined, fallback: string) {
   return (value ?? "").replace(/^﻿/, "").trim() || fallback;
 }
 
+const SITE_DOMAIN = clean(process.env.SITE_DOMAIN, "dkh.io.vn");
+
 const DEMO_ACCOUNTS = [
   {
-    email: clean(process.env.DEMO_ADMIN_EMAIL, "admin@dkh.io"),
+    email: clean(process.env.DEMO_ADMIN_EMAIL, `admin@${SITE_DOMAIN}`),
     password: clean(process.env.DEMO_ADMIN_PASSWORD, "Admin123!"),
   },
   {
-    email: clean(process.env.DEMO_SELLER_EMAIL, "seller@dkh.io"),
+    email: clean(process.env.DEMO_SELLER_EMAIL, `seller@${SITE_DOMAIN}`),
     password: clean(process.env.DEMO_SELLER_PASSWORD, "Password123!"),
   },
 ];
@@ -40,6 +42,29 @@ async function repairEmails(prisma: PrismaClient) {
 
     await prisma.user.update({ where: { id: user.id }, data: { email } });
     console.log(`· bootstrap: repaired email ${JSON.stringify(user.email)} -> ${email}`);
+  }
+}
+
+/**
+ * The site moved from the dkh.io placeholder to the registered dkh.io.vn. Rename
+ * the seeded accounts in place rather than reseeding, so the demo orders survive.
+ */
+async function migrateSeedDomain(prisma: PrismaClient) {
+  const users = await prisma.user.findMany({ where: { email: { endsWith: "@dkh.io" } } });
+
+  for (const user of users) {
+    const email = user.email.replace(/@dkh\.io$/, `@${SITE_DOMAIN}`);
+    if (await prisma.user.findUnique({ where: { email } })) continue;
+
+    await prisma.user.update({ where: { id: user.id }, data: { email } });
+    console.log(`· bootstrap: moved ${user.email} -> ${email}`);
+  }
+
+  const setting = await prisma.setting.findUnique({ where: { key: "site.supportEmail" } });
+  if (setting?.value.endsWith("@dkh.io")) {
+    const value = setting.value.replace(/@dkh\.io$/, `@${SITE_DOMAIN}`);
+    await prisma.setting.update({ where: { key: "site.supportEmail" }, data: { value } });
+    console.log(`· bootstrap: support address now ${value}`);
   }
 }
 
@@ -78,6 +103,7 @@ async function main() {
     } else if (users > 0) {
       console.log(`· bootstrap: ${users} users present, skipping seed.`);
       await repairEmails(prisma);
+      await migrateSeedDomain(prisma);
       await syncDemoPasswords(prisma);
       return;
     }

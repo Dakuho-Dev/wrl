@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { getCurrentUser } from "@/lib/auth";
+import { SITE_DOMAIN } from "@/lib/site-config";
 import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = { title: "Log in" };
@@ -13,8 +14,8 @@ export const metadata: Metadata = { title: "Log in" };
  * carries real seller data.
  */
 const showDemoCredentials = process.env.SHOW_DEMO_CREDENTIALS !== "false";
-const demoSeller = process.env.DEMO_SELLER_EMAIL ?? "seller@dkh.io";
-const demoAdmin = process.env.DEMO_ADMIN_EMAIL ?? "admin@dkh.io";
+const demoSeller = process.env.DEMO_SELLER_EMAIL ?? `seller@${SITE_DOMAIN}`;
+const demoAdmin = process.env.DEMO_ADMIN_EMAIL ?? `admin@${SITE_DOMAIN}`;
 const demoSellerPassword = process.env.DEMO_SELLER_PASSWORD ?? "Password123!";
 const demoAdminPassword = process.env.DEMO_ADMIN_PASSWORD ?? "Admin123!";
 

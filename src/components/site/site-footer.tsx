@@ -99,7 +99,7 @@ export function SiteFooter() {
           </p>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-slate-500">
-              © {new Date().getFullYear()} dkh.io — All rights reserved
+              © {new Date().getFullYear()} {siteConfig.domain} — All rights reserved
             </p>
             <div className="flex gap-5 font-mono text-[11px] uppercase tracking-[0.14em] text-slate-500">
               <Link href="/terms" className="transition hover:text-white">

@@ -100,13 +100,14 @@ async function main() {
   const env = (name: string, fallback: string) =>
     (process.env[name] ?? "").replace(/^﻿/, "").trim() || fallback;
 
+  const siteDomain = env("SITE_DOMAIN", "dkh.io.vn");
   const sellerPassword = env("DEMO_SELLER_PASSWORD", "Password123!");
   const adminPassword = env("DEMO_ADMIN_PASSWORD", "Admin123!");
   const password = await bcrypt.hash(sellerPassword, 10);
 
   const admin = await prisma.user.create({
     data: {
-      email: env("DEMO_ADMIN_EMAIL", "admin@dkh.io"),
+      email: env("DEMO_ADMIN_EMAIL", `admin@${siteDomain}`),
       passwordHash: await bcrypt.hash(adminPassword, 10),
       name: "Platform Admin",
       company: "DKH",
@@ -120,7 +121,7 @@ async function main() {
 
   const seller = await prisma.user.create({
     data: {
-      email: env("DEMO_SELLER_EMAIL", "seller@dkh.io"),
+      email: env("DEMO_SELLER_EMAIL", `seller@${siteDomain}`),
       passwordHash: password,
       name: "Hannah Lewis",
       company: "Little Thistle Studio",
@@ -371,7 +372,7 @@ async function main() {
     data: [
       { key: "site.name", value: "DKH" },
       { key: "site.tagline", value: "Order management for Etsy sellers" },
-      { key: "site.supportEmail", value: "support@dkh.io" },
+      { key: "site.supportEmail", value: env("SUPPORT_EMAIL", `support@${siteDomain}`) },
       { key: "signup.enabled", value: "true" },
       { key: "sync.intervalMinutes", value: "15" },
       { key: "maintenance.enabled", value: "false" },

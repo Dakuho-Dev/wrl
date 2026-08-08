@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { LegalPage, LegalSection } from "@/components/site/legal";
+import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -24,7 +25,7 @@ export default function PrivacyPage() {
           account data of the sellers themselves.
         </p>
         <p>
-          Contact: <a href="mailto:privacy@dkh.io">privacy@dkh.io</a>
+          Contact: <a href={`mailto:${siteConfig.privacyEmail}`}>{siteConfig.privacyEmail}</a>
         </p>
       </LegalSection>
 
@@ -123,7 +124,7 @@ export default function PrivacyPage() {
         <p>
           You can access, correct, export or delete your data at any time from{" "}
           <strong>Dashboard → Settings</strong>, or by emailing{" "}
-          <a href="mailto:privacy@dkh.io">privacy@dkh.io</a>. Specifically:
+          <a href={`mailto:${siteConfig.privacyEmail}`}>{siteConfig.privacyEmail}</a>. Specifically:
         </p>
         <ul className="space-y-1.5">
           <li><strong>Disconnect a shop</strong> — stops all syncing and deletes the stored tokens for that shop.</li>

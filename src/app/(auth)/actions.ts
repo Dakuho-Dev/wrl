@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 
 import { createSession, destroySession, hashPassword, logActivity, verifyPassword } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { siteConfig } from "@/lib/site-config";
 
 export type AuthState = { error?: string } | null;
 
@@ -18,7 +19,7 @@ export async function loginAction(_prev: AuthState, formData: FormData): Promise
     return { error: "Incorrect email or password." };
   }
   if (user.status === "SUSPENDED") {
-    return { error: "This account has been suspended. Contact support@dkh.io." };
+    return { error: `This account has been suspended. Contact ${siteConfig.supportEmail}.` };
   }
 
   await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });

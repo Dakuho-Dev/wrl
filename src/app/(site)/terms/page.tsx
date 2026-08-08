@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { LegalPage, LegalSection } from "@/components/site/legal";
+import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions",
@@ -144,7 +145,7 @@ export default function TermsPage() {
 
       <LegalSection heading="13. Contact">
         <p>
-          Questions about these terms: <a href="mailto:legal@dkh.io">legal@dkh.io</a>.
+          Questions about these terms: <a href={`mailto:${siteConfig.legalEmail}`}>{siteConfig.legalEmail}</a>.
         </p>
       </LegalSection>
     </LegalPage>

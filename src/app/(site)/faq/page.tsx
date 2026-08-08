@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/site/page-hero";
 import Link from "next/link";
 
+import { siteConfig } from "@/lib/site-config";
+
 export const metadata: Metadata = {
   title: "FAQ",
   description: "Answers about connecting shops, syncing orders, data handling and marketplace API usage.",
@@ -59,7 +61,7 @@ const GROUPS = [
       },
       {
         q: "How do I delete my data?",
-        a: "Disconnecting a shop deletes its tokens immediately. Deleting your account from Dashboard → Settings removes all associated shops, orders and shipments within 30 days. You can also email support@dkh.io.",
+        a: `Disconnecting a shop deletes its tokens immediately. Deleting your account from Dashboard → Settings removes all associated shops, orders and shipments within 30 days. You can also email ${siteConfig.supportEmail}.`,
       },
       {
         q: "Where is data stored?",

@@ -26,7 +26,7 @@ export function Logo({
             onDark ? "text-white" : "text-ink",
           )}
         >
-          dkh<span className={onDark ? "text-sky-300" : "text-accent"}>.io</span>
+          dkh<span className={onDark ? "text-sky-300" : "text-accent"}>.io.vn</span>
         </span>
         {subtitle ? (
           <span

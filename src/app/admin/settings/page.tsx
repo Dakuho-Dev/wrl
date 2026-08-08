@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Button, Card, CardHeader, Field, Input, PageHeader, Select } from "@/components/ui";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { siteConfig } from "@/lib/site-config";
 import { formatDateTime } from "@/lib/utils";
 import { saveSettings } from "../actions";
 
@@ -30,7 +31,7 @@ export default async function AdminSettingsPage() {
               <Input
                 name="supportEmail"
                 type="email"
-                defaultValue={settings["site.supportEmail"] ?? "support@dkh.io"}
+                defaultValue={settings["site.supportEmail"] ?? siteConfig.supportEmail}
               />
             </Field>
             <div className="sm:col-span-2">

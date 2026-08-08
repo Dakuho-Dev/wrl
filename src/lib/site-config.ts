@@ -1,15 +1,27 @@
 import { cleanEnv } from "@/lib/env";
 
+/** The registered domain. Every brand string on the site derives from this. */
+export const SITE_DOMAIN = cleanEnv(process.env.SITE_DOMAIN, "dkh.io.vn");
+
 /**
  * Public contact details.
  *
  * Etsy's API Terms require the application to publish "a monitored email address
  * that Etsy sellers can use to contact your Application for support" — so
- * SUPPORT_EMAIL must point at a mailbox somebody actually reads. Set it in the
- * environment; the fallback is a placeholder, not a working address.
+ * SUPPORT_EMAIL must point at a mailbox somebody actually reads.
+ *
+ * The privacy/security/legal addresses fall back to the support mailbox rather
+ * than inventing aliases nobody has created. One address that works beats four
+ * that bounce.
  */
+const supportEmail = cleanEnv(process.env.SUPPORT_EMAIL, `support@${SITE_DOMAIN}`);
+
 export const siteConfig = {
-  supportEmail: cleanEnv(process.env.SUPPORT_EMAIL, "support@dkh.io"),
+  domain: SITE_DOMAIN,
+  supportEmail,
+  privacyEmail: cleanEnv(process.env.PRIVACY_EMAIL, supportEmail),
+  securityEmail: cleanEnv(process.env.SECURITY_EMAIL, supportEmail),
+  legalEmail: cleanEnv(process.env.LEGAL_EMAIL, supportEmail),
   legalName: cleanEnv(process.env.LEGAL_NAME, "DKH"),
   /** Only rendered when set — we do not publish an address we cannot stand behind. */
   businessAddress: cleanEnv(process.env.BUSINESS_ADDRESS, ""),

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { appUrl } from "@/lib/env";
+
 export const metadata: Metadata = {
   title: "Documentation",
   description:
@@ -156,7 +158,7 @@ ETSY_SCOPES="shops_r listings_r transactions_r transactions_w"`}</Code>
               Authenticate with an API key from <strong>Dashboard → API keys</strong>. Send it as a
               bearer token.
             </p>
-            <Code>{`curl https://dkh.io/api/v1/orders?status=NEW&limit=25 \\
+            <Code>{`curl ${appUrl()}/api/v1/orders?status=NEW&limit=25 \\
   -H "Authorization: Bearer dkh_live_xxxxxxxxxxxx"`}</Code>
             <div className="mt-5 overflow-hidden rounded-xl border border-line">
               <table className="w-full text-left text-xs">
