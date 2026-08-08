@@ -23,11 +23,11 @@ export default async function RegisterPage() {
     <div className="grid w-full max-w-4xl gap-8 lg:grid-cols-2 lg:items-center">
       <div className="hidden lg:block">
         <h2 className="text-3xl font-semibold tracking-tight text-ink">
-          Bring every order into one queue
+          Your Etsy orders in one queue
         </h2>
         <p className="mt-4 leading-relaxed text-muted">
-          Connect Etsy, Shopify, Amazon and TikTok Shop, automate the fulfillment steps and let
-          tracking flow back to your buyers automatically.
+          Authorise your Etsy shop, work through the orders in one place, and let DKH upload the
+          tracking number to Etsy when each one ships.
         </p>
         <ul className="mt-7 space-y-3">
           {PERKS.map((perk) => (

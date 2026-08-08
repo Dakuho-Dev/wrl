@@ -6,25 +6,25 @@ import "./globals.css";
 
 const appUrl = resolveAppUrl();
 
+const DESCRIPTION =
+  "DKH is an order management tool for Etsy sellers. It imports your Etsy orders into a production queue and uploads tracking numbers back to Etsy when you ship.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
   title: {
-    default: "DKH — Order management & fulfillment automation",
+    default: "DKH — Order management for Etsy sellers",
     template: "%s · DKH",
   },
-  description:
-    "DKH connects your Etsy, Shopify, Amazon and TikTok Shop stores and automates the entire order lifecycle — synchronization, processing, shipping labels and tracking.",
+  description: DESCRIPTION,
   keywords: [
-    "order management",
+    "Etsy order management",
     "Etsy order sync",
-    "fulfillment automation",
-    "multichannel ecommerce",
-    "shipping tracking",
+    "Etsy tracking upload",
+    "Etsy seller tools",
   ],
   openGraph: {
-    title: "DKH — Order management & fulfillment automation",
-    description:
-      "Sync orders from every sales channel, automate fulfillment, and push tracking back to the marketplace automatically.",
+    title: "DKH — Order management for Etsy sellers",
+    description: DESCRIPTION,
     url: appUrl,
     siteName: "DKH",
     type: "website",
