@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { LegalPage, LegalSection } from "@/components/site/legal";
-import { siteConfig } from "@/lib/site-config";
+import { ETSY_TRADEMARK_NOTICE, siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -169,10 +169,8 @@ export default function PrivacyPage() {
       </LegalSection>
 
       <LegalSection heading="13. Trademarks">
-        <p>
-          The term &ldquo;Etsy&rdquo; is a trademark of Etsy, Inc. This Application uses
-          Etsy&rsquo;s API, but is not endorsed or certified by Etsy.
-        </p>
+        {/* Wording fixed by Etsy's API Terms §1 — do not paraphrase. */}
+        <p>{ETSY_TRADEMARK_NOTICE}</p>
       </LegalSection>
     </LegalPage>
   );

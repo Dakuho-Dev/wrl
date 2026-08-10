@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { LegalPage, LegalSection } from "@/components/site/legal";
-import { siteConfig } from "@/lib/site-config";
+import { ETSY_TRADEMARK_NOTICE, siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions",
@@ -96,10 +96,8 @@ export default function TermsPage() {
           APPLICATION DEVELOPER, DO NOT PROVIDE THE APPLICATION SERVICE, AND MAKE NO WARRANTIES OF
           ANY KIND WITH RESPECT TO THE APPLICATION OR DATA ACCESSED THROUGH IT.
         </p>
-        <p>
-          The term &ldquo;Etsy&rdquo; is a trademark of Etsy, Inc. This Application uses
-          Etsy&rsquo;s API, but is not endorsed or certified by Etsy.
-        </p>
+        {/* Wording fixed by Etsy's API Terms §1 — do not paraphrase. */}
+        <p>{ETSY_TRADEMARK_NOTICE}</p>
         <p>
           In handling data we read from Etsy on your behalf, we act as your service provider and
           process it only to deliver the features described in these terms and in the{" "}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight, Check, Lock, X } from "lucide-react";
 
 import { ButtonLink } from "@/components/ui";
+import { ETSY_TRADEMARK_NOTICE } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "What we access",
@@ -177,8 +178,8 @@ export default function PlatformsPage() {
           </div>
 
           <p className="mt-12 border-t border-line pt-6 text-xs leading-relaxed text-muted">
-            The term &ldquo;Etsy&rdquo; is a trademark of Etsy, Inc. This Application uses
-            Etsy&rsquo;s API, but is not endorsed or certified by Etsy. See our{" "}
+            {/* Wording fixed by Etsy's API Terms §1 — do not paraphrase. */}
+            {ETSY_TRADEMARK_NOTICE} See our{" "}
             <Link href="/terms" className="text-accent underline">
               Terms
             </Link>{" "}
