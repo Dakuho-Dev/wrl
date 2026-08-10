@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { Logo } from "@/components/logo";
-import { ETSY_TRADEMARK_NOTICE, siteConfig } from "@/lib/site-config";
+import { siteConfig } from "@/lib/site-config";
 
 const COLUMNS = [
   {
@@ -92,11 +92,8 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-12 space-y-4 border-t border-white/10 pt-6">
-          {/* Wording fixed by Etsy's API Terms §1 — do not paraphrase. */}
-          <p className="max-w-4xl rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-xs leading-relaxed text-slate-300">
-            {ETSY_TRADEMARK_NOTICE}
-          </p>
+        <div className="mt-12 border-t border-white/10 pt-6">
+          {/* The Etsy trademark notice lives in the scopes band on the home page. */}
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-slate-500">
               © {new Date().getFullYear()} {siteConfig.domain} — All rights reserved

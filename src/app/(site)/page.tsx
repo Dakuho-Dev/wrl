@@ -12,7 +12,7 @@ import {
   Workflow,
 } from "lucide-react";
 
-import { EtsyTrademarkBanner, EtsyTrademarkCard } from "@/components/site/etsy-trademark-banner";
+import { EtsyTrademarkCard } from "@/components/site/etsy-trademark-banner";
 import { ButtonLink } from "@/components/ui";
 
 /**
@@ -127,9 +127,6 @@ const COMMITMENTS = [
 export default function HomePage() {
   return (
     <>
-      {/* Required by Etsy API Terms §1 — kept first so it cannot be missed. */}
-      <EtsyTrademarkBanner />
-
       {/* ------------------------------------------------------------ Hero */}
       <section className="bg-brand-sweep relative overflow-hidden text-white">
         <div className="surface-dots absolute inset-0 opacity-60" aria-hidden />
