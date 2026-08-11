@@ -87,7 +87,20 @@ sẽ không hiển thị, tốt hơn là bịa.
 DKH
 ```
 
-**Application description**
+**Application description** — bản ngắn, dùng bản này trước
+
+```
+DKH is a third-party tool that helps Etsy sellers view and organize their shop data in a clear production queue. The app uses the Etsy API to securely read shop details, active listings, and orders for tracking and daily fulfilment, and to submit a tracking number back to Etsy when the seller records a shipment. DKH never messages buyers — Etsy sends that notification. All data access is transparent to users.
+
+Disclaimer: The term "Etsy" is a trademark of Etsy, Inc. This application uses the Etsy API but is not endorsed or certified by Etsy, Inc.
+```
+
+Hai điểm cố ý khác với mô tả của các app tương tự: **nêu rõ quyền ghi** (`transactions_w`), vì
+giấu nó rồi vẫn xin scope đó là đúng loại mâu thuẫn đã làm trượt lần một; và **nói thẳng DKH
+không nhắn người mua**, điều §5 cấm rất gắt.
+
+**Application description** — bản dài, dùng khi ô nhập cho phép
+
 ```
 DKH is an order management tool for a single marketplace: Etsy. It is aimed at sellers
 who make items to order and need a production queue that their whole workshop can work
