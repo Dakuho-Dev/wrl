@@ -48,7 +48,7 @@ export async function GET(request: Request) {
     if (!shopInfo) {
       return fail(
         request,
-        "Your Etsy account authorized successfully but no shop was found on it. Open a shop on Etsy first.",
+        `Etsy authorised the account with user id ${etsyUserId}, but reports no shop on it. If your shop lives on a different Etsy login, sign out of Etsy and authorise again with that account.`,
       );
     }
 

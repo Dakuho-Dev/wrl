@@ -162,17 +162,55 @@ export type EtsyShop = {
   listing_active_count: number;
 };
 
+/**
+ * Resolve the shop belonging to the authorised account.
+ *
+ * Two routes, because Etsy has changed this over time: `/users/me` carries the
+ * shop_id for the token holder, and the older owner-id lookup returns either a
+ * paginated list or a bare shop object depending on the account.
+ *
+ * Every failure is collected and rethrown. Swallowing them here is what turns a
+ * 403 or an expired scope into a misleading "no shop was found on it".
+ */
 export async function getMyShop(accessToken: string): Promise<EtsyShop | null> {
-  const userId = userIdFromToken(accessToken);
-  const data = await etsyFetch<{ count: number; results: EtsyShop[] }>(
+  const attempts: string[] = [];
+  const note = (path: string, error: unknown) =>
+    attempts.push(`${path} → ${error instanceof Error ? error.message : String(error)}`);
+
+  const me = await etsyFetch<{ user_id: number; shop_id?: number | null }>(
+    "/users/me",
+    accessToken,
+  ).catch((error) => {
+    note("/users/me", error);
+    return null;
+  });
+
+  if (me?.shop_id) {
+    const shop = await etsyFetch<EtsyShop>(`/shops/${me.shop_id}`, accessToken).catch((error) => {
+      note(`/shops/${me.shop_id}`, error);
+      return null;
+    });
+    if (shop && "shop_id" in shop) return shop;
+  }
+
+  const userId = me?.user_id ?? userIdFromToken(accessToken);
+  const owned = await etsyFetch<{ count?: number; results?: EtsyShop[] } & Partial<EtsyShop>>(
     `/users/${userId}/shops`,
     accessToken,
-  ).catch(() => null);
+  ).catch((error) => {
+    note(`/users/${userId}/shops`, error);
+    return null;
+  });
 
-  if (data && Array.isArray(data.results) && data.results.length) return data.results[0];
-  // Some accounts return the shop object directly.
-  const single = await etsyFetch<EtsyShop>(`/users/${userId}/shops`, accessToken).catch(() => null);
-  return single && "shop_id" in single ? single : null;
+  if (owned) {
+    if (Array.isArray(owned.results) && owned.results.length) return owned.results[0];
+    if (typeof owned.shop_id === "number") return owned as EtsyShop;
+  }
+
+  if (attempts.length) {
+    throw new Error(`Etsy did not return a shop for this account. ${attempts.join(" | ")}`);
+  }
+  return null;
 }
 
 export type EtsyReceipt = {
