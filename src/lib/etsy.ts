@@ -130,23 +130,47 @@ export async function refreshTokens(refreshToken: string): Promise<EtsyTokens> {
 
 // ------------------------------------------------------------------ API calls
 
-async function etsyFetch<T>(path: string, accessToken: string, init?: RequestInit): Promise<T> {
-  const { clientId } = etsyConfig();
-  const res = await fetch(`${ETSY_API_BASE}${path}`, {
-    ...init,
-    headers: {
-      "x-api-key": clientId,
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-      ...(init?.headers ?? {}),
-    },
-    cache: "no-store",
-  });
+/**
+ * The forms Etsy accepts in the `x-api-key` header, best guess first.
+ *
+ * Some app registrations require "keystring:shared_secret" and reject a bare
+ * keystring with 403 "Shared secret is required in x-api-key header."; others
+ * want the keystring alone. Which one applies is a property of the app, not of
+ * the endpoint, so try the richer form first and fall back once.
+ */
+function apiKeyForms() {
+  const { clientId, clientSecret } = etsyConfig();
+  return clientSecret ? [`${clientId}:${clientSecret}`, clientId] : [clientId];
+}
 
-  if (!res.ok) {
-    throw new Error(`Etsy API ${path} failed (${res.status}): ${await res.text()}`);
+/** True when Etsy is objecting to the shape of the key rather than the request. */
+function isKeyFormComplaint(status: number, body: string) {
+  return status === 403 && /shared secret/i.test(body);
+}
+
+async function etsyFetch<T>(path: string, accessToken: string, init?: RequestInit): Promise<T> {
+  let lastError: Error | null = null;
+
+  for (const apiKey of apiKeyForms()) {
+    const res = await fetch(`${ETSY_API_BASE}${path}`, {
+      ...init,
+      headers: {
+        "x-api-key": apiKey,
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+        ...(init?.headers ?? {}),
+      },
+      cache: "no-store",
+    });
+
+    if (res.ok) return (await res.json()) as T;
+
+    const body = await res.text();
+    lastError = new Error(`Etsy API ${path} failed (${res.status}): ${body}`);
+    if (!isKeyFormComplaint(res.status, body)) break;
   }
-  return (await res.json()) as T;
+
+  throw lastError ?? new Error(`Etsy API ${path} failed`);
 }
 
 /** The Etsy user id is the prefix of the access token: "12345678.abcdef..." */
@@ -327,15 +351,21 @@ export async function rawEtsyRequest(path: string, accessToken?: string) {
   const url = `${ETSY_API_BASE}${path}`;
   const started = Date.now();
 
-  const res = await fetch(url, {
-    headers: {
-      "x-api-key": clientId,
-      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-    },
-    cache: "no-store",
-  });
+  // Same key-form fallback as etsyFetch, so the explorer sees what the app sees.
+  let res!: Response;
+  let text = "";
+  for (const apiKey of apiKeyForms()) {
+    res = await fetch(url, {
+      headers: {
+        "x-api-key": apiKey,
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      },
+      cache: "no-store",
+    });
+    text = await res.text();
+    if (res.ok || !isKeyFormComplaint(res.status, text)) break;
+  }
 
-  const text = await res.text();
   let body: unknown = text;
   try {
     body = JSON.parse(text);
