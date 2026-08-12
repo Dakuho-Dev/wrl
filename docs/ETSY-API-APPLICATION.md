@@ -172,6 +172,7 @@ vì chỉ có lời hứa.
 
 ## Rate limit
 
-10 request/giây, 10.000 request/ngày mỗi app. `src/lib/sync.ts` đồng bộ tuần tự theo từng
+App `dkh-order-manager-application` (Personal Access) đang ở **5 QPS / 5K QPD** — thấp hơn
+mức 10/10K của tài liệu công khai. `src/lib/sync.ts` đồng bộ tuần tự theo từng
 shop và ghi mọi lần chạy vào bảng `SyncJob`. Khi có nhiều seller nên chuyển sync sang hàng
 đợi nền và thêm backoff khi gặp HTTP 429.
