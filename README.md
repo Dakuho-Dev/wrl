@@ -145,7 +145,7 @@ vercel deploy --prod --yes
 
 Biến môi trường production đã cấu hình sẵn trên Vercel (`vercel env ls production`):
 `AUTH_SECRET`, `ENCRYPTION_KEY`, `NEXT_PUBLIC_APP_URL`, `ETSY_REDIRECT_URI`, `ETSY_SCOPES`,
-`ETSY_CLIENT_ID`, `ETSY_CLIENT_SECRET`, `DEMO_*`, `SHOW_DEMO_CREDENTIALS`.
+`ETSY_CLIENT_ID`, `ETSY_CLIENT_SECRET`, `SUPPORT_EMAIL`, `DEMO_*`.
 
 ### Database
 
@@ -191,7 +191,7 @@ Xem hướng dẫn chi tiết kèm nội dung mẫu để điền: [`docs/ETSY-A
 
 Còn lại khi có người dùng thật:
 
-- [ ] Đặt `SHOW_DEMO_CREDENTIALS=false` và xoá 2 tài khoản demo
+- [ ] Xoá 2 tài khoản demo khỏi cơ sở dữ liệu (trang login không còn công bố chúng)
 - [ ] Chuyển rate limit sang Redis/Upstash nếu cần giới hạn toàn cục (hiện đếm theo từng instance)
 - [ ] Chuyển sync sang hàng đợi nền thay vì chạy trong request
 
