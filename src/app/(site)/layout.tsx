@@ -6,10 +6,12 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   const user = await getCurrentUser();
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="min-h-screen lg:pl-64">
       <SiteNav signedIn={Boolean(user)} />
-      <main className="flex-1">{children}</main>
-      <SiteFooter />
+      <div className="flex min-h-screen flex-col">
+        <main className="flex-1">{children}</main>
+        <SiteFooter />
+      </div>
     </div>
   );
 }

@@ -30,50 +30,39 @@ const FACTS = [
   ["AES-256-GCM", "tokens encrypted at rest"],
 ];
 
-/**
- * `span` drives the bento rhythm on large screens: 2+1 / 1+1+1 / 3. The order
- * is deliberate — the two widest cards are the two things DKH actually does to
- * your Etsy data, read receipts and write tracking.
- */
 const CAPABILITIES = [
   {
     n: "01",
-    span: "lg:col-span-2",
     icon: RefreshCw,
     title: "Order synchronisation",
     body: "Receipts are imported from your Etsy shop with buyer name, shipping address, line items, personalisation text and payment state, then kept up to date on every sync.",
   },
   {
     n: "02",
-    span: "lg:col-span-1",
     icon: ListChecks,
     title: "Production queue",
     body: "One list of what has to be made and shipped, with status, priority, internal notes and tags that live in DKH — your Etsy listings and orders are never altered.",
   },
   {
     n: "03",
-    span: "lg:col-span-1",
     icon: Tags,
     title: "Listing reference",
     body: "Active listings are pulled in read-only so order lines can be matched to a SKU, price and stock level. DKH does not create or edit listings.",
   },
   {
     n: "04",
-    span: "lg:col-span-1",
     icon: Truck,
     title: "Tracking upload",
     body: "When you record a shipment, the tracking number and carrier are submitted to Etsy against the receipt. Etsy marks the order shipped and handles notifying the buyer.",
   },
   {
     n: "05",
-    span: "lg:col-span-1",
     icon: Workflow,
     title: "Workflow rules",
     body: "Trigger-condition-action rules that set status, priority or tags, alert a teammate, or call your own webhook. Everything they touch stays inside DKH.",
   },
   {
     n: "06",
-    span: "lg:col-span-3",
     icon: BarChart3,
     title: "Reporting",
     body: "Revenue, order volume and time-to-ship across your own shop, with CSV export of your own data whenever you want it.",
@@ -152,7 +141,7 @@ export default function HomePage() {
           />
 
           <div className="relative grid items-center gap-12 px-6 py-16 sm:px-10 lg:grid-cols-12 lg:px-14 lg:py-24">
-          <div className="animate-rise lg:col-span-7">
+          <div className="animate-rise lg:order-2 lg:col-span-7">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.16em] text-violet-100 backdrop-blur">
               <ShieldCheck className="h-3.5 w-3.5" />
               Order management for Etsy sellers
@@ -195,7 +184,7 @@ export default function HomePage() {
           </div>
 
           {/* Sample queue — labelled, so nobody mistakes it for real trading data. */}
-          <div className="animate-rise lg:col-span-5">
+          <div className="animate-rise lg:order-1 lg:col-span-5">
             <div className="rounded-2xl border border-white/15 bg-white/8 p-2 shadow-2xl shadow-black/40 backdrop-blur">
               <div className="overflow-hidden rounded-xl bg-surface">
                 <div className="flex items-center justify-between border-b border-line px-4 py-3">
@@ -267,26 +256,45 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="mt-12 grid auto-rows-fr gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {CAPABILITIES.map((item) => {
+          {/* Alternating rows: the eye zig-zags down the page instead of
+              scanning a uniform grid, so each capability gets its own beat. */}
+          <div className="mt-14 space-y-4">
+            {CAPABILITIES.map((item, index) => {
               const Icon = item.icon;
+              const flip = index % 2 === 1;
               return (
                 <article
                   key={item.n}
-                  className={`shadow-card group relative overflow-hidden rounded-3xl border border-line bg-surface p-7 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30 hover:shadow-hard ${item.span}`}
+                  className={`shadow-card group relative flex flex-col gap-6 overflow-hidden rounded-3xl border border-line bg-surface p-7 transition-all duration-300 hover:border-accent/30 hover:shadow-hard sm:items-center sm:gap-10 sm:p-9 ${
+                    flip ? "sm:flex-row-reverse" : "sm:flex-row"
+                  }`}
                 >
                   <span
-                    className="bg-accent-sweep absolute inset-x-0 top-0 h-1 origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100"
+                    className={`bg-accent-sweep absolute inset-y-0 w-1 origin-bottom scale-y-0 transition-transform duration-300 group-hover:scale-y-100 ${
+                      flip ? "right-0" : "left-0"
+                    }`}
                     aria-hidden
                   />
-                  <div className="flex items-center justify-between">
-                    <span className="bg-accent-soft grid h-11 w-11 place-items-center rounded-xl text-accent transition group-hover:bg-accent group-hover:text-white">
-                      <Icon className="h-5 w-5" />
+
+                  <div className="flex shrink-0 items-center gap-4 sm:w-64 sm:flex-col sm:items-start sm:gap-5">
+                    <span className="bg-accent-sweep shadow-hard-accent grid h-14 w-14 shrink-0 place-items-center rounded-2xl text-white transition group-hover:scale-105">
+                      <Icon className="h-6 w-6" />
                     </span>
-                    <span className="font-mono text-xs text-muted-2">{item.n}</span>
+                    <div>
+                      <span className="font-mono text-[11px] tracking-widest text-muted-2">
+                        {item.n}
+                      </span>
+                      <h3 className="text-xl leading-snug text-ink">{item.title}</h3>
+                    </div>
                   </div>
-                  <h3 className="mt-5 text-lg text-ink">{item.title}</h3>
-                  <p className="mt-2.5 text-[14.5px] leading-relaxed text-muted">{item.body}</p>
+
+                  <p
+                    className={`flex-1 text-[15px] leading-relaxed text-muted ${
+                      flip ? "sm:text-right" : ""
+                    }`}
+                  >
+                    {item.body}
+                  </p>
                 </article>
               );
             })}
@@ -300,29 +308,29 @@ export default function HomePage() {
         <div className="surface-dots absolute inset-0 opacity-40" aria-hidden />
 
         <div className="relative px-6 py-16 sm:px-10 lg:px-14 lg:py-20">
-          <div className="flex flex-wrap items-end justify-between gap-6">
-            <div className="max-w-2xl">
-              <p className="label !text-violet-100">Exactly what we access</p>
-              <h2 className="mt-3 text-4xl sm:text-[2.75rem]">Four scopes. That is the list.</h2>
-              <p className="mt-4 leading-relaxed text-violet-100">
-                You see them on Etsy&rsquo;s own authorisation screen before you approve anything —
-                and you can revoke them from your Etsy account at any time.
-              </p>
+          {/* Heading pins to the left while the scopes scroll past it. */}
+          <div className="grid gap-10 lg:grid-cols-12">
+            <div className="lg:col-span-5">
+              <div className="lg:sticky lg:top-10">
+                <p className="label !text-violet-100">Exactly what we access</p>
+                <h2 className="mt-3 text-4xl sm:text-[2.75rem]">Four scopes. That is the list.</h2>
+                <p className="mt-4 leading-relaxed text-violet-100">
+                  You see them on Etsy&rsquo;s own authorisation screen before you approve anything
+                  — and you can revoke them from your Etsy account at any time.
+                </p>
+                <Link
+                  href="/platforms"
+                  className="mt-7 inline-flex items-center gap-2 rounded-xl border border-white/40 px-5 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:border-white hover:bg-white/10"
+                >
+                  Full detail <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
             </div>
-            <Link
-              href="/platforms"
-              className="inline-flex items-center gap-2 rounded-xl border border-white/40 px-5 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:border-white hover:bg-white/10"
-            >
-              Full detail <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
 
-          {/* Second required-notice placement, mid-page and high contrast. */}
-          <div className="mt-10">
+            <div className="space-y-4 lg:col-span-7">
+            {/* Second required-notice placement, mid-page and high contrast. */}
             <EtsyTrademarkCard />
-          </div>
 
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
             {SCOPES.map(([scope, access, purpose]) => (
               <div
                 key={scope}
@@ -346,6 +354,7 @@ export default function HomePage() {
                 <p className="mt-3 text-sm leading-relaxed text-violet-100">{purpose}</p>
               </div>
             ))}
+            </div>
           </div>
         </div>
         </div>
@@ -359,21 +368,26 @@ export default function HomePage() {
             <h2 className="mt-3 text-4xl text-ink sm:text-[2.75rem]">From paid to packed</h2>
           </div>
 
-          <div className="relative mt-14 grid gap-8 md:grid-cols-4">
-            {/* Connector rail behind the numbered steps. */}
+          {/* Vertical timeline: an order moves through these in sequence, so
+              the layout runs down the page rather than across it. */}
+          <div className="relative mx-auto mt-14 max-w-3xl">
             <div
-              className="absolute left-0 right-0 top-6 hidden h-px bg-gradient-to-r from-accent/10 via-accent/40 to-accent/10 md:block"
+              className="absolute bottom-6 left-6 top-6 w-px bg-gradient-to-b from-accent/10 via-accent/40 to-accent/10"
               aria-hidden
             />
-            {PIPELINE.map(([step, title, body]) => (
-              <div key={step} className="relative">
-                <span className="bg-accent-sweep shadow-hard-accent relative z-10 grid h-12 w-12 place-items-center rounded-xl font-display text-lg text-white">
-                  {step}
-                </span>
-                <h3 className="mt-5 text-lg text-ink">{title}</h3>
-                <p className="mt-2 text-[14.5px] leading-relaxed text-muted">{body}</p>
-              </div>
-            ))}
+            <div className="space-y-8">
+              {PIPELINE.map(([step, title, body]) => (
+                <div key={step} className="relative flex gap-6">
+                  <span className="bg-accent-sweep shadow-hard-accent relative z-10 grid h-12 w-12 shrink-0 place-items-center rounded-2xl font-display text-lg text-white">
+                    {step}
+                  </span>
+                  <div className="pt-1.5">
+                    <h3 className="text-lg text-ink">{title}</h3>
+                    <p className="mt-2 text-[15px] leading-relaxed text-muted">{body}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -381,7 +395,8 @@ export default function HomePage() {
       {/* ------------------------------------------------------------ Commitments */}
       <section className="bg-paper">
         <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:px-8">
-          <div>
+          {/* Copy sits to the right of the list here, mirroring the hero. */}
+          <div className="lg:order-2">
             <p className="label">How we handle your data</p>
             <h2 className="mt-3 text-4xl text-ink sm:text-[2.75rem]">
               Your seller data stays yours
@@ -400,7 +415,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <ul className="shadow-card space-y-4 rounded-2xl border border-line bg-surface p-7">
+          <ul className="shadow-card space-y-4 rounded-3xl border border-line bg-surface p-7 lg:order-1">
             {COMMITMENTS.map((item) => (
               <li key={item} className="flex items-start gap-3.5 text-[14.5px] leading-relaxed text-ink-2">
                 <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-emerald-100 text-emerald-700">

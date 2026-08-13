@@ -18,69 +18,90 @@ const LINKS = [
 ];
 
 /**
- * Floating pill nav: detached from the top edge so the page reads as a stack of
- * cards rather than a document with a toolbar bolted on.
+ * Navigation lives in a fixed rail down the left edge on desktop, and collapses
+ * to a top bar below it. The rail keeps the whole map of the site visible while
+ * you read, which a horizontal bar cannot do without a dropdown.
  */
 export function SiteNav({ signedIn }: { signedIn: boolean }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
-  return (
-    <header className="sticky top-0 z-50 px-3 pt-3 sm:px-4 sm:pt-4">
-      <div className="shadow-card mx-auto max-w-7xl rounded-2xl border border-line bg-surface/80 backdrop-blur-xl">
-        <div className="flex h-16 items-center justify-between gap-6 pl-4 pr-3 sm:pl-5 sm:pr-4">
-          <Logo />
+  const primary = signedIn ? (
+    <Link
+      href="/dashboard"
+      className="shadow-hard-accent block rounded-xl bg-accent px-4 py-3 text-center text-sm font-semibold text-white transition-all hover:-translate-y-px hover:bg-accent-2"
+    >
+      Dashboard →
+    </Link>
+  ) : (
+    <>
+      <Link
+        href="/register"
+        className="shadow-hard-accent block rounded-xl bg-accent px-4 py-3 text-center text-sm font-semibold text-white transition-all hover:-translate-y-px hover:bg-accent-2"
+      >
+        Start free
+      </Link>
+      <Link
+        href="/login"
+        className="block rounded-xl border border-line px-4 py-2.5 text-center text-sm font-medium text-ink-2 transition hover:border-accent hover:text-accent"
+      >
+        Log in
+      </Link>
+    </>
+  );
 
-          <nav className="hidden items-center gap-0.5 lg:flex">
-            {LINKS.map((link) => {
-              const active = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={cn(
-                    "rounded-full px-3.5 py-2 text-[13.5px] font-medium transition",
-                    active
-                      ? "bg-accent-soft text-accent"
-                      : "text-ink-2 hover:bg-paper-2 hover:text-accent",
-                  )}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-          </nav>
-
-          <div className="hidden items-center gap-2 lg:flex">
-            {signedIn ? (
-              <Link
-                href="/dashboard"
-                className="shadow-hard-accent rounded-full bg-accent px-5 py-2.5 text-[13.5px] font-semibold text-white transition-all hover:-translate-y-px hover:bg-accent-2"
-              >
-                Dashboard →
-              </Link>
-            ) : (
-              <>
-                <Link
-                  href="/login"
-                  className="rounded-full px-3.5 py-2 text-[13.5px] font-medium text-ink-2 transition hover:text-accent"
-                >
-                  Log in
-                </Link>
-                <Link
-                  href="/register"
-                  className="shadow-hard-accent rounded-full bg-accent px-5 py-2.5 text-[13.5px] font-semibold text-white transition-all hover:-translate-y-px hover:bg-accent-2"
-                >
-                  Start free
-                </Link>
-              </>
+  const navList = (
+    <nav className="space-y-1">
+      {LINKS.map((link, index) => {
+        const active = pathname === link.href;
+        return (
+          <Link
+            key={link.href}
+            href={link.href}
+            onClick={() => setOpen(false)}
+            className={cn(
+              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium transition",
+              active
+                ? "bg-accent-soft text-accent"
+                : "text-ink-2 hover:bg-paper-2 hover:text-accent",
             )}
-          </div>
+          >
+            <span
+              className={cn(
+                "font-mono text-[10px] tabular-nums",
+                active ? "text-accent" : "text-muted-2",
+              )}
+            >
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            {link.label}
+          </Link>
+        );
+      })}
+    </nav>
+  );
 
+  return (
+    <>
+      {/* ---------------------------------------------------- Desktop rail */}
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-line bg-surface/80 backdrop-blur-xl lg:flex">
+        <div className="px-5 py-6">
+          <Logo />
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-3">{navList}</div>
+
+        <div className="space-y-2 border-t border-line p-4">{primary}</div>
+      </aside>
+
+      {/* ------------------------------------------------------ Mobile bar */}
+      <header className="sticky top-0 z-50 border-b border-line bg-surface/85 backdrop-blur-xl lg:hidden">
+        <div className="flex h-16 items-center justify-between px-4 sm:px-6">
+          <Logo />
           <button
             type="button"
             onClick={() => setOpen((value) => !value)}
-            className="grid h-10 w-10 place-items-center rounded-xl border border-line text-ink lg:hidden"
+            className="grid h-10 w-10 place-items-center rounded-xl border border-line text-ink"
             aria-label="Toggle navigation"
             aria-expanded={open}
           >
@@ -89,47 +110,12 @@ export function SiteNav({ signedIn }: { signedIn: boolean }) {
         </div>
 
         {open ? (
-          <div className="border-t border-line px-3 pb-3 lg:hidden">
-            <div className="pt-2">
-              {LINKS.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  className="block rounded-xl px-3 py-3 text-sm font-medium text-ink-2 hover:bg-accent-soft hover:text-accent"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-            <div className="flex gap-2 pt-2">
-              {signedIn ? (
-                <Link
-                  href="/dashboard"
-                  className="flex-1 rounded-xl bg-accent px-4 py-2.5 text-center text-sm font-semibold text-white"
-                >
-                  Dashboard
-                </Link>
-              ) : (
-                <>
-                  <Link
-                    href="/login"
-                    className="flex-1 rounded-xl border border-line px-4 py-2.5 text-center text-sm font-semibold text-ink"
-                  >
-                    Log in
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="flex-1 rounded-xl bg-accent px-4 py-2.5 text-center text-sm font-semibold text-white"
-                  >
-                    Start free
-                  </Link>
-                </>
-              )}
-            </div>
+          <div className="border-t border-line px-3 pb-4 pt-2">
+            {navList}
+            <div className="mt-3 space-y-2">{primary}</div>
           </div>
         ) : null}
-      </div>
-    </header>
+      </header>
+    </>
   );
 }
