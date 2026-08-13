@@ -30,39 +30,50 @@ const FACTS = [
   ["AES-256-GCM", "tokens encrypted at rest"],
 ];
 
+/**
+ * `span` drives the bento rhythm on large screens: 2+1 / 1+1+1 / 3. The order
+ * is deliberate — the two widest cards are the two things DKH actually does to
+ * your Etsy data, read receipts and write tracking.
+ */
 const CAPABILITIES = [
   {
     n: "01",
+    span: "lg:col-span-2",
     icon: RefreshCw,
     title: "Order synchronisation",
     body: "Receipts are imported from your Etsy shop with buyer name, shipping address, line items, personalisation text and payment state, then kept up to date on every sync.",
   },
   {
     n: "02",
+    span: "lg:col-span-1",
     icon: ListChecks,
     title: "Production queue",
     body: "One list of what has to be made and shipped, with status, priority, internal notes and tags that live in DKH — your Etsy listings and orders are never altered.",
   },
   {
     n: "03",
+    span: "lg:col-span-1",
     icon: Tags,
     title: "Listing reference",
     body: "Active listings are pulled in read-only so order lines can be matched to a SKU, price and stock level. DKH does not create or edit listings.",
   },
   {
     n: "04",
+    span: "lg:col-span-1",
     icon: Truck,
     title: "Tracking upload",
     body: "When you record a shipment, the tracking number and carrier are submitted to Etsy against the receipt. Etsy marks the order shipped and handles notifying the buyer.",
   },
   {
     n: "05",
+    span: "lg:col-span-1",
     icon: Workflow,
     title: "Workflow rules",
     body: "Trigger-condition-action rules that set status, priority or tags, alert a teammate, or call your own webhook. Everything they touch stays inside DKH.",
   },
   {
     n: "06",
+    span: "lg:col-span-3",
     icon: BarChart3,
     title: "Reporting",
     body: "Revenue, order volume and time-to-ship across your own shop, with CSV export of your own data whenever you want it.",
@@ -109,7 +120,7 @@ const MANIFEST = [
 ];
 
 const STATE_TONE: Record<string, string> = {
-  Shipped: "bg-sky-100 text-sky-800",
+  Shipped: "bg-violet-100 text-violet-800",
   "In production": "bg-amber-100 text-amber-800",
   New: "bg-slate-100 text-slate-700",
   Delivered: "bg-emerald-100 text-emerald-800",
@@ -127,17 +138,22 @@ const COMMITMENTS = [
 export default function HomePage() {
   return (
     <>
-      {/* ------------------------------------------------------------ Hero */}
-      <section className="bg-brand-sweep relative overflow-hidden text-white">
-        <div className="surface-dots absolute inset-0 opacity-60" aria-hidden />
-        <div
-          className="absolute -right-24 -top-24 h-[420px] w-[420px] rounded-full bg-sky-400/20 blur-3xl"
-          aria-hidden
-        />
+      {/* --------------------------------------------------- Hero (card) */}
+      <section className="px-3 pt-4 sm:px-4">
+        <div className="bg-brand-sweep relative mx-auto max-w-7xl overflow-hidden rounded-[28px] text-white">
+          <div className="surface-dots absolute inset-0 opacity-60" aria-hidden />
+          <div
+            className="absolute -right-24 -top-28 h-[420px] w-[420px] rounded-full bg-fuchsia-400/25 blur-3xl"
+            aria-hidden
+          />
+          <div
+            className="absolute -bottom-32 -left-28 h-[380px] w-[380px] rounded-full bg-violet-500/30 blur-3xl"
+            aria-hidden
+          />
 
-        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-12 lg:px-8 lg:py-24">
+          <div className="relative grid items-center gap-12 px-6 py-16 sm:px-10 lg:grid-cols-12 lg:px-14 lg:py-24">
           <div className="animate-rise lg:col-span-7">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.16em] text-sky-100 backdrop-blur">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.16em] text-violet-100 backdrop-blur">
               <ShieldCheck className="h-3.5 w-3.5" />
               Order management for Etsy sellers
             </span>
@@ -146,7 +162,7 @@ export default function HomePage() {
               Your Etsy orders,
               <br />
               in a queue built{" "}
-              <span className="bg-gradient-to-r from-sky-300 to-cyan-200 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-violet-300 to-fuchsia-200 bg-clip-text text-transparent">
                 for making things.
               </span>
             </h1>
@@ -160,7 +176,7 @@ export default function HomePage() {
             <div className="mt-9 flex flex-wrap items-center gap-3">
               <Link
                 href="/register"
-                className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3.5 text-base font-semibold text-accent shadow-lg shadow-black/20 transition-all hover:-translate-y-0.5 hover:bg-sky-50"
+                className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3.5 text-base font-semibold text-accent shadow-lg shadow-black/20 transition-all hover:-translate-y-0.5 hover:bg-violet-50"
               >
                 Create free account
                 <ArrowRight className="h-4 w-4" />
@@ -214,14 +230,18 @@ export default function HomePage() {
               </div>
             </div>
           </div>
+          </div>
         </div>
       </section>
 
       {/* ------------------------------------------------------------ Facts */}
-      <section className="border-b border-line bg-surface">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px px-4 sm:px-6 lg:grid-cols-4 lg:px-8">
+      <section className="px-3 sm:px-4">
+        <div className="mx-auto grid max-w-7xl gap-3 py-8 sm:grid-cols-2 lg:grid-cols-4">
           {FACTS.map(([value, label]) => (
-            <div key={label} className="px-3 py-8 text-center lg:px-5">
+            <div
+              key={label}
+              className="shadow-card rounded-2xl border border-line bg-surface px-5 py-6 text-center transition hover:-translate-y-0.5 hover:shadow-hard-sm"
+            >
               <p className="text-brand-sweep font-display text-xl leading-tight sm:text-2xl">
                 {value}
               </p>
@@ -234,7 +254,7 @@ export default function HomePage() {
       </section>
 
       {/* ------------------------------------------------------------ Capabilities */}
-      <section id="features" className="bg-paper">
+      <section id="features" className="bg-aurora">
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <p className="label">What DKH does</p>
@@ -247,16 +267,16 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid auto-rows-fr gap-4 md:grid-cols-2 lg:grid-cols-3">
             {CAPABILITIES.map((item) => {
               const Icon = item.icon;
               return (
                 <article
                   key={item.n}
-                  className="shadow-card group relative overflow-hidden rounded-2xl border border-line bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30 hover:shadow-hard"
+                  className={`shadow-card group relative overflow-hidden rounded-3xl border border-line bg-surface p-7 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30 hover:shadow-hard ${item.span}`}
                 >
                   <span
-                    className="bg-azure-sweep absolute inset-x-0 top-0 h-1 origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100"
+                    className="bg-accent-sweep absolute inset-x-0 top-0 h-1 origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100"
                     aria-hidden
                   />
                   <div className="flex items-center justify-between">
@@ -274,16 +294,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ---------------------------------------------- Scopes (azure band) */}
-      <section id="platforms" className="bg-azure-sweep relative overflow-hidden text-white">
+      {/* -------------------------------------------- Scopes (accent card) */}
+      <section id="platforms" className="px-3 pb-4 sm:px-4">
+        <div className="bg-accent-sweep relative mx-auto max-w-7xl overflow-hidden rounded-[28px] text-white">
         <div className="surface-dots absolute inset-0 opacity-40" aria-hidden />
 
-        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <div className="relative px-6 py-16 sm:px-10 lg:px-14 lg:py-20">
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div className="max-w-2xl">
-              <p className="label !text-sky-100">Exactly what we access</p>
+              <p className="label !text-violet-100">Exactly what we access</p>
               <h2 className="mt-3 text-4xl sm:text-[2.75rem]">Four scopes. That is the list.</h2>
-              <p className="mt-4 leading-relaxed text-sky-100">
+              <p className="mt-4 leading-relaxed text-violet-100">
                 You see them on Etsy&rsquo;s own authorisation screen before you approve anything —
                 and you can revoke them from your Etsy account at any time.
               </p>
@@ -309,7 +330,7 @@ export default function HomePage() {
               >
                 <div className="flex items-center justify-between gap-3">
                   <code className="flex items-center gap-2 font-mono text-[15px] font-semibold text-white">
-                    <KeyRound className="h-4 w-4 text-sky-200" />
+                    <KeyRound className="h-4 w-4 text-violet-200" />
                     {scope}
                   </code>
                   <span
@@ -322,10 +343,11 @@ export default function HomePage() {
                     {access}
                   </span>
                 </div>
-                <p className="mt-3 text-sm leading-relaxed text-sky-100">{purpose}</p>
+                <p className="mt-3 text-sm leading-relaxed text-violet-100">{purpose}</p>
               </div>
             ))}
           </div>
+        </div>
         </div>
       </section>
 
@@ -345,7 +367,7 @@ export default function HomePage() {
             />
             {PIPELINE.map(([step, title, body]) => (
               <div key={step} className="relative">
-                <span className="bg-azure-sweep shadow-hard-accent relative z-10 grid h-12 w-12 place-items-center rounded-xl font-display text-lg text-white">
+                <span className="bg-accent-sweep shadow-hard-accent relative z-10 grid h-12 w-12 place-items-center rounded-xl font-display text-lg text-white">
                   {step}
                 </span>
                 <h3 className="mt-5 text-lg text-ink">{title}</h3>
@@ -391,10 +413,15 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ------------------------------------------------------------ CTA */}
-      <section className="bg-brand-sweep relative overflow-hidden text-white">
+      {/* ------------------------------------------------------- CTA (card) */}
+      <section className="px-3 pb-6 sm:px-4">
+        <div className="bg-brand-sweep relative mx-auto max-w-7xl overflow-hidden rounded-[28px] text-white">
         <div className="surface-dots absolute inset-0 opacity-50" aria-hidden />
-        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <div
+          className="absolute -right-20 -top-24 h-[340px] w-[340px] rounded-full bg-fuchsia-400/25 blur-3xl"
+          aria-hidden
+        />
+        <div className="relative px-6 py-16 sm:px-10 lg:px-14 lg:py-20">
           <div className="flex flex-wrap items-end justify-between gap-8">
             <div>
               <h2 className="max-w-2xl text-4xl leading-tight sm:text-[2.75rem]">
@@ -408,7 +435,7 @@ export default function HomePage() {
             <div className="flex flex-wrap gap-3">
               <Link
                 href="/register"
-                className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3.5 text-base font-semibold text-accent shadow-lg shadow-black/20 transition-all hover:-translate-y-0.5 hover:bg-sky-50"
+                className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3.5 text-base font-semibold text-accent shadow-lg shadow-black/20 transition-all hover:-translate-y-0.5 hover:bg-violet-50"
               >
                 Create free account
                 <ArrowRight className="h-4 w-4" />
@@ -421,6 +448,7 @@ export default function HomePage() {
               </Link>
             </div>
           </div>
+        </div>
         </div>
       </section>
     </>

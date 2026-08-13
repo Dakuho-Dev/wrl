@@ -97,7 +97,7 @@ export default function FaqPage() {
     <>
       <PageHero eyebrow="FAQ" title="Frequently asked questions">
         Can&apos;t find what you need?{" "}
-        <Link href="/contact" className="font-semibold text-sky-300 underline underline-offset-4">
+        <Link href="/contact" className="font-semibold text-violet-300 underline underline-offset-4">
           Send us a message
         </Link>{" "}
         and we will get back within one business day.

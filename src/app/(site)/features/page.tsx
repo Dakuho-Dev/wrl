@@ -147,7 +147,7 @@ export default function FeaturesPage() {
         >
           <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:items-start lg:px-8">
             <div className={index % 2 === 1 ? "lg:order-2" : ""}>
-              <span className="bg-azure-sweep shadow-hard-accent grid h-12 w-12 place-items-center rounded-xl text-white">
+              <span className="bg-accent-sweep shadow-hard-accent grid h-12 w-12 place-items-center rounded-xl text-white">
                 <section.icon className="h-6 w-6" />
               </span>
               <p className="label mt-5">{section.eyebrow}</p>

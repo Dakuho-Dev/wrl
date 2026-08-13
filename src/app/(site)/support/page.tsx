@@ -67,7 +67,7 @@ export default function SupportPage() {
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-accent transition-all hover:-translate-y-0.5 hover:bg-sky-50"
+            className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-accent transition-all hover:-translate-y-0.5 hover:bg-violet-50"
           >
             <MessageSquare className="h-4 w-4" /> Open a ticket
           </Link>

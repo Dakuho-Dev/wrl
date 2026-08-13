@@ -1,36 +1,40 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------
-   DKH design system — deep navy + azure, rounded surfaces, soft
-   elevation. Modern SaaS rather than editorial print.
+   DKH design system — violet ink on warm-white, generous radii,
+   layered soft shadows. Deliberately not blue: Etsy's own chrome is
+   orange, and half the tools in this category ship the same azure.
 ------------------------------------------------------------------ */
 
 @theme {
-  /* Surfaces — cool, near-white page with a tinted second layer */
-  --color-paper: #f4f7fc;
-  --color-paper-2: #e9eff8;
-  --color-paper-3: #dae4f2;
+  /* Surfaces — warm white with a faint violet cast */
+  --color-paper: #f8f7fd;
+  --color-paper-2: #efedf9;
+  --color-paper-3: #e2def3;
   --color-surface: #ffffff;
 
   /* Structure */
-  --color-line: #dde5f0;
-  --color-line-strong: #c3d1e4;
+  --color-line: #e5e1f2;
+  --color-line-strong: #cdc5e6;
 
-  /* Type — navy instead of black, so nothing on the page reads harsh */
-  --color-ink: #0d1f38;
-  --color-ink-2: #2c4460;
-  --color-muted: #5d738f;
-  --color-muted-2: #8b9db5;
+  /* Type — violet-black rather than grey, so text and brand agree */
+  --color-ink: #160f2e;
+  --color-ink-2: #3a2f5c;
+  --color-muted: #6b6088;
+  --color-muted-2: #9b91b4;
 
-  /* Accent — azure, with a deeper press state and a soft wash */
-  --color-accent: #1668d8;
-  --color-accent-2: #1150ab;
-  --color-accent-soft: #e7f0fe;
-  --color-accent-ink: #0f4899;
+  /* Accent — vivid violet, with a press state and a soft wash */
+  --color-accent: #6d3bf5;
+  --color-accent-2: #5628d4;
+  --color-accent-soft: #efeaff;
+  --color-accent-ink: #4a1fb8;
 
-  /* Deep field used for the hero, the stat strip and the footer */
-  --color-navy: #0b1b33;
-  --color-navy-2: #12294a;
+  /* Second hue for gradients only — never for body text */
+  --color-blossom: #d946ef;
+
+  /* Deep field used for the hero, the closing CTA and the footer */
+  --color-deep: #140b2b;
+  --color-deep-2: #241247;
 
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-display: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -53,13 +57,12 @@ body {
   border-color: var(--color-line);
 }
 
-/* Tight, heavy sans on headings — the product-site voice. */
 h1,
 h2,
 h3,
 .font-display {
   font-family: var(--font-display);
-  letter-spacing: -0.025em;
+  letter-spacing: -0.03em;
   font-weight: 700;
 }
 
@@ -68,57 +71,65 @@ h3,
   color: #fff;
 }
 
-/* Small caps mono label used for every section eyebrow and table header. */
+/* Small caps mono label used for every section eyebrow. */
 .label {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-accent);
   font-weight: 600;
 }
 
 /* ---------------------------------------------------------- Elevation
-   Soft, tinted with the brand navy so shadows never look grey. */
+   Two-layer shadows tinted with the brand ink, so nothing looks grey. */
 
 @utility shadow-hard {
   box-shadow:
-    0 1px 2px rgba(13, 31, 56, 0.06),
-    0 12px 28px -8px rgba(13, 31, 56, 0.16);
+    0 1px 2px rgba(22, 15, 46, 0.05),
+    0 18px 40px -12px rgba(22, 15, 46, 0.18);
 }
 
 @utility shadow-hard-sm {
   box-shadow:
-    0 1px 2px rgba(13, 31, 56, 0.06),
-    0 6px 16px -6px rgba(13, 31, 56, 0.18);
+    0 1px 2px rgba(22, 15, 46, 0.05),
+    0 8px 20px -8px rgba(22, 15, 46, 0.18);
 }
 
 @utility shadow-hard-accent {
-  box-shadow: 0 10px 24px -8px rgba(22, 104, 216, 0.5);
+  box-shadow: 0 12px 28px -10px rgba(109, 59, 245, 0.55);
 }
 
 @utility shadow-card {
   box-shadow:
-    0 1px 2px rgba(13, 31, 56, 0.05),
-    0 4px 14px -6px rgba(13, 31, 56, 0.1);
+    0 1px 2px rgba(22, 15, 46, 0.04),
+    0 6px 18px -8px rgba(22, 15, 46, 0.1);
 }
 
 /* ---------------------------------------------------------- Fields */
 
-/* The signature azure sweep — hero, platform band, CTA. */
+/* Deep field: hero, closing CTA, footer. */
 @utility bg-brand-sweep {
-  background-image: linear-gradient(135deg, #0b1b33 0%, #123c7c 45%, #1668d8 100%);
+  background-image: linear-gradient(140deg, #140b2b 0%, #2e1160 48%, #6d3bf5 100%);
 }
 
-@utility bg-azure-sweep {
-  background-image: linear-gradient(135deg, #1150ab 0%, #1668d8 55%, #35a7ea 100%);
+/* Bright field: the scopes band and anything that should pop mid-page. */
+@utility bg-accent-sweep {
+  background-image: linear-gradient(135deg, #5628d4 0%, #6d3bf5 45%, #d946ef 100%);
 }
 
 @utility text-brand-sweep {
-  background-image: linear-gradient(100deg, #1668d8 0%, #35a7ea 100%);
+  background-image: linear-gradient(100deg, #6d3bf5 0%, #d946ef 100%);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
+}
+
+/* Soft aurora blobs behind light sections. */
+@utility bg-aurora {
+  background-image:
+    radial-gradient(38rem 22rem at 12% -6%, rgba(109, 59, 245, 0.16), transparent 65%),
+    radial-gradient(32rem 20rem at 92% 8%, rgba(217, 70, 239, 0.13), transparent 62%);
 }
 
 .scroll-thin::-webkit-scrollbar {
@@ -139,22 +150,29 @@ h3,
     to bottom,
     transparent,
     transparent 31px,
-    rgba(13, 31, 56, 0.04) 31px,
-    rgba(13, 31, 56, 0.04) 32px
+    rgba(22, 15, 46, 0.04) 31px,
+    rgba(22, 15, 46, 0.04) 32px
   );
 }
 
 @utility surface-grid {
   background-image:
-    linear-gradient(to right, rgba(13, 31, 56, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(13, 31, 56, 0.04) 1px, transparent 1px);
+    linear-gradient(to right, rgba(22, 15, 46, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(22, 15, 46, 0.04) 1px, transparent 1px);
   background-size: 32px 32px;
 }
 
-/* Faint dot field for dark sections, so the navy is never flat. */
+/* Faint dot field for dark sections, so the deep violet is never flat. */
 @utility surface-dots {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.13) 1px, transparent 1px);
   background-size: 22px 22px;
+}
+
+/* Hairline gradient border for glass cards on the deep field. */
+@utility ring-glass {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 20px 50px -20px rgba(0, 0, 0, 0.7);
 }
 
 @keyframes marquee {
@@ -167,17 +185,22 @@ h3,
 }
 
 @keyframes rise {
-  from { opacity: 0; transform: translateY(14px); }
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-rise {
-  animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
+.animate-rise-2 { animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both; }
+.animate-rise-3 { animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both; }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee,
-  .animate-rise {
+  .animate-rise,
+  .animate-rise-2,
+  .animate-rise-3 {
     animation: none;
   }
 }

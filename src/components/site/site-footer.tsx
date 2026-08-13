@@ -50,7 +50,7 @@ export function SiteFooter() {
   ] as Array<[string, string]>;
 
   return (
-    <footer className="bg-navy text-slate-300">
+    <footer className="bg-deep text-slate-300">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-4">
@@ -64,7 +64,7 @@ export function SiteFooter() {
             <dl className="mt-6 divide-y divide-white/10 border-y border-white/10">
               {contact.map(([label, value]) => (
                 <div key={label} className="flex items-baseline justify-between gap-4 py-2.5">
-                  <dt className="label !text-sky-400">{label}</dt>
+                  <dt className="label !text-violet-300">{label}</dt>
                   <dd className="text-sm text-slate-200">{value}</dd>
                 </div>
               ))}
@@ -74,7 +74,7 @@ export function SiteFooter() {
           <div className="grid gap-8 sm:grid-cols-4 lg:col-span-8">
             {COLUMNS.map((column) => (
               <div key={column.title}>
-                <h4 className="label !text-sky-400">{column.title}</h4>
+                <h4 className="label !text-violet-300">{column.title}</h4>
                 <ul className="mt-4 space-y-2.5">
                   {column.links.map((link) => (
                     <li key={link.href + link.label}>
