@@ -15,8 +15,8 @@ function clean(value: string | undefined, fallback: string) {
   return (value ?? "").replace(/^﻿/, "").trim() || fallback;
 }
 
-/** Mail domain, not the site subdomain — addresses stay on the registered apex. */
-const MAIL_DOMAIN = clean(process.env.MAIL_DOMAIN, "dkh.io.vn");
+/** One host for the site and for every address. */
+const MAIL_DOMAIN = clean(process.env.MAIL_DOMAIN, clean(process.env.SITE_DOMAIN, "wrl.dkh.io.vn"));
 
 const DEMO_ACCOUNTS = [
   {
@@ -47,25 +47,41 @@ async function repairEmails(prisma: PrismaClient) {
 }
 
 /**
- * The site moved from the dkh.io placeholder to the registered dkh.io.vn. Rename
- * the seeded accounts in place rather than reseeding, so the demo orders survive.
+ * Hosts this project has used, oldest first. The seeded demo accounts get
+ * renamed in place onto MAIL_DOMAIN rather than reseeded, so the demo orders
+ * survive every move.
  */
+const FORMER_HOSTS = ["dkh.io", "dkh.io.vn"];
+
+function rehost(address: string) {
+  for (const host of FORMER_HOSTS) {
+    if (address.endsWith(`@${host}`) && host !== MAIL_DOMAIN) {
+      return `${address.slice(0, -host.length - 1)}@${MAIL_DOMAIN}`;
+    }
+  }
+  return null;
+}
+
 async function migrateSeedDomain(prisma: PrismaClient) {
-  const users = await prisma.user.findMany({ where: { email: { endsWith: "@dkh.io" } } });
+  for (const host of FORMER_HOSTS) {
+    if (host === MAIL_DOMAIN) continue;
 
-  for (const user of users) {
-    const email = user.email.replace(/@dkh\.io$/, `@${MAIL_DOMAIN}`);
-    if (await prisma.user.findUnique({ where: { email } })) continue;
+    const users = await prisma.user.findMany({ where: { email: { endsWith: `@${host}` } } });
+    for (const user of users) {
+      const email = rehost(user.email);
+      if (!email) continue;
+      if (await prisma.user.findUnique({ where: { email } })) continue;
 
-    await prisma.user.update({ where: { id: user.id }, data: { email } });
-    console.log(`· bootstrap: moved ${user.email} -> ${email}`);
+      await prisma.user.update({ where: { id: user.id }, data: { email } });
+      console.log(`· bootstrap: moved ${user.email} -> ${email}`);
+    }
   }
 
   const setting = await prisma.setting.findUnique({ where: { key: "site.supportEmail" } });
-  if (setting?.value.endsWith("@dkh.io")) {
-    const value = setting.value.replace(/@dkh\.io$/, `@${MAIL_DOMAIN}`);
-    await prisma.setting.update({ where: { key: "site.supportEmail" }, data: { value } });
-    console.log(`· bootstrap: support address now ${value}`);
+  const moved = setting ? rehost(setting.value) : null;
+  if (setting && moved) {
+    await prisma.setting.update({ where: { key: "site.supportEmail" }, data: { value: moved } });
+    console.log(`· bootstrap: support address now ${moved}`);
   }
 }
 

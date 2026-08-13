@@ -3,15 +3,15 @@ import { cleanEnv } from "@/lib/env";
 /** Display name of the product, as it appears in copy, the logo and metadata. */
 export const BRAND = cleanEnv(process.env.BRAND, "WrL");
 
-/** The host the site is served from. */
+/** The host the site is served from, and the host every address hangs off. */
 export const SITE_DOMAIN = cleanEnv(process.env.SITE_DOMAIN, "wrl.dkh.io.vn");
 
 /**
- * Where mail lives. Deliberately separate from SITE_DOMAIN: the site runs on a
- * subdomain, but MX records belong to the registered apex, so addresses stay
- * short and no second mailbox has to be configured.
+ * Where mail lives. Follows SITE_DOMAIN so the brand reads the same everywhere;
+ * the override exists in case MX ever has to sit on a different host than the
+ * website.
  */
-export const MAIL_DOMAIN = cleanEnv(process.env.MAIL_DOMAIN, "dkh.io.vn");
+export const MAIL_DOMAIN = cleanEnv(process.env.MAIL_DOMAIN, SITE_DOMAIN);
 
 /**
  * Public contact details.

@@ -46,11 +46,11 @@ mô tả một sản phẩm không tồn tại đúng như mô tả**:
 
 **Đặt một hòm thư thật.** §3 bắt buộc app phải công bố "a monitored email address that
 Etsy sellers can use to contact your Application for support". Domain `dkh.io.vn` đã đăng
-ký, nên tạo được `support@dkh.io.vn` thật (forwarding của nhà cung cấp domain, hoặc Zoho
+ký, nên tạo được `support@wrl.dkh.io.vn` thật (forwarding của nhà cung cấp domain, hoặc Zoho
 Mail bản miễn phí). Reviewer có gửi thử thì phải tới nơi.
 
 ```bash
-vercel env add SUPPORT_EMAIL production --force --value "support@dkh.io.vn"
+vercel env add SUPPORT_EMAIL production --force --value "support@wrl.dkh.io.vn"
 ```
 
 Các địa chỉ `privacy@` / `security@` / `legal@` trên trang pháp lý tự động dùng lại

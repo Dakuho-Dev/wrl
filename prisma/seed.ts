@@ -100,8 +100,8 @@ async function main() {
   const env = (name: string, fallback: string) =>
     (process.env[name] ?? "").replace(/^﻿/, "").trim() || fallback;
 
-  // Demo accounts live on the mail domain, not the site subdomain.
-  const mailDomain = env("MAIL_DOMAIN", "dkh.io.vn");
+  // Everything hangs off one host: the site subdomain.
+  const mailDomain = env("MAIL_DOMAIN", env("SITE_DOMAIN", "wrl.dkh.io.vn"));
   const sellerPassword = env("DEMO_SELLER_PASSWORD", "Password123!");
   const adminPassword = env("DEMO_ADMIN_PASSWORD", "Admin123!");
   const password = await bcrypt.hash(sellerPassword, 10);

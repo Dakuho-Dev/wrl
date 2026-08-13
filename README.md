@@ -29,8 +29,8 @@ Mở http://localhost:3000
 
 | Vai trò | Email | Mật khẩu |
 |---|---|---|
-| Người bán | `seller@dkh.io.vn` | `Password123!` |
-| Quản trị viên | `admin@dkh.io.vn` | `Admin123!` |
+| Người bán | `seller@wrl.dkh.io.vn` | `Password123!` |
+| Quản trị viên | `admin@wrl.dkh.io.vn` | `Admin123!` |
 
 ---
 
