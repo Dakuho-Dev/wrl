@@ -9,7 +9,7 @@ import { ETSY_TRADEMARK_NOTICE } from "@/lib/site-config";
 export const metadata: Metadata = {
   title: "What we access",
   description:
-    "The exact Etsy Open API scopes DKH requests, the endpoints it calls, and the things it deliberately does not do.",
+    "The exact Etsy Open API scopes WrL requests, the endpoints it calls, and the things it deliberately does not do.",
 };
 
 const SCOPES = [
@@ -48,7 +48,7 @@ const ENDPOINTS = [
 ];
 
 const NOT_DOING = [
-  "Message your buyers. DKH never emails, texts or otherwise contacts an Etsy member. Uploading the tracking number is the only buyer-visible effect, and Etsy sends that notification, not us.",
+  "Message your buyers. WrL never emails, texts or otherwise contacts an Etsy member. Uploading the tracking number is the only buyer-visible effect, and Etsy sends that notification, not us.",
   "Create or edit listings. We hold no write access to your catalogue — listings are read-only.",
   "Change your shop settings, policies or prices.",
   "Scrape Etsy. Every call is to the documented Open API v3 with a token you granted.",
@@ -60,9 +60,9 @@ export default function PlatformsPage() {
   return (
     <>
       <PageHero eyebrow="What we access" title="Four scopes, listed in full">
-        DKH integrates with one marketplace: Etsy, through the Etsy Open API v3. You approve the
+        WrL integrates with one marketplace: Etsy, through the Etsy Open API v3. You approve the
         scopes on Etsy&rsquo;s own authorisation screen, and you can revoke them from Etsy or from
-        DKH at any time.
+        WrL at any time.
       </PageHero>
 
       <section className="border-b border-line py-16">
@@ -95,7 +95,7 @@ export default function PlatformsPage() {
           </div>
 
           <p className="mt-6 text-sm leading-relaxed text-muted">
-            That is the complete list. DKH does not request <code>listings_w</code>,{" "}
+            That is the complete list. WrL does not request <code>listings_w</code>,{" "}
             <code>shops_w</code>, <code>email_r</code>, <code>billing_r</code>,{" "}
             <code>cart_r</code>, <code>favorites_r</code>, <code>feedback_r</code>,{" "}
             <code>profile_r</code> or <code>recommend_r</code>, because no feature needs them.
@@ -133,7 +133,7 @@ export default function PlatformsPage() {
 
       <section className="border-b border-line py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl text-ink">What DKH deliberately does not do</h2>
+          <h2 className="text-2xl text-ink">What WrL deliberately does not do</h2>
           <ul className="mt-6 divide-y divide-line border-y border-line">
             {NOT_DOING.map((item) => (
               <li key={item} className="flex items-start gap-3 py-4 text-sm leading-relaxed text-ink-2">
@@ -152,9 +152,9 @@ export default function PlatformsPage() {
               <h2 className="text-2xl text-ink">Revoking access</h2>
               <ul className="mt-4 space-y-3">
                 {[
-                  "Disconnect the shop in DKH — the stored tokens are deleted immediately and syncing stops.",
-                  "Or revoke DKH from your Etsy account settings, which has the same effect.",
-                  "Orders already imported stay in your DKH account until you delete them or your account.",
+                  "Disconnect the shop in WrL — the stored tokens are deleted immediately and syncing stops.",
+                  "Or revoke WrL from your Etsy account settings, which has the same effect.",
+                  "Orders already imported stay in your WrL account until you delete them or your account.",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-sm text-ink-2">
                     <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
@@ -167,8 +167,8 @@ export default function PlatformsPage() {
             <div>
               <h2 className="text-2xl text-ink">Other marketplaces</h2>
               <p className="mt-4 text-sm leading-relaxed text-muted">
-                DKH supports Etsy only. We are not going to list channels we have not built — if
-                you need Shopify, Amazon or TikTok Shop today, DKH is not the tool for you yet.
+                WrL supports Etsy only. We are not going to list channels we have not built — if
+                you need Shopify, Amazon or TikTok Shop today, WrL is not the tool for you yet.
                 Tell us what you sell on and we will say honestly whether it is on the roadmap.
               </p>
               <ButtonLink href="/contact" variant="outline" className="mt-5">

@@ -6,7 +6,7 @@ import { appUrl } from "@/lib/env";
 export const metadata: Metadata = {
   title: "Documentation",
   description:
-    "How to connect a shop, how the sync works, and the DKH REST API reference for orders, shipments and webhooks.",
+    "How to connect a shop, how the sync works, and the WrL REST API reference for orders, shipments and webhooks.",
 };
 
 const NAV = [
@@ -64,7 +64,7 @@ export default function DocsPage() {
             <h1 className="text-4xl font-semibold tracking-tight text-ink">Documentation</h1>
             <p className="mt-3 text-muted">
               Everything you need to connect a shop, understand the sync pipeline and build on top of
-              the DKH API.
+              the WrL API.
             </p>
           </div>
 
@@ -82,11 +82,11 @@ export default function DocsPage() {
 
           <Doc id="connect-etsy" title="Connect an Etsy shop">
             <p>
-              DKH uses the <strong>Etsy Open API v3</strong> with OAuth 2.0 and PKCE. The flow is:
+              WrL uses the <strong>Etsy Open API v3</strong> with OAuth 2.0 and PKCE. The flow is:
             </p>
             <ol className="ml-5 list-decimal space-y-2">
               <li>
-                You click <strong>Connect Etsy</strong>. DKH generates a PKCE verifier and
+                You click <strong>Connect Etsy</strong>. WrL generates a PKCE verifier and
                 redirects you to <code>https://www.etsy.com/oauth/connect</code>.
               </li>
               <li>
@@ -98,7 +98,7 @@ export default function DocsPage() {
                 <code>/api/integrations/etsy/callback</code> with an authorization code.
               </li>
               <li>
-                DKH exchanges the code for an access token and a refresh token at{" "}
+                WrL exchanges the code for an access token and a refresh token at{" "}
                 <code>https://api.etsy.com/v3/public/oauth/token</code>, then stores them encrypted.
               </li>
               <li>
@@ -194,12 +194,12 @@ ETSY_SCOPES="shops_r listings_r transactions_r transactions_w"`}</Code>
             <p className="border border-line border-l-4 border-l-amber-600 bg-amber-500/10 px-4 py-3 text-amber-900">
               <strong>Outbound webhooks are not implemented.</strong> You can register an endpoint
               in <strong>Dashboard → API keys</strong> and it will be stored against your account,
-              but DKH does not deliver events to it today. Poll{" "}
+              but WrL does not deliver events to it today. Poll{" "}
               <code>GET /api/v1/orders</code> instead until this ships.
             </p>
             <p>
               When it does ship, deliveries will be signed with HMAC-SHA256 in an{" "}
-              <code>X-DKH-Signature</code> header and cover{" "}
+              <code>X-WrL-Signature</code> header and cover{" "}
               <code>order.created</code>, <code>order.updated</code>, <code>order.shipped</code> and{" "}
               <code>shop.sync_failed</code>. We will announce it here and by email before enabling
               it.

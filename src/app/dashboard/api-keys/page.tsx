@@ -112,7 +112,7 @@ export default async function ApiKeysPage() {
     <>
       <PageHeader
         title="API & webhooks"
-        description="Programmatic access to your DKH data. See the docs for endpoints and payloads."
+        description="Programmatic access to your WrL data. See the docs for endpoints and payloads."
       />
 
       <Alert tone="info" title="Keep your keys secret">
@@ -122,7 +122,7 @@ export default async function ApiKeysPage() {
 
       <div className="mt-4 grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardHeader title="API keys" description="Scoped credentials for the DKH REST API" />
+          <CardHeader title="API keys" description="Scoped credentials for the WrL REST API" />
           {keys.length ? (
             <Table>
               <thead>

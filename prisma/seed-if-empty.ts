@@ -15,15 +15,16 @@ function clean(value: string | undefined, fallback: string) {
   return (value ?? "").replace(/^﻿/, "").trim() || fallback;
 }
 
-const SITE_DOMAIN = clean(process.env.SITE_DOMAIN, "dkh.io.vn");
+/** Mail domain, not the site subdomain — addresses stay on the registered apex. */
+const MAIL_DOMAIN = clean(process.env.MAIL_DOMAIN, "dkh.io.vn");
 
 const DEMO_ACCOUNTS = [
   {
-    email: clean(process.env.DEMO_ADMIN_EMAIL, `admin@${SITE_DOMAIN}`),
+    email: clean(process.env.DEMO_ADMIN_EMAIL, `admin@${MAIL_DOMAIN}`),
     password: clean(process.env.DEMO_ADMIN_PASSWORD, "Admin123!"),
   },
   {
-    email: clean(process.env.DEMO_SELLER_EMAIL, `seller@${SITE_DOMAIN}`),
+    email: clean(process.env.DEMO_SELLER_EMAIL, `seller@${MAIL_DOMAIN}`),
     password: clean(process.env.DEMO_SELLER_PASSWORD, "Password123!"),
   },
 ];
@@ -53,7 +54,7 @@ async function migrateSeedDomain(prisma: PrismaClient) {
   const users = await prisma.user.findMany({ where: { email: { endsWith: "@dkh.io" } } });
 
   for (const user of users) {
-    const email = user.email.replace(/@dkh\.io$/, `@${SITE_DOMAIN}`);
+    const email = user.email.replace(/@dkh\.io$/, `@${MAIL_DOMAIN}`);
     if (await prisma.user.findUnique({ where: { email } })) continue;
 
     await prisma.user.update({ where: { id: user.id }, data: { email } });
@@ -62,7 +63,7 @@ async function migrateSeedDomain(prisma: PrismaClient) {
 
   const setting = await prisma.setting.findUnique({ where: { key: "site.supportEmail" } });
   if (setting?.value.endsWith("@dkh.io")) {
-    const value = setting.value.replace(/@dkh\.io$/, `@${SITE_DOMAIN}`);
+    const value = setting.value.replace(/@dkh\.io$/, `@${MAIL_DOMAIN}`);
     await prisma.setting.update({ where: { key: "site.supportEmail" }, data: { value } });
     console.log(`· bootstrap: support address now ${value}`);
   }

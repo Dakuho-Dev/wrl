@@ -1,4 +1,4 @@
-# DKH — Order Management & Fulfillment Automation
+# WrL — Order Management & Fulfillment Automation
 
 Nền tảng quản lý đơn hàng đa sàn (Etsy, Shopify, Amazon, TikTok Shop) — bản dựng đầy đủ gồm
 website giới thiệu, dashboard cho người bán, và trang quản trị (admin) hoàn chỉnh.

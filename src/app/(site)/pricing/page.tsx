@@ -28,7 +28,7 @@ const FAQS = [
   },
   {
     q: "Do you charge for shipping labels?",
-    a: "DKH does not add a markup. You pay the carrier's rate directly through your own carrier account.",
+    a: "WrL does not add a markup. You pay the carrier's rate directly through your own carrier account.",
   },
 ];
 

@@ -6,7 +6,7 @@ import { ETSY_TRADEMARK_NOTICE, siteConfig } from "@/lib/site-config";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "How DKH collects, uses, stores and deletes data — including the data we access through the Etsy Open API.",
+    "How WrL collects, uses, stores and deletes data — including the data we access through the Etsy Open API.",
 };
 
 export default function PrivacyPage() {
@@ -14,11 +14,11 @@ export default function PrivacyPage() {
     <LegalPage
       title="Privacy Policy"
       updated="5 August 2026"
-      intro="This policy explains what information DKH collects, why we collect it, how we protect it, and the choices you have. It covers both the information you give us directly and the information we access on your behalf through the Etsy Open API."
+      intro="This policy explains what information WrL collects, why we collect it, how we protect it, and the choices you have. It covers both the information you give us directly and the information we access on your behalf through the Etsy Open API."
     >
       <LegalSection heading="1. Who we are">
         <p>
-          DKH (&ldquo;DKH&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) provides an order
+          WrL (&ldquo;WrL&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) provides an order
           management tool for Etsy sellers. For the purposes of the
           GDPR we act as a <strong>data processor</strong> for the order and buyer data we handle on
           behalf of our customers (the sellers), and as a <strong>data controller</strong> for the
@@ -39,7 +39,7 @@ export default function PrivacyPage() {
 
       <LegalSection id="marketplace-data" heading="3. Information we access through the Etsy API">
         <p>
-          When you connect a shop, you authorise DKH through Etsy&apos;s own OAuth
+          When you connect a shop, you authorise WrL through Etsy&apos;s own OAuth
           screen. We then access only the data covered by the scopes you approved. For Etsy this
           means:
         </p>
@@ -55,7 +55,7 @@ export default function PrivacyPage() {
           <li>
             <strong>Receipts / orders</strong> (<code>transactions_r</code>) — order id, buyer name,
             buyer email where provided, shipping address, line items, personalization text, totals
-            and payment state, used to create the order records you manage in DKH.
+            and payment state, used to create the order records you manage in WrL.
           </li>
           <li>
             <strong>Tracking upload</strong> (<code>transactions_w</code>) — we write the tracking
@@ -69,7 +69,7 @@ export default function PrivacyPage() {
           information held by Etsy.
         </p>
         <p>
-          <strong>We never contact your buyers.</strong> DKH sends no email, SMS or other message
+          <strong>We never contact your buyers.</strong> WrL sends no email, SMS or other message
           to Etsy members. Uploading a tracking number is the only action that has any buyer-visible
           effect, and the resulting notification is sent by Etsy, not by us.
         </p>
@@ -132,7 +132,7 @@ export default function PrivacyPage() {
           <li><strong>Delete account</strong> — erases your account and every record attached to it.</li>
         </ul>
         <p>
-          Buyers whose data appears in a seller&apos;s DKH account may contact us and we will
+          Buyers whose data appears in a seller&apos;s WrL account may contact us and we will
           route the request to the relevant seller (the controller) and assist with fulfilling it.
           EU and UK residents also have the right to lodge a complaint with their supervisory
           authority.
@@ -157,7 +157,7 @@ export default function PrivacyPage() {
       </LegalSection>
 
       <LegalSection heading="11. Children">
-        <p>DKH is a business tool and is not directed at anyone under 16.</p>
+        <p>WrL is a business tool and is not directed at anyone under 16.</p>
       </LegalSection>
 
       <LegalSection heading="12. Changes">

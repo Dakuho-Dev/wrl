@@ -18,14 +18,14 @@ export default async function AdminSettingsPage() {
 
   return (
     <>
-      <PageHeader title="Platform settings" description="Global configuration for the DKH instance." />
+      <PageHeader title="Platform settings" description="Global configuration for the WrL instance." />
 
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader title="General" description="Branding, signups and sync cadence" />
           <form action={saveSettings} className="grid gap-4 p-5 sm:grid-cols-2">
             <Field label="Site name">
-              <Input name="siteName" defaultValue={settings["site.name"] ?? "DKH"} />
+              <Input name="siteName" defaultValue={settings["site.name"] ?? "WrL"} />
             </Field>
             <Field label="Support email">
               <Input

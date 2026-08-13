@@ -88,7 +88,7 @@ export default async function AdminHomePage() {
     <>
       <PageHeader
         title="Platform dashboard"
-        description="Everything happening across every DKH account."
+        description="Everything happening across every WrL account."
       />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

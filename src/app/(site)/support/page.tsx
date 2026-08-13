@@ -7,7 +7,7 @@ import { ButtonLink, Card } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "Support Center",
-  description: "Guides, troubleshooting and ways to reach the DKH support team.",
+  description: "Guides, troubleshooting and ways to reach the WrL support team.",
 };
 
 const TOPICS = [
@@ -43,7 +43,7 @@ const ISSUES = [
     body: "This usually means the marketplace revoked the token — often after a password change. Open Dashboard → Shops, click Reconnect, and approve the permissions again. Your existing orders are preserved.",
   },
   {
-    title: "An order is missing from DKH",
+    title: "An order is missing from WrL",
     body: "Check the sync log for the shop. Orders placed while a sync was failing appear on the next successful run. You can also press Sync now to pull immediately.",
   },
   {

@@ -26,7 +26,7 @@ export default async function RegisterPage() {
           Your Etsy orders in one queue
         </h2>
         <p className="mt-4 leading-relaxed text-muted">
-          Authorise your Etsy shop, work through the orders in one place, and let DKH upload the
+          Authorise your Etsy shop, work through the orders in one place, and let WrL upload the
           tracking number to Etsy when each one ships.
         </p>
         <ul className="mt-7 space-y-3">

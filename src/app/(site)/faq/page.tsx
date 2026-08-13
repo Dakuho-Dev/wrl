@@ -15,7 +15,7 @@ const GROUPS = [
     items: [
       {
         q: "What do I need to connect my first shop?",
-        a: "Just an account on the marketplace you sell on. Create a free DKH account, go to Dashboard → Shops → Connect shop, choose your channel and approve the permissions on the marketplace's own authorization screen.",
+        a: "Just an account on the marketplace you sell on. Create a free WrL account, go to Dashboard → Shops → Connect shop, choose your channel and approve the permissions on the marketplace's own authorization screen.",
       },
       {
         q: "How long does the first import take?",
@@ -31,15 +31,15 @@ const GROUPS = [
     title: "Orders & fulfillment",
     items: [
       {
-        q: "Does DKH change anything in my shop automatically?",
-        a: "Only what you ask it to. By default DKH reads data. Write actions — uploading tracking numbers and marking an order shipped — happen when you create a shipment or when you explicitly enable an automation that does it.",
+        q: "Does WrL change anything in my shop automatically?",
+        a: "Only what you ask it to. By default WrL reads data. Write actions — uploading tracking numbers and marking an order shipped — happen when you create a shipment or when you explicitly enable an automation that does it.",
       },
       {
         q: "What happens if a buyer cancels or refunds?",
         a: "The next sync detects the change on the marketplace and updates the order status to Cancelled or Refunded, and any automations you have that watch for those statuses will run.",
       },
       {
-        q: "Can I edit an order in DKH?",
+        q: "Can I edit an order in WrL?",
         a: "You can change internal fields — status, priority, tags and notes — and add shipments. Buyer-facing details such as the shipping address stay under the marketplace's control.",
       },
       {
@@ -73,8 +73,8 @@ const GROUPS = [
     title: "Marketplace APIs",
     items: [
       {
-        q: "Is DKH affiliated with Etsy?",
-        a: "No. The term \"Etsy\" is a trademark of Etsy, Inc. DKH uses the Etsy API but is not endorsed or certified by Etsy, Inc.",
+        q: "Is WrL affiliated with Etsy?",
+        a: "No. The term \"Etsy\" is a trademark of Etsy, Inc. WrL uses the Etsy API but is not endorsed or certified by Etsy, Inc.",
       },
       {
         q: "Do you scrape marketplaces?",
@@ -82,7 +82,7 @@ const GROUPS = [
       },
       {
         q: "What happens if I revoke access?",
-        a: "Syncing stops immediately and the shop is marked as disconnected. Already-imported orders stay in your DKH account until you delete them.",
+        a: "Syncing stops immediately and the shop is marked as disconnected. Already-imported orders stay in your WrL account until you delete them.",
       },
       {
         q: "How do you handle rate limits?",

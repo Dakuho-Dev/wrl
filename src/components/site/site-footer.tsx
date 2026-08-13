@@ -56,7 +56,7 @@ export function SiteFooter() {
           <div className="lg:col-span-4">
             <Logo onDark />
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-slate-400">
-              DKH is an order management tool for Etsy sellers. It reads your orders through the
+              WrL is an order management tool for Etsy sellers. It reads your orders through the
               Etsy Open API, gives you a production queue, and uploads tracking numbers back to
               Etsy when you ship.
             </p>

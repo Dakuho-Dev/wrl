@@ -175,7 +175,7 @@ export async function replyToTicket(formData: FormData) {
       data: {
         ticketId,
         userId: admin.id,
-        authorName: "DKH Support",
+        authorName: "WrL Support",
         isStaff: true,
         message,
       },

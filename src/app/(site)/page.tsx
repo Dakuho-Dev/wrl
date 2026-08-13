@@ -41,13 +41,13 @@ const CAPABILITIES = [
     n: "02",
     icon: ListChecks,
     title: "Production queue",
-    body: "One list of what has to be made and shipped, with status, priority, internal notes and tags that live in DKH — your Etsy listings and orders are never altered.",
+    body: "One list of what has to be made and shipped, with status, priority, internal notes and tags that live in WrL — your Etsy listings and orders are never altered.",
   },
   {
     n: "03",
     icon: Tags,
     title: "Listing reference",
-    body: "Active listings are pulled in read-only so order lines can be matched to a SKU, price and stock level. DKH does not create or edit listings.",
+    body: "Active listings are pulled in read-only so order lines can be matched to a SKU, price and stock level. WrL does not create or edit listings.",
   },
   {
     n: "04",
@@ -59,7 +59,7 @@ const CAPABILITIES = [
     n: "05",
     icon: Workflow,
     title: "Workflow rules",
-    body: "Trigger-condition-action rules that set status, priority or tags, alert a teammate, or call your own webhook. Everything they touch stays inside DKH.",
+    body: "Trigger-condition-action rules that set status, priority or tags, alert a teammate, or call your own webhook. Everything they touch stays inside WrL.",
   },
   {
     n: "06",
@@ -73,12 +73,12 @@ const PIPELINE = [
   [
     "01",
     "Authorise",
-    "You approve DKH on Etsy's own screen and see the exact scopes. We never ask for your Etsy password.",
+    "You approve WrL on Etsy's own screen and see the exact scopes. We never ask for your Etsy password.",
   ],
   [
     "02",
     "Import",
-    "Your receipts and active listings are read into DKH and refreshed on a schedule, or on demand.",
+    "Your receipts and active listings are read into WrL and refreshed on a schedule, or on demand.",
   ],
   [
     "03",
@@ -88,7 +88,7 @@ const PIPELINE = [
   [
     "04",
     "Upload tracking",
-    "Record the shipment and DKH submits the tracking number to Etsy. Etsy notifies the buyer — DKH never messages buyers itself.",
+    "Record the shipment and WrL submits the tracking number to Etsy. Etsy notifies the buyer — WrL never messages buyers itself.",
   ],
 ];
 
@@ -119,7 +119,7 @@ const STATE_TONE: Record<string, string> = {
 const COMMITMENTS = [
   "We request four scopes — the exact set the features above need, and nothing more",
   "Buyer data is used only to fulfil your own orders: never sold, never used for advertising, never shared with other sellers",
-  "DKH does not email, text or otherwise message your buyers",
+  "WrL does not email, text or otherwise message your buyers",
   "Tokens are encrypted at rest and deleted the moment you disconnect",
   "Disconnect or delete your account from the dashboard, and the data goes with it",
 ];
@@ -157,7 +157,7 @@ export default function HomePage() {
             </h1>
 
             <p className="mt-7 max-w-xl text-lg leading-relaxed text-slate-200">
-              DKH reads the orders from your Etsy shop into one production board, lets you track
+              WrL reads the orders from your Etsy shop into one production board, lets you track
               each one from paid to packed, and uploads the tracking number back to Etsy when it
               ships. That is the whole job.
             </p>
@@ -246,7 +246,7 @@ export default function HomePage() {
       <section id="features" className="bg-aurora">
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="label">What DKH does</p>
+            <p className="label">What WrL does</p>
             <h2 className="mt-3 text-4xl text-ink sm:text-[2.75rem]">
               Six things, all working today
             </h2>
@@ -402,7 +402,7 @@ export default function HomePage() {
               Your seller data stays yours
             </h2>
             <p className="mt-5 max-w-lg leading-relaxed text-muted">
-              DKH acts as a service provider to you, the seller. Everything read from Etsy is used
+              WrL acts as a service provider to you, the seller. Everything read from Etsy is used
               to fulfil your own orders and for nothing else.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">

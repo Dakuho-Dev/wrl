@@ -6,7 +6,7 @@ import { siteConfig } from "@/lib/site-config";
 export const metadata: Metadata = {
   title: "Security Policy",
   description:
-    "How DKH protects seller accounts, marketplace API credentials and buyer data, and how to report a vulnerability.",
+    "How WrL protects seller accounts, marketplace API credentials and buyer data, and how to report a vulnerability.",
 };
 
 export default function SecurityPage() {
@@ -14,7 +14,7 @@ export default function SecurityPage() {
     <LegalPage
       title="Security Policy"
       updated="5 August 2026"
-      intro="DKH holds marketplace access tokens and buyer order data on behalf of sellers. This page describes the controls we apply and how to report a security issue."
+      intro="WrL holds marketplace access tokens and buyer order data on behalf of sellers. This page describes the controls we apply and how to report a security issue."
     >
       <LegalSection heading="1. Authentication and access">
         <ul className="space-y-1.5">

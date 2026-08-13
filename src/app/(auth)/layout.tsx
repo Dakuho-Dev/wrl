@@ -24,7 +24,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
       <footer className="relative border-t border-line py-5">
         <p className="text-center text-xs text-muted-2">
-          © {new Date().getFullYear()} DKH ·{" "}
+          © {new Date().getFullYear()} WrL ·{" "}
           <Link href="/terms" className="hover:text-ink-2">
             Terms
           </Link>{" "}

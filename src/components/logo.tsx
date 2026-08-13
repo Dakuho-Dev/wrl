@@ -17,7 +17,7 @@ export function Logo({
   return (
     <Link href={href} className={cn("group inline-flex items-center gap-3", className)}>
       <span className="bg-accent-sweep shadow-hard-accent grid h-9 w-9 place-items-center rounded-lg font-mono text-[12px] font-bold leading-none tracking-tight text-white transition group-hover:-translate-y-px">
-        DKH
+        WrL
       </span>
       <span className="leading-none">
         <span
@@ -26,7 +26,7 @@ export function Logo({
             onDark ? "text-white" : "text-ink",
           )}
         >
-          dkh<span className={onDark ? "text-violet-300" : "text-accent"}>.io.vn</span>
+          Wr<span className={onDark ? "text-violet-300" : "text-accent"}>L</span>
         </span>
         {subtitle ? (
           <span

@@ -5,7 +5,7 @@ import { ETSY_TRADEMARK_NOTICE, siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions",
-  description: "The terms governing your use of the DKH order management platform.",
+  description: "The terms governing your use of the WrL order management platform.",
 };
 
 export default function TermsPage() {
@@ -13,14 +13,14 @@ export default function TermsPage() {
     <LegalPage
       title="Terms & Conditions"
       updated="5 August 2026"
-      intro="These terms form the agreement between DKH and you when you create an account or use the service. Please read them; by signing up you accept them."
+      intro="These terms form the agreement between WrL and you when you create an account or use the service. Please read them; by signing up you accept them."
     >
       <LegalSection heading="1. The service">
         <p>
-          DKH provides software that connects to your Etsy shop through the Etsy Open API, imports
+          WrL provides software that connects to your Etsy shop through the Etsy Open API, imports
           your orders and active listings, gives you a queue for working through them, and submits
           tracking information back to Etsy when you record a shipment. Etsy is the only
-          marketplace DKH integrates with. The service is provided on a subscription basis
+          marketplace WrL integrates with. The service is provided on a subscription basis
           according to the plan you select.
         </p>
       </LegalSection>
@@ -36,10 +36,10 @@ export default function TermsPage() {
 
       <LegalSection heading="3. Connected shops and Etsy's terms">
         <p>
-          You authorise DKH to access your Etsy shop using the scopes you approve on Etsy&apos;s own
+          You authorise WrL to access your Etsy shop using the scopes you approve on Etsy&apos;s own
           authorisation screen. You remain bound by Etsy&apos;s terms, including its API Terms of
           Use and seller policies. You confirm that you have the right to grant this access and to
-          have us process the buyer data that flows into DKH.
+          have us process the buyer data that flows into WrL.
         </p>
         <p>
           Etsy may change, restrict or withdraw its API at any time. If that happens we will adapt
@@ -70,7 +70,7 @@ export default function TermsPage() {
 
       <LegalSection heading="6. Your data">
         <p>
-          You keep all rights to the data you bring into DKH. You grant us a limited licence to
+          You keep all rights to the data you bring into WrL. You grant us a limited licence to
           host, process and transmit it solely to operate the service for you. Our handling of
           personal data is described in the <a href="/privacy">Privacy Policy</a>, which forms part
           of these terms.
@@ -87,11 +87,11 @@ export default function TermsPage() {
 
       <LegalSection id="etsy-disclaimer" heading="8. Etsy disclaimer">
         <p>
-          DKH integrates with Etsy through the Etsy Open API. Etsy is not the provider of this
+          WrL integrates with Etsy through the Etsy Open API. Etsy is not the provider of this
           service and has no responsibility for it:
         </p>
         <p className="border border-line bg-paper-2 p-4 font-mono text-xs uppercase leading-relaxed">
-          DISCLAIMER: THIS APPLICATION IS SOLELY PROVIDED BY DKH (THE &ldquo;APPLICATION
+          DISCLAIMER: THIS APPLICATION IS SOLELY PROVIDED BY WrL (THE &ldquo;APPLICATION
           DEVELOPER&rdquo;). YOU ACKNOWLEDGE THAT ETSY, INC. AND ITS AFFILIATES ARE NOT THE
           APPLICATION DEVELOPER, DO NOT PROVIDE THE APPLICATION SERVICE, AND MAKE NO WARRANTIES OF
           ANY KIND WITH RESPECT TO THE APPLICATION OR DATA ACCESSED THROUGH IT.
@@ -101,7 +101,7 @@ export default function TermsPage() {
         <p>
           In handling data we read from Etsy on your behalf, we act as your service provider and
           process it only to deliver the features described in these terms and in the{" "}
-          <a href="/privacy">Privacy Policy</a>. DKH does not contact your buyers. When you record
+          <a href="/privacy">Privacy Policy</a>. WrL does not contact your buyers. When you record
           a shipment, the tracking number is submitted to Etsy and Etsy notifies the buyer through
           its own channels.
         </p>

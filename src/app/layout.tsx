@@ -7,13 +7,13 @@ import "./globals.css";
 const appUrl = resolveAppUrl();
 
 const DESCRIPTION =
-  "DKH is an order management tool for Etsy sellers. It imports your Etsy orders into a production queue and uploads tracking numbers back to Etsy when you ship.";
+  "WrL is an order management tool for Etsy sellers. It imports your Etsy orders into a production queue and uploads tracking numbers back to Etsy when you ship.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
   title: {
-    default: "DKH — Order management for Etsy sellers",
-    template: "%s · DKH",
+    default: "WrL — Order management for Etsy sellers",
+    template: "%s · WrL",
   },
   description: DESCRIPTION,
   keywords: [
@@ -23,10 +23,10 @@ export const metadata: Metadata = {
     "Etsy seller tools",
   ],
   openGraph: {
-    title: "DKH — Order management for Etsy sellers",
+    title: "WrL — Order management for Etsy sellers",
     description: DESCRIPTION,
     url: appUrl,
-    siteName: "DKH",
+    siteName: "WrL",
     type: "website",
   },
   robots: { index: true, follow: true },

@@ -29,7 +29,7 @@ mô tả một sản phẩm không tồn tại đúng như mô tả**:
 ## Đã sửa những gì
 
 - Xoá toàn bộ số liệu bịa
-- Bỏ Shopify/Amazon/TikTok khỏi website, dashboard và dữ liệu mẫu — DKH chỉ còn Etsy
+- Bỏ Shopify/Amazon/TikTok khỏi website, dashboard và dữ liệu mẫu — WrL chỉ còn Etsy
 - Bỏ 10 tính năng không tồn tại; thêm hẳn mục **"Not built yet"** ở `/features` liệt kê
   công khai những gì chưa làm được
 - Đánh dấu webhook là chưa triển khai thay vì mô tả như đang chạy
@@ -68,11 +68,11 @@ Xoá bản ghi A cũ trỏ về `103.166.183.10` / `103.56.163.10` / `103.216.11
 **Sau khi domain xanh**, đổi URL công bố và callback — phải sửa cả trong app Etsy:
 
 ```bash
-vercel env add NEXT_PUBLIC_APP_URL production --force --value "https://dkh.io.vn"
+vercel env add NEXT_PUBLIC_APP_URL production --force --value "https://wrl.dkh.io.vn"
 ```
 
 ```bash
-vercel env add ETSY_REDIRECT_URI production --force --value "https://dkh.io.vn/api/integrations/etsy/callback"
+vercel env add ETSY_REDIRECT_URI production --force --value "https://wrl.dkh.io.vn/api/integrations/etsy/callback"
 ```
 
 Có thể đặt thêm `BUSINESS_PHONE` và `BUSINESS_ADDRESS` nếu có thật — bỏ trống thì trang
@@ -84,35 +84,35 @@ sẽ không hiển thị, tốt hơn là bịa.
 
 **Application name**
 ```
-DKH
+WrL
 ```
 
 **Application description** — bản ngắn, dùng bản này trước
 
 ```
-DKH is a third-party tool that helps Etsy sellers view and organize their shop data in a clear production queue. The app uses the Etsy API to securely read shop details, active listings, and orders for tracking and daily fulfilment, and to submit a tracking number back to Etsy when the seller records a shipment. DKH never messages buyers — Etsy sends that notification. All data access is transparent to users.
+WrL is a third-party tool that helps Etsy sellers view and organize their shop data in a clear production queue. The app uses the Etsy API to securely read shop details, active listings, and orders for tracking and daily fulfilment, and to submit a tracking number back to Etsy when the seller records a shipment. WrL never messages buyers — Etsy sends that notification. All data access is transparent to users.
 
 Disclaimer: The term "Etsy" is a trademark of Etsy, Inc. This application uses the Etsy API but is not endorsed or certified by Etsy, Inc.
 ```
 
 Hai điểm cố ý khác với mô tả của các app tương tự: **nêu rõ quyền ghi** (`transactions_w`), vì
-giấu nó rồi vẫn xin scope đó là đúng loại mâu thuẫn đã làm trượt lần một; và **nói thẳng DKH
+giấu nó rồi vẫn xin scope đó là đúng loại mâu thuẫn đã làm trượt lần một; và **nói thẳng WrL
 không nhắn người mua**, điều §5 cấm rất gắt.
 
 **Application description** — bản dài, dùng khi ô nhập cho phép
 
 ```
-DKH is an order management tool for a single marketplace: Etsy. It is aimed at sellers
+WrL is an order management tool for a single marketplace: Etsy. It is aimed at sellers
 who make items to order and need a production queue that their whole workshop can work
 from, rather than the Etsy seller dashboard alone.
 
-After a seller authorises their shop on Etsy's own OAuth screen, DKH:
+After a seller authorises their shop on Etsy's own OAuth screen, WrL:
   - imports their receipts (buyer name, shipping address, line items, personalisation
     text, totals, payment state) into a filterable order queue;
   - reads their active listings so order lines can be matched to a SKU, price and stock
     level;
   - lets them move orders through their own production stages with internal status,
-    priority, tags and notes that exist only inside DKH;
+    priority, tags and notes that exist only inside WrL;
   - submits the carrier and tracking number back to Etsy when a shipment is recorded,
     so the order is marked shipped on Etsy;
   - reports on their own revenue, order volume and time-to-ship, with CSV export.
@@ -123,7 +123,7 @@ We request exactly four scopes, which is the complete set the features above nee
   transactions_r  read receipts — this is the order data being managed
   transactions_w  submit a tracking number against a receipt
 
-DKH does not create or edit listings, does not change shop settings or prices, and does
+WrL does not create or edit listings, does not change shop settings or prices, and does
 not contact buyers. Uploading a tracking number is the only action with any buyer-visible
 effect, and the resulting notification is sent by Etsy, not by us. We do not scrape Etsy:
 every call is to the documented Open API v3 using a token the seller granted.
@@ -133,23 +133,23 @@ for advertising or model training, and never shared with other sellers. Tokens a
 encrypted at rest and deleted the moment a shop is disconnected. Sellers can export or
 erase everything from their dashboard.
 
-DKH integrates with Etsy only. Features we have not built are listed publicly at
-https://dkh.io.vn/features so nobody signs up expecting them.
+WrL integrates with Etsy only. Features we have not built are listed publicly at
+https://wrl.dkh.io.vn/features so nobody signs up expecting them.
 
-Website: https://dkh.io.vn
-Privacy Policy: https://dkh.io.vn/privacy
-Terms (incl. required Etsy disclaimer): https://dkh.io.vn/terms
-Scopes and endpoints in detail: https://dkh.io.vn/platforms
+Website: https://wrl.dkh.io.vn
+Privacy Policy: https://wrl.dkh.io.vn/privacy
+Terms (incl. required Etsy disclaimer): https://wrl.dkh.io.vn/terms
+Scopes and endpoints in detail: https://wrl.dkh.io.vn/platforms
 ```
 
 **Website URL**
 ```
-https://dkh.io.vn
+https://wrl.dkh.io.vn
 ```
 
 **Callback URL**
 ```
-https://dkh.io.vn/api/integrations/etsy/callback
+https://wrl.dkh.io.vn/api/integrations/etsy/callback
 ```
 
 **App type** → Seller Tools (không tick Buyer Tools)

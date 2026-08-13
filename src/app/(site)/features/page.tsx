@@ -18,7 +18,7 @@ import { ButtonLink } from "@/components/ui";
 export const metadata: Metadata = {
   title: "Features",
   description:
-    "Order synchronisation, a production queue, workflow rules, tracking upload to Etsy, reporting and a REST API — everything DKH does today.",
+    "Order synchronisation, a production queue, workflow rules, tracking upload to Etsy, reporting and a REST API — everything WrL does today.",
 };
 
 /**
@@ -33,7 +33,7 @@ const SECTIONS = [
     eyebrow: "Order synchronisation",
     icon: RefreshCw,
     title: "Your Etsy orders, imported and kept current",
-    body: "DKH polls your shop on a schedule and on demand, importing receipts with buyer name, shipping address, line items, personalisation text, totals and payment state. Active listings come in read-only so order lines can be matched to a SKU, price and stock level.",
+    body: "WrL polls your shop on a schedule and on demand, importing receipts with buyer name, shipping address, line items, personalisation text, totals and payment state. Active listings come in read-only so order lines can be matched to a SKU, price and stock level.",
     bullets: [
       "Records are matched on Etsy's own receipt and listing ids, so re-syncing never duplicates",
       "Every run is recorded as a sync job with counts, duration and any error",
@@ -50,7 +50,7 @@ const SECTIONS = [
     body: "The order list is filterable by status, shop and free-text search across order number, buyer and Etsy receipt id, with pagination and bulk status changes. Each order opens onto its line items, personalisation, shipping address and a full event timeline.",
     bullets: [
       "Statuses you control: new, processing, on hold, shipped, delivered, cancelled, refunded",
-      "Internal priority, tags and notes that live in DKH and never touch your Etsy listing",
+      "Internal priority, tags and notes that live in WrL and never touch your Etsy listing",
       "Bulk status update across a filtered selection",
       "Timeline showing every import, status change, note and shipment on the order",
       "Personalisation text called out so it is not missed during production",
@@ -61,13 +61,13 @@ const SECTIONS = [
     eyebrow: "Shipping & tracking",
     icon: Truck,
     title: "Record a shipment, Etsy gets the tracking",
-    body: "When an order ships you record the carrier and tracking number. DKH submits it to Etsy against the receipt, which marks the order shipped on Etsy. An order can carry several shipments if it goes out in more than one parcel.",
+    body: "When an order ships you record the carrier and tracking number. WrL submits it to Etsy against the receipt, which marks the order shipped on Etsy. An order can carry several shipments if it goes out in more than one parcel.",
     bullets: [
       "Carrier, service, tracking number and label cost per shipment",
       "Tracking link generated for the major carriers",
       "Upload status shown per shipment, so a failed push is visible",
       "Shipping view listing recent shipments and the orders still waiting",
-      "Etsy sends the buyer notification — DKH never messages your buyers",
+      "Etsy sends the buyer notification — WrL never messages your buyers",
     ],
   },
   {
@@ -75,7 +75,7 @@ const SECTIONS = [
     eyebrow: "Workflow rules",
     icon: Workflow,
     title: "Rules for the repetitive decisions",
-    body: "Build trigger-condition-action rules that act on orders as they arrive. Everything a rule touches stays inside DKH: your Etsy listings, prices and shop settings are never modified.",
+    body: "Build trigger-condition-action rules that act on orders as they arrive. Everything a rule touches stays inside WrL: your Etsy listings, prices and shop settings are never modified.",
     bullets: [
       "Triggers: order created, order paid, order shipped, sync completed, schedule",
       "Conditions on total, destination country, SKU or personalisation",
@@ -103,7 +103,7 @@ const SECTIONS = [
     eyebrow: "REST API",
     icon: Cable,
     title: "Your data, programmatically",
-    body: "Everything DKH imports is available over a REST API secured with scoped keys you generate yourself, so your own production software can read the queue and post shipments back.",
+    body: "Everything WrL imports is available over a REST API secured with scoped keys you generate yourself, so your own production software can read the queue and post shipments back.",
     bullets: [
       "GET /api/v1/orders — list and filter your orders",
       "GET /api/v1/orders/{id} — one order with items, shipments and events",
@@ -126,7 +126,7 @@ const EXTRAS = [
 const NOT_YET = [
   "Buying shipping labels or comparing carrier rates — you record tracking from your own carrier account",
   "Packing slips, pick lists, invoices or customs documents",
-  "Outbound webhook delivery — you can register an endpoint, but DKH does not send to it yet",
+  "Outbound webhook delivery — you can register an endpoint, but WrL does not send to it yet",
   "Team accounts and per-staff permissions",
   "Marketplaces other than Etsy",
 ];
@@ -134,7 +134,7 @@ const NOT_YET = [
 export default function FeaturesPage() {
   return (
     <>
-      <PageHero eyebrow="Features" title="Everything DKH does today">
+      <PageHero eyebrow="Features" title="Everything WrL does today">
         Six areas, all working against the Etsy Open API right now. What is not built yet is
         listed at the bottom of this page rather than left to your imagination.
       </PageHero>

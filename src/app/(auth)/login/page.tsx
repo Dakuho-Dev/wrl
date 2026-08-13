@@ -16,7 +16,7 @@ export default async function LoginPage() {
       <div className="shadow-hard rounded-2xl border border-line bg-surface p-7">
         <h1 className="text-2xl font-semibold tracking-tight text-ink">Welcome back</h1>
         <p className="mt-1.5 text-sm text-muted">
-          Sign in to your DKH operations console.
+          Sign in to your WrL operations console.
         </p>
 
         <div className="mt-6">

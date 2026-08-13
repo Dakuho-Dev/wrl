@@ -8,7 +8,7 @@ import { ContactForm } from "./contact-form";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Get in touch with the DKH team about the Etsy integration, support or billing.",
+  description: "Get in touch with the WrL team about the Etsy integration, support or billing.",
 };
 
 export default function ContactPage() {

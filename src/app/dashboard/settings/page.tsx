@@ -94,7 +94,7 @@ export default async function SettingsPage() {
 
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
-          <CardHeader title="Profile" description="How you appear inside DKH" />
+          <CardHeader title="Profile" description="How you appear inside WrL" />
           <form action={updateProfile} className="space-y-3.5 p-5">
             <Field label="Full name">
               <Input name="name" defaultValue={user.name} required />
@@ -168,7 +168,7 @@ export default async function SettingsPage() {
       <Card className="mt-4">
         <CardHeader
           title="Data & privacy"
-          description="Export or permanently delete everything DKH holds about you"
+          description="Export or permanently delete everything WrL holds about you"
         />
         <div className="space-y-4 p-5">
           <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-paper-2 p-4">

@@ -159,7 +159,7 @@ export default async function ShopsPage({
             <div className="border border-line bg-paper-2 p-4">
               <p className="label">Other marketplaces</p>
               <p className="mt-2 text-sm leading-relaxed text-muted">
-                DKH supports Etsy only. Shopify, Amazon and TikTok Shop are not implemented — if
+                WrL supports Etsy only. Shopify, Amazon and TikTok Shop are not implemented — if
                 you need them,{" "}
                 <Link href="/contact" className="text-accent underline">
                   tell us
@@ -328,7 +328,7 @@ export default async function ShopsPage({
         <h3 className="text-sm font-semibold text-ink">What happens when you disconnect</h3>
         <ul className="mt-2 space-y-1 text-sm text-muted">
           <li>• Access and refresh tokens are deleted immediately — syncing stops.</li>
-          <li>• Already-imported orders stay in DKH so you keep your history.</li>
+          <li>• Already-imported orders stay in WrL so you keep your history.</li>
           <li>
             • To erase every order and listing we hold, delete your account from{" "}
             <Link href="/dashboard/settings" className="text-accent hover:text-accent">
