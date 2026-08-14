@@ -135,7 +135,7 @@ Xem trạng thái cấu hình tại **Admin → Integrations**.
 
 ## 5. Deploy
 
-**Đã deploy:** https://dkh-io.vercel.app — Vercel project `tu99s-projects/dkh`.
+**Đã deploy:** https://wearelucky.io.vn — Vercel project `tu99s-projects/owlflow`.
 
 Redeploy sau khi sửa code:
 

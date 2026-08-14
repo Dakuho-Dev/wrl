@@ -42,35 +42,57 @@ mô tả một sản phẩm không tồn tại đúng như mô tả**:
 
 ---
 
-## ⚠️ Phải làm trước khi nộp lại
+## Đã xong
 
-**Đặt một hòm thư thật.** §3 bắt buộc app phải công bố "a monitored email address that
-Etsy sellers can use to contact your Application for support". Domain `wearelucky.io.vn`
-đã đăng ký, nên tạo được `support@wearelucky.io.vn` thật (forwarding của nhà cung cấp
-domain, hoặc Zoho Mail bản miễn phí). Reviewer có gửi thử thì phải tới nơi.
+- [x] Tên miền `wearelucky.io.vn` — apex và `www` đều 200, SSL hợp lệ, sitemap đúng host
+- [x] `SITE_DOMAIN`, `NEXT_PUBLIC_APP_URL`, `ETSY_REDIRECT_URI` trỏ tên miền mới
+- [x] Khoá API còn sống — `openapi-ping` không còn báo *key not found*
+- [x] `x-api-key` gửi dạng `keystring:shared_secret`, đúng thứ app này đòi
+- [x] Etsy chấp nhận callback `https://wearelucky.io.vn/api/integrations/etsy/callback`
+- [x] 15 trang công khai đều 200, không còn tham chiếu tên miền cũ
+- [x] Gỡ `dkh.io.vn`, `www.dkh.io.vn`, `wrl.dkh.io.vn` khỏi Vercel (đã 404)
 
-```bash
-vercel env add SUPPORT_EMAIL production --force --value "support@wearelucky.io.vn"
+## ⚠️ Chỉ chủ tài khoản làm được
+
+**1. Thêm callback vào app Etsy.** Không có URL này trong danh sách thì OAuth trượt:
+
+```
+https://wearelucky.io.vn/api/integrations/etsy/callback
 ```
 
-Các địa chỉ `privacy@` / `security@` / `legal@` trên trang pháp lý tự động dùng lại
-`SUPPORT_EMAIL` nếu không đặt riêng — một hòm thư hoạt động tốt hơn bốn hòm thư bounce.
+Xoá luôn các callback cũ trỏ `dkh.io.vn`, `wrl.dkh.io.vn`, `dkh-io.vercel.app` — tất cả
+đều đã 404, để lại chỉ khiến reviewer bấm trúng chỗ chết.
 
-**Trỏ DNS về Vercel.** Zone `wearelucky.io.vn` nằm trên `ns1/ns2.vclouddns.vn`:
+**2. Kết nối thử một shop thật.** Đây là bằng chứng duy nhất cho §3 "fully functional".
+Toàn bộ chuỗi trước đó đã kiểm chứng được từ bên ngoài; riêng bước đổi token và đọc shop
+thì cần token của chính chủ.
 
-| Type  | Host  | Value                  |
-|-------|-------|------------------------|
-| A     | `@`   | `76.76.21.21`          |
-| CNAME | `www` | `cname.vercel-dns.com` |
+**3. Hòm thư `support@wearelucky.io.vn`.** §3 bắt buộc công bố "a monitored email address".
+Zoho bản miễn phí, hoặc forwarding của iNET. MX đặt trên `@`:
 
-**Sau khi domain xanh**, đổi URL công bố và callback — phải sửa cả trong app Etsy:
+| Host | Type | Priority | Value          |
+|------|------|----------|----------------|
+| `@`  | MX   | 10       | `mx.zoho.com`  |
+| `@`  | MX   | 20       | `mx2.zoho.com` |
+| `@`  | MX   | 50       | `mx3.zoho.com` |
+| `@`  | TXT  | —        | `v=spf1 include:zohomail.com ~all` |
+
+Thư tới nơi rồi thì chạy:
 
 ```bash
-vercel env add NEXT_PUBLIC_APP_URL production --force --value "https://wearelucky.io.vn"
+vercel env add SUPPORT_EMAIL production --force -y --project owlflow --value "support@wearelucky.io.vn"
 ```
 
+`privacy@` / `security@` / `legal@` tự dùng lại `SUPPORT_EMAIL` nếu không đặt riêng — một
+hòm thư hoạt động tốt hơn bốn hòm thư bounce.
+
+**4. Xoá `dkh-io.vercel.app`** trong dashboard: vercel.com → owlflow → Settings → Domains.
+CLI không có lệnh gỡ project domain dạng `.vercel.app`.
+
+**5. Tạo lại shared secret** bên Etsy — giá trị cũ đã lộ khi trao đổi. Rồi tự set:
+
 ```bash
-vercel env add ETSY_REDIRECT_URI production --force --value "https://wearelucky.io.vn/api/integrations/etsy/callback"
+vercel env add ETSY_CLIENT_SECRET production --force -y --project owlflow --value "<giá trị mới>"
 ```
 
 Có thể đặt thêm `BUSINESS_PHONE` và `BUSINESS_ADDRESS` nếu có thật — bỏ trống thì trang
