@@ -4,7 +4,7 @@ import { cleanEnv } from "@/lib/env";
 export const BRAND = cleanEnv(process.env.BRAND, "WrL");
 
 /** The host the site is served from, and the host every address hangs off. */
-export const SITE_DOMAIN = cleanEnv(process.env.SITE_DOMAIN, "wrl.dkh.io.vn");
+export const SITE_DOMAIN = cleanEnv(process.env.SITE_DOMAIN, "wearelucky.io.vn");
 
 /**
  * Where mail lives. Follows SITE_DOMAIN so the brand reads the same everywhere;

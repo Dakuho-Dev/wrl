@@ -16,7 +16,7 @@ function clean(value: string | undefined, fallback: string) {
 }
 
 /** One host for the site and for every address. */
-const MAIL_DOMAIN = clean(process.env.MAIL_DOMAIN, clean(process.env.SITE_DOMAIN, "wrl.dkh.io.vn"));
+const MAIL_DOMAIN = clean(process.env.MAIL_DOMAIN, clean(process.env.SITE_DOMAIN, "wearelucky.io.vn"));
 
 const DEMO_ACCOUNTS = [
   {
@@ -51,7 +51,7 @@ async function repairEmails(prisma: PrismaClient) {
  * renamed in place onto MAIL_DOMAIN rather than reseeded, so the demo orders
  * survive every move.
  */
-const FORMER_HOSTS = ["dkh.io", "dkh.io.vn"];
+const FORMER_HOSTS = ["dkh.io", "dkh.io.vn", "wrl.dkh.io.vn"];
 
 function rehost(address: string) {
   for (const host of FORMER_HOSTS) {

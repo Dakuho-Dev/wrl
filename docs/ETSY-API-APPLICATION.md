@@ -45,34 +45,32 @@ mô tả một sản phẩm không tồn tại đúng như mô tả**:
 ## ⚠️ Phải làm trước khi nộp lại
 
 **Đặt một hòm thư thật.** §3 bắt buộc app phải công bố "a monitored email address that
-Etsy sellers can use to contact your Application for support". Domain `dkh.io.vn` đã đăng
-ký, nên tạo được `support@wrl.dkh.io.vn` thật (forwarding của nhà cung cấp domain, hoặc Zoho
-Mail bản miễn phí). Reviewer có gửi thử thì phải tới nơi.
+Etsy sellers can use to contact your Application for support". Domain `wearelucky.io.vn`
+đã đăng ký, nên tạo được `support@wearelucky.io.vn` thật (forwarding của nhà cung cấp
+domain, hoặc Zoho Mail bản miễn phí). Reviewer có gửi thử thì phải tới nơi.
 
 ```bash
-vercel env add SUPPORT_EMAIL production --force --value "support@wrl.dkh.io.vn"
+vercel env add SUPPORT_EMAIL production --force --value "support@wearelucky.io.vn"
 ```
 
 Các địa chỉ `privacy@` / `security@` / `legal@` trên trang pháp lý tự động dùng lại
 `SUPPORT_EMAIL` nếu không đặt riêng — một hòm thư hoạt động tốt hơn bốn hòm thư bounce.
 
-**Trỏ DNS về Vercel.** Tại nhà cung cấp đang giữ nameserver `*.vclouddns.com`:
+**Trỏ DNS về Vercel.** Zone `wearelucky.io.vn` nằm trên `ns1/ns2.vclouddns.vn`:
 
 | Type  | Host  | Value                  |
 |-------|-------|------------------------|
 | A     | `@`   | `76.76.21.21`          |
 | CNAME | `www` | `cname.vercel-dns.com` |
 
-Xoá bản ghi A cũ trỏ về `103.166.183.10` / `103.56.163.10` / `103.216.118.10` (trang park).
-
 **Sau khi domain xanh**, đổi URL công bố và callback — phải sửa cả trong app Etsy:
 
 ```bash
-vercel env add NEXT_PUBLIC_APP_URL production --force --value "https://wrl.dkh.io.vn"
+vercel env add NEXT_PUBLIC_APP_URL production --force --value "https://wearelucky.io.vn"
 ```
 
 ```bash
-vercel env add ETSY_REDIRECT_URI production --force --value "https://wrl.dkh.io.vn/api/integrations/etsy/callback"
+vercel env add ETSY_REDIRECT_URI production --force --value "https://wearelucky.io.vn/api/integrations/etsy/callback"
 ```
 
 Có thể đặt thêm `BUSINESS_PHONE` và `BUSINESS_ADDRESS` nếu có thật — bỏ trống thì trang
@@ -134,22 +132,22 @@ encrypted at rest and deleted the moment a shop is disconnected. Sellers can exp
 erase everything from their dashboard.
 
 WrL integrates with Etsy only. Features we have not built are listed publicly at
-https://wrl.dkh.io.vn/features so nobody signs up expecting them.
+https://wearelucky.io.vn/features so nobody signs up expecting them.
 
-Website: https://wrl.dkh.io.vn
-Privacy Policy: https://wrl.dkh.io.vn/privacy
-Terms (incl. required Etsy disclaimer): https://wrl.dkh.io.vn/terms
-Scopes and endpoints in detail: https://wrl.dkh.io.vn/platforms
+Website: https://wearelucky.io.vn
+Privacy Policy: https://wearelucky.io.vn/privacy
+Terms (incl. required Etsy disclaimer): https://wearelucky.io.vn/terms
+Scopes and endpoints in detail: https://wearelucky.io.vn/platforms
 ```
 
 **Website URL**
 ```
-https://wrl.dkh.io.vn
+https://wearelucky.io.vn
 ```
 
 **Callback URL**
 ```
-https://wrl.dkh.io.vn/api/integrations/etsy/callback
+https://wearelucky.io.vn/api/integrations/etsy/callback
 ```
 
 **App type** → Seller Tools (không tick Buyer Tools)

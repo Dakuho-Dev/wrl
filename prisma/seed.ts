@@ -101,7 +101,7 @@ async function main() {
     (process.env[name] ?? "").replace(/^﻿/, "").trim() || fallback;
 
   // Everything hangs off one host: the site subdomain.
-  const mailDomain = env("MAIL_DOMAIN", env("SITE_DOMAIN", "wrl.dkh.io.vn"));
+  const mailDomain = env("MAIL_DOMAIN", env("SITE_DOMAIN", "wearelucky.io.vn"));
   const sellerPassword = env("DEMO_SELLER_PASSWORD", "Password123!");
   const adminPassword = env("DEMO_ADMIN_PASSWORD", "Admin123!");
   const password = await bcrypt.hash(sellerPassword, 10);
