@@ -49,20 +49,16 @@ const REDIRECT_URI = `http://localhost:${PORT}/callback`;
 const MINIMAL_SCOPES = ["shops_r", "listings_r", "transactions_r", "transactions_w"];
 
 /**
- * Every read scope Etsy publishes, for local exploration only. Authorising with
- * these tells you what the wider API exposes — it must NOT change what the
- * deployed app asks for.
+ * Every read scope Etsy publishes — the full list is address_r, address_w,
+ * email_r, listings_d, listings_r, listings_w, profile_r, profile_w, shops_r,
+ * shops_w, transactions_r, transactions_w, and nothing else. For local
+ * exploration only: this must NOT change what the deployed app asks for.
  */
 const ALL_READ_SCOPES = [
   "address_r",
-  "billing_r",
-  "cart_r",
   "email_r",
-  "favorites_r",
-  "feedback_r",
   "listings_r",
   "profile_r",
-  "recommend_r",
   "shops_r",
   "transactions_r",
 ];
@@ -394,8 +390,8 @@ const CATALOGUE = [
   { group: "Public", label: "buyer taxonomy", path: "/buyer-taxonomy/nodes", scope: "—" },
 
   // Account.
-  { group: "Account", label: "me", path: "/users/me", scope: "any token" },
-  { group: "Account", label: "user profile", path: "/users/{userId}", scope: "profile_r" },
+  { group: "Account", label: "me", path: "/users/me", scope: "shops_r" },
+  { group: "Account", label: "user profile", path: "/users/{userId}", scope: "email_r" },
   { group: "Account", label: "addresses", path: "/user/addresses", scope: "address_r" },
 
   // Shop.
@@ -403,7 +399,9 @@ const CATALOGUE = [
   { group: "Shop", label: "shop", path: "/shops/{shopId}", scope: "shops_r" },
   { group: "Shop", label: "shop sections", path: "/shops/{shopId}/sections", scope: "shops_r" },
   { group: "Shop", label: "shipping profiles", path: "/shops/{shopId}/shipping-profiles", scope: "shops_r" },
-  { group: "Shop", label: "return policies", path: "/shops/{shopId}/policies/return", scope: "shops_r" },
+  { group: "Shop", label: "return policies", path: "/shops/{shopId}/policies/return", scope: "api_key" },
+  { group: "Shop", label: "processing profiles", path: "/shops/{shopId}/readiness-state-definitions", scope: "shops_r" },
+  { group: "Shop", label: "shipping carriers", path: "/shipping-carriers?origin_country_iso=US", scope: "api_key" },
   { group: "Shop", label: "production partners", path: "/shops/{shopId}/production-partners", scope: "shops_r" },
   { group: "Shop", label: "holiday preferences", path: "/shops/{shopId}/holiday-preferences", scope: "shops_r" },
 
@@ -417,8 +415,8 @@ const CATALOGUE = [
   { group: "Listings", label: "listing inventory", path: "/listings/{listingId}/inventory", scope: "listings_r" },
   { group: "Listings", label: "listing images", path: "/shops/{shopId}/listings/{listingId}/images", scope: "—" },
   { group: "Listings", label: "listing videos", path: "/shops/{shopId}/listings/{listingId}/videos", scope: "—" },
-  { group: "Listings", label: "listing properties", path: "/shops/{shopId}/listings/{listingId}/properties", scope: "listings_r" },
-  { group: "Listings", label: "listing translations", path: "/shops/{shopId}/listings/{listingId}/translations/en", scope: "listings_r" },
+  { group: "Listings", label: "listing properties", path: "/shops/{shopId}/listings/{listingId}/properties", scope: "api_key" },
+  { group: "Listings", label: "listing translations", path: "/shops/{shopId}/listings/{listingId}/translations/en", scope: "api_key" },
 
   // Orders.
   { group: "Orders", label: "receipts", path: "/shops/{shopId}/receipts?limit=5", scope: "transactions_r" },
@@ -428,12 +426,12 @@ const CATALOGUE = [
   { group: "Orders", label: "shop transactions", path: "/shops/{shopId}/transactions?limit=5", scope: "transactions_r" },
 
   // Money.
-  { group: "Money", label: "payments", path: "/shops/{shopId}/payments?payment_ids=", scope: "transactions_r" },
-  { group: "Money", label: "ledger entries", path: "/shops/{shopId}/payment-account/ledger-entries?limit=5", scope: "billing_r" },
+  { group: "Money", label: "receipt payments listing", path: "/shops/{shopId}/receipts/{receiptId}/listings", scope: "transactions_r" },
+  { group: "Money", label: "ledger entries", path: "/shops/{shopId}/payment-account/ledger-entries?limit=5", scope: "transactions_r" },
 
   // Feedback.
-  { group: "Feedback", label: "shop reviews", path: "/shops/{shopId}/reviews?limit=5", scope: "feedback_r" },
-  { group: "Feedback", label: "listing reviews", path: "/listings/{listingId}/reviews?limit=5", scope: "feedback_r" },
+  { group: "Feedback", label: "shop reviews", path: "/shops/{shopId}/reviews?limit=5", scope: "api_key" },
+  { group: "Feedback", label: "listing reviews", path: "/listings/{listingId}/reviews?limit=5", scope: "api_key" },
 ];
 
 // ---------------------------------------------------------------- report
