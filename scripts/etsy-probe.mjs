@@ -575,10 +575,11 @@ async function main() {
     lastResult = result;
 
     const mark = result.ok ? c.green("✔") : c.red("✖");
-    const status = result.ok ? c.green(String(result.status)) : c.red(String(result.status));
+    // Pad first, colour second: the escape codes are invisible but padEnd counts them.
+    const status = (result.ok ? c.green : c.red)(String(result.status).padEnd(8));
     const tail = result.ok ? c.dim(summarise(result.body)) : c.dim(refusal(result));
     console.log(
-      `${mark} ${entry.label.padEnd(28)}${status.padEnd(9)}${`${result.ms}ms`.padEnd(8)}${tail}`,
+      `${mark} ${entry.label.padEnd(28)}${status} ${`${result.ms}ms`.padEnd(8)}${tail}`,
     );
 
     rows.push({
