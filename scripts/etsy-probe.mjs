@@ -10,6 +10,7 @@
  * No dependencies — Node 18+ built-ins only.
  *
  *   node scripts/etsy-probe.mjs --key <KEYSTRING> --secret <SHARED_SECRET>
+ *   node scripts/etsy-probe.mjs --manual            # Etsy signed in on another device
  *   node scripts/etsy-probe.mjs --all-scopes        # ask for every read scope
  *   node scripts/etsy-probe.mjs --path "/shops/{shopId}/receipts?limit=2"
  *   node scripts/etsy-probe.mjs --reauth            # forget the cached token
@@ -25,6 +26,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import http from "node:http";
 import path from "node:path";
+import readline from "node:readline/promises";
 import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 
@@ -79,6 +81,14 @@ const SECRET = (argValue("--secret") ?? process.env.ETSY_CLIENT_SECRET ?? "").tr
 const CUSTOM_PATH = argValue("--path");
 const FORCE_REAUTH = hasFlag("--reauth");
 const ALL_SCOPES = hasFlag("--all-scopes");
+
+/**
+ * Authorise on a different device than the one running this script — the phone
+ * or laptop where the Etsy account is actually signed in. Etsy still redirects
+ * to localhost, which will not load over there, but the address bar carries the
+ * code and that is all we need.
+ */
+const MANUAL = hasFlag("--manual");
 
 const SCOPES = process.env.ETSY_PROBE_SCOPES
   ? process.env.ETSY_PROBE_SCOPES.split(/\s+/)
@@ -150,9 +160,78 @@ async function authorise() {
     c.dim(`Add ${REDIRECT_URI} to your app's callback URLs first, or Etsy will refuse.\n`),
   );
   console.log(`${c.dim(url.toString())}\n`);
-  openBrowser(url.toString());
 
-  const code = await new Promise((resolve, reject) => {
+  const code = MANUAL ? await codeByHand(url, state) : await codeByCallback(url, state);
+
+  const res = await fetch(TOKEN_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      grant_type: "authorization_code",
+      client_id: KEYSTRING,
+      redirect_uri: REDIRECT_URI,
+      code,
+      code_verifier: verifier,
+    }),
+  });
+
+  if (!res.ok) die(`Token exchange failed (${res.status}): ${await res.text()}`);
+
+  const tokens = await res.json();
+  tokens.obtained_at = Date.now();
+  tokens.scopes = SCOPES;
+  fs.writeFileSync(TOKEN_FILE, JSON.stringify(tokens, null, 2));
+  console.log(`${c.green("✔")} Token saved to ${c.cyan(path.relative(process.cwd(), TOKEN_FILE))}\n`);
+  return tokens;
+}
+
+/**
+ * Cross-device flow. Etsy sends the browser to localhost, which fails to load
+ * on the other machine — but the URL in the address bar still carries ?code and
+ * ?state, so paste that back here.
+ */
+async function codeByHand(url, state) {
+  console.log(c.bold("Manual mode — authorise on the device where Etsy is signed in."));
+  console.log("  1. Open the link above there (email it to yourself, or scan it).");
+  console.log("  2. Approve the scopes.");
+  console.log(
+    `  3. The browser lands on ${c.cyan(REDIRECT_URI)} and shows a connection error.`,
+  );
+  console.log(c.dim("     That is expected — the page is meant for this machine, not that one."));
+  console.log("  4. Copy the whole URL out of the address bar and paste it below.\n");
+
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  const answer = (await rl.question(c.bold("Paste the redirected URL (or just the code): "))).trim();
+  rl.close();
+
+  if (!answer) die("Nothing pasted.");
+
+  let code = answer;
+  let returned = null;
+
+  if (answer.includes("?") || answer.includes("code=")) {
+    const parsed = new URL(answer.startsWith("http") ? answer : `http://x/?${answer.replace(/^\?/, "")}`);
+    const error = parsed.searchParams.get("error");
+    if (error) die(`Etsy returned: ${error}`);
+    code = parsed.searchParams.get("code");
+    returned = parsed.searchParams.get("state");
+  }
+
+  if (!code) die("No ?code found in what you pasted.");
+  if (returned && returned !== state) {
+    die("State mismatch — the pasted URL is from a different authorisation attempt.");
+  }
+  if (!returned) {
+    console.log(c.yellow("\n! Only a code was pasted, so the state check was skipped.\n"));
+  }
+
+  return code;
+}
+
+/** Same-device flow: catch the redirect on a throwaway local server. */
+async function codeByCallback(url, state) {
+  openBrowser(url.toString());
+  return new Promise((resolve, reject) => {
     const server = http.createServer((req, res) => {
       const incoming = new URL(req.url, `http://localhost:${PORT}`);
       if (incoming.pathname !== "/callback") {
@@ -175,30 +254,9 @@ async function authorise() {
     server.listen(PORT, () => console.log(c.dim(`Waiting on ${REDIRECT_URI} …`)));
     setTimeout(() => {
       server.close();
-      reject(new Error("Timed out waiting for the Etsy redirect."));
+      reject(new Error("Timed out waiting for the Etsy redirect. Try --manual."));
     }, 300_000);
   });
-
-  const res = await fetch(TOKEN_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      grant_type: "authorization_code",
-      client_id: KEYSTRING,
-      redirect_uri: REDIRECT_URI,
-      code,
-      code_verifier: verifier,
-    }),
-  });
-
-  if (!res.ok) die(`Token exchange failed (${res.status}): ${await res.text()}`);
-
-  const tokens = await res.json();
-  tokens.obtained_at = Date.now();
-  tokens.scopes = SCOPES;
-  fs.writeFileSync(TOKEN_FILE, JSON.stringify(tokens, null, 2));
-  console.log(`${c.green("✔")} Token saved to ${c.cyan(path.relative(process.cwd(), TOKEN_FILE))}\n`);
-  return tokens;
 }
 
 async function refresh(tokens) {
