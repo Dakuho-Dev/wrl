@@ -43,6 +43,47 @@ function joinField(values: Array<string | null | undefined>) {
 }
 
 /**
+ * How wide the CMS's own columns are, for the ones narrow enough to overflow.
+ *
+ * `order_info` was shaped around the Chrome extension, which read one order's
+ * worth of text off a page. WrL joins every line item into one field, so an
+ * order with a dozen items produced a `quantity` of "1, 1, 1, …" past 50
+ * characters and Postgres rejected the whole batch with
+ * "value too long for type character varying(50)" — a 500 that took the other
+ * 199 rows in the batch down with it.
+ *
+ * Truncating here keeps a long order from blocking everyone else's. Only
+ * display fields are affected; nothing the CMS keys on is in this list.
+ */
+const CMS_COLUMN_LIMITS: Partial<Record<keyof CmsOrderPayload, number>> = {
+  buyerPhone: 50,
+  buyerZip: 50,
+  orderStatus: 50,
+  quantity: 50,
+  shipmentStatus: 50,
+  source: 50,
+  buyerCity: 100,
+  buyerCountry: 100,
+  buyerState: 100,
+  orderDate: 100,
+  orderId: 100,
+  shipmentSubStatus: 100,
+  stateName: 100,
+};
+
+function clampToCmsColumns(payload: CmsOrderPayload): CmsOrderPayload {
+  const clamped = { ...payload };
+  for (const [field, limit] of Object.entries(CMS_COLUMN_LIMITS)) {
+    const key = field as keyof CmsOrderPayload;
+    const value = clamped[key];
+    if (typeof value === "string" && value.length > (limit as number)) {
+      (clamped[key] as string) = value.slice(0, limit as number);
+    }
+  }
+  return clamped;
+}
+
+/**
  * The CMS's `stateName` column already has a fixed vocabulary from the Etsy CSV
  * export (New / Personalized / Completed) and its filter dropdown offers only
  * those. Stay inside it — the fulfilment detail belongs in `shipmentStatus`,
@@ -114,7 +155,7 @@ export function toCmsPayload(order: OrderWithRelations): CmsOrderPayload {
   // the most recent label is the one the CMS should show.
   const shipment = order.shipments[0] ?? null;
 
-  return {
+  return clampToCmsColumns({
     shopName: order.shop.name,
     stateName: cmsStateName(order.status),
     orderDate: cmsDate(order.placedAt),
@@ -145,7 +186,7 @@ export function toCmsPayload(order: OrderWithRelations): CmsOrderPayload {
     deliveredAt: order.deliveredAt?.toISOString() ?? null,
     lastTrackedAt: shipment?.lastTrackedAt?.toISOString() ?? null,
     source: "WRL",
-  };
+  });
 }
 
 export type CmsPushResult = {

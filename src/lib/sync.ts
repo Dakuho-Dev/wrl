@@ -3,6 +3,7 @@ import "server-only";
 import { prisma } from "@/lib/db";
 import {
   listActiveListings,
+  fetchListingImages,
   listAllReceipts,
   mapReceiptStatus,
   money,
@@ -117,6 +118,14 @@ export async function syncShop(
       if ((type === "PRODUCTS" || type === "FULL") && !outOfTime()) {
         const listings = await listActiveListings(accessToken, shop.externalId ?? "");
         read += listings.length;
+
+        // The listings endpoint carries no photos, so they are resolved in one
+        // batch call rather than one per listing (see listActiveListings).
+        const listingImages = await fetchListingImages(
+          accessToken,
+          listings.map((listing) => String(listing.listing_id)),
+        ).catch(() => new Map<string, string>());
+
         for (const listing of listings) {
           if (outOfTime()) {
             complete = false;
@@ -130,7 +139,8 @@ export async function syncShop(
             price: money(listing.price),
             currency: listing.price?.currency_code ?? shop.currency,
             quantity: listing.quantity ?? 0,
-            imageUrl: listing.images?.[0]?.url_570xN ?? null,
+            imageUrl:
+              listingImages.get(String(listing.listing_id)) ?? listing.images?.[0]?.url_570xN ?? null,
             state: listing.state ?? "active",
             tags: JSON.stringify(listing.tags ?? []),
             views: listing.views ?? 0,

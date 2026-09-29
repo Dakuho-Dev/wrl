@@ -278,6 +278,17 @@ dọn gì; mã tự quay lại hàng đợi.
 Mỗi shop một phiên đăng nhập Etsy riêng (một `persist:` partition riêng trong
 app), nhân viên tự đăng nhập một lần cho mỗi shop. App không bao giờ tự gõ mật khẩu.
 
+App không đọc nhãn trạng thái trong từng dòng. Etsy cho lọc ngay trên URL:
+
+```
+etsy.com/your/orders/sold/all?completed_status=pre_transit
+```
+
+nên **trang chính là bộ lọc** — mọi đơn hiện ra đều ở đúng trạng thái ấy, app chỉ
+nhặt mã đơn (`#` + tối thiểu 6 chữ số). Mỗi shop đi qua ba trang: `pre_transit`,
+`in_transit` và `delivered`. Thiếu trang thứ ba thì đơn đã giao sẽ mắc kẹt ở
+"Đang vận chuyển" vĩnh viễn, vì nó chỉ lặng lẽ biến mất khỏi hai danh sách kia.
+
 **Hai làn không tranh nhau.** Làn Etsy bỏ qua vận đơn `trackerProvider = MANUAL`
 đã có trạng thái thật, vì Etsy chỉ cho một nhãn tổng còn 17track cho cả hành
 trình — và mỗi lần ghi lại đẩy vận đơn xuống cuối hàng đợi của làn kia.

@@ -47,13 +47,13 @@ const ETSY_CHANNEL_ICON =
   "https://www.etsy.com//images/seller-tools/mission-control/channel-icons/etsy-channel.svg";
 
 export type CmsOrderProduct = {
-  productName: string;
-  productImgSrc: string;
+  name: string;
+  imgSrc: string;
   etsyLink: string;
   sku: string;
   quantity: number;
   personalization: string;
-  productDescription: string;
+  description: string;
 };
 
 export type CmsOrderRow = {
@@ -66,6 +66,12 @@ export type CmsOrderRow = {
 
 export type CmsOrdersPushResult = {
   skipped?: string;
+  /**
+   * Why the push stopped. Reported rather than thrown so the counts above
+   * survive: a rejected request still tells you how many orders were selected
+   * and which labels they carried, which is the part you need to diagnose it.
+   */
+  error?: string;
   /** Orders that were queued but carried no personalisation, so were dropped. */
   notPersonalized: number;
   /** Orders judged to belong on the production list, whether or not they got sent. */
@@ -265,13 +271,15 @@ export function toCmsOrderRow(order: PendingOrder): CmsOrderRow {
     // The CMS treats it as optional and falls back to an initial.
     customerImgSrc: "",
     products: order.items.map((item) => ({
-      productName: item.title,
-      productImgSrc: item.imageUrl ?? "",
+      // CreateProductDto picks these names off ProductEntity; the extension's
+      // productName/productImgSrc were its own shape, mapped before posting.
+      name: item.title,
+      imgSrc: item.imageUrl ?? "",
       etsyLink: item.listingId ? `https://www.etsy.com/listing/${item.listingId}` : "",
       sku: item.sku ?? "",
       quantity: item.quantity,
       personalization: personalizationBlock(item),
-      productDescription: "",
+      description: "",
     })),
   };
 }
@@ -368,7 +376,8 @@ export async function pushOrdersToCmsList(limit = 500): Promise<CmsOrdersPushRes
       }
 
       if (!res.ok) {
-        throw new Error(`CMS order list push failed (${res.status}): ${await res.text()}`);
+        result.error = `CMS order list push failed (${res.status}): ${(await res.text()).slice(0, 200)}`;
+        return result;
       }
 
       result.batches += 1;

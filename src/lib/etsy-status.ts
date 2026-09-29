@@ -77,11 +77,12 @@ export async function etsyStatusPlan() {
 
   const plan = [];
   for (const shop of shops) {
-    // Parcels this lane is responsible for: the ones no other lane can answer.
+    // The agent now walks Etsy's own status pages for the whole shop rather
+    // than a personalisation-filtered slice, so every parcel still moving is
+    // in scope, whichever carrier it is on.
     const waiting = await prisma.shipment.count({
       where: {
         order: { shopId: shop.id },
-        trackerProvider: "USPS",
         status: { notIn: TERMINAL_STATUSES },
       },
     });
@@ -155,7 +156,17 @@ export async function applyEtsyStatuses(inputs: EtsyStatusInput[]): Promise<Etsy
     const carrier = asText(input.carrier);
     let shipment = order.shipments[0] ?? null;
 
-    if (shipment && shipment.trackerProvider === "MANUAL" && shipment.status !== "LABEL_CREATED") {
+    // 17track owns the non-USPS parcels because it reports the whole journey,
+    // not just a label — so a parcel it has already resolved is left alone,
+    // otherwise the two lanes take turns overwriting each other. The exception
+    // is "delivered": that is terminal and Etsy is the seller's own source of
+    // truth for it, so it is always allowed through.
+    if (
+      shipment &&
+      shipment.trackerProvider === "MANUAL" &&
+      shipment.status !== "LABEL_CREATED" &&
+      status !== "DELIVERED"
+    ) {
       out.leftToOtherLane += 1;
       continue;
     }

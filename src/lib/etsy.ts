@@ -450,13 +450,23 @@ export type EtsyListing = {
   images?: Array<{ url_570xN: string }>;
 };
 
+/**
+ * A shop's active listings.
+ *
+ * Note what is missing: `includes=Images`. This endpoint is
+ * findAllActiveListingsByShop, whose parameters are limit, offset, keywords,
+ * sort_on, sort_order, the price bounds and the section — `includes` is not
+ * among them, so Etsy accepts the request and quietly ignores it. Asking for it
+ * here is why every Product row carried a null imageUrl while the sync
+ * otherwise looked healthy. Callers that want photos use fetchListingImages.
+ */
 export async function listActiveListings(
   accessToken: string,
   shopId: string,
   limit = 50,
 ): Promise<EtsyListing[]> {
   const data = await etsyFetch<{ count: number; results: EtsyListing[] }>(
-    `/shops/${shopId}/listings/active?limit=${limit}&includes=Images`,
+    `/shops/${shopId}/listings/active?limit=${limit}`,
     accessToken,
   );
   return data.results ?? [];
