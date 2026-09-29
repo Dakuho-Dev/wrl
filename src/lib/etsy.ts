@@ -247,6 +247,9 @@ export type EtsyReceipt = {
   is_paid: boolean;
   is_shipped: boolean;
   create_timestamp: number;
+  /** Epoch seconds of the last change — the resume cursor for order sync. */
+  updated_timestamp?: number;
+  update_timestamp?: number;
   first_line?: string;
   second_line?: string;
   city?: string;
@@ -258,6 +261,17 @@ export type EtsyReceipt = {
   total_shipping_cost?: { amount: number; divisor: number; currency_code: string };
   total_tax_cost?: { amount: number; divisor: number; currency_code: string };
   discount_amt?: { amount: number; divisor: number; currency_code: string };
+  /**
+   * Etsy exposes only these four fields per shipment — there is no transit
+   * state here. Resolving "pre-transit / in-transit" is the tracking
+   * provider's job; see src/lib/tracking-sync.ts.
+   */
+  shipments?: Array<{
+    receipt_shipping_id?: number | null;
+    shipment_notification_timestamp?: number;
+    carrier_name?: string;
+    tracking_code?: string;
+  }>;
   transactions?: Array<{
     transaction_id: number;
     title: string;
@@ -265,10 +279,92 @@ export type EtsyReceipt = {
     listing_id: number;
     sku?: string;
     price?: { amount: number; divisor: number; currency_code: string };
+    shipped_timestamp?: number | null;
+    /** Buyer-chosen options; personalisation arrives here as one of the entries. */
     variations?: Array<{ formatted_name: string; formatted_value: string }>;
+    listing_image_id?: number | null;
     buyer_coupon?: number;
   }>;
 };
+
+/**
+ * Split a transaction's variations into the personalisation the buyer typed and
+ * the ordinary product options, which we store in different columns.
+ */
+/**
+ * Which buyer-entered field is the personalisation the maker has to read.
+ *
+ * There is no flag for this in the API — it arrives as just another variation —
+ * and the label is whatever the seller typed when they set the listing up. Two
+ * are already in use across one shop ("Personalization" and "Please enter"), so
+ * matching only the obvious one silently loses orders: it was why 13 of 48
+ * personalised orders reached the production list.
+ */
+export const PERSONALIZATION_LABEL =
+  /personali[sz]|please enter|custom text|your text|add your|enter your|engrav/i;
+
+/** Etsy's placeholder when the buyer left an optional personalisation blank. */
+export const NOT_REQUESTED = /not requested on this item/i;
+
+export function splitVariations(
+  variations?: Array<{ formatted_name: string; formatted_value: string }>,
+) {
+  const personalization: string[] = [];
+  const options: string[] = [];
+
+  for (const variation of variations ?? []) {
+    const line = `${variation.formatted_name}: ${variation.formatted_value}`;
+    if (PERSONALIZATION_LABEL.test(variation.formatted_name)) {
+      personalization.push(variation.formatted_value);
+    } else {
+      options.push(line);
+    }
+  }
+
+  return {
+    personalization: personalization.join(" | ") || null,
+    variation: options.join(", ") || null,
+  };
+}
+
+/** One personalisation field per line, the way the CMS order list shows them. */
+const NEWLINE = "\n";
+
+/**
+ * Every buyer-chosen field as one "Label: value" line.
+ *
+ * This is the shape the order list in the CMS has always shown, because the
+ * Chrome extension built it by reading each label/value pair off Etsy's order
+ * row — size, colour, the personalisation prompt, everything except Quantity
+ * and SKU, which have columns of their own. Reproducing it exactly is what lets
+ * the API take the extension's place without the page changing.
+ */
+export function personalizationLines(
+  variations?: Array<{ formatted_name: string; formatted_value: string }>,
+) {
+  return (variations ?? [])
+    .map((variation) => `${variation.formatted_name}: ${variation.formatted_value}`)
+    .join(NEWLINE);
+}
+
+/**
+ * Etsy's own "Personalization" tab holds the orders a maker still has to read
+ * something off before they can make the item. In the API that is a transaction
+ * carrying a personalisation variation with real content — the prompt is still
+ * listed when the buyer skipped it, but with Etsy's "Not requested" placeholder.
+ */
+export function hasPersonalization(receipt: EtsyReceipt): boolean {
+  for (const transaction of receipt.transactions ?? []) {
+    for (const variation of transaction.variations ?? []) {
+      if (!PERSONALIZATION_LABEL.test(variation.formatted_name)) continue;
+      const value = (variation.formatted_value ?? "").trim();
+      if (!value) continue;
+      if (NOT_REQUESTED.test(value)) continue;
+      return true;
+    }
+  }
+  return false;
+}
 
 export function money(value?: { amount: number; divisor: number }) {
   if (!value || !value.divisor) return 0;
@@ -286,6 +382,59 @@ export async function listReceipts(
     accessToken,
   );
   return data.results ?? [];
+}
+
+/** Etsy caps this endpoint at 100 receipts per page. */
+const RECEIPTS_PAGE_SIZE = 100;
+
+/**
+ * Walk every page of a shop's receipts.
+ *
+ * `minLastModified` is the incremental hook: on a scheduled run we only want
+ * the receipts that changed since the last successful sync, otherwise a busy
+ * shop re-reads its whole history every hour and burns the daily rate limit.
+ * `maxPages` is a safety stop so one run cannot loop forever.
+ *
+ * Oldest change first: the caller processes receipts in this order and saves
+ * the last one it finished as a cursor, so a run cut short by its time budget
+ * resumes exactly where it stopped without skipping anything.
+ */
+export async function listAllReceipts(
+  accessToken: string,
+  shopId: string,
+  options: {
+    minLastModified?: Date | null;
+    maxPages?: number;
+    /** Extra getShopReceipts filters, e.g. { was_shipped: "false" }. */
+    filters?: Record<string, string>;
+  } = {},
+): Promise<EtsyReceipt[]> {
+  const { minLastModified = null, maxPages = 20, filters = {} } = options;
+  const receipts: EtsyReceipt[] = [];
+
+  for (let page = 0; page < maxPages; page += 1) {
+    const params = new URLSearchParams({
+      limit: String(RECEIPTS_PAGE_SIZE),
+      offset: String(page * RECEIPTS_PAGE_SIZE),
+      sort_on: "updated",
+      sort_order: "asc",
+      ...filters,
+    });
+    if (minLastModified) {
+      params.set("min_last_modified", String(Math.floor(minLastModified.getTime() / 1000)));
+    }
+
+    const data = await etsyFetch<{ count: number; results: EtsyReceipt[] }>(
+      `/shops/${shopId}/receipts?${params.toString()}`,
+      accessToken,
+    );
+
+    const results = data.results ?? [];
+    receipts.push(...results);
+    if (results.length < RECEIPTS_PAGE_SIZE) break;
+  }
+
+  return receipts;
 }
 
 export type EtsyListing = {
@@ -311,6 +460,42 @@ export async function listActiveListings(
     accessToken,
   );
   return data.results ?? [];
+}
+
+/**
+ * Listing photos for specific listings, keyed by listing id.
+ *
+ * The order list in the CMS shows a thumbnail per item, which the Chrome
+ * extension read straight off Etsy's page. From the API it takes a second
+ * lookup: a receipt's transaction carries `listing_id` but no image URL. This
+ * is the batch endpoint, so a whole page of orders costs one or two calls
+ * rather than one per item.
+ *
+ * Listings the seller has since deleted simply do not come back, which is why
+ * the caller treats a missing entry as "no photo" rather than an error.
+ */
+export async function fetchListingImages(
+  accessToken: string,
+  listingIds: string[],
+): Promise<Map<string, string>> {
+  const images = new Map<string, string>();
+  const unique = [...new Set(listingIds.filter(Boolean))];
+  if (!unique.length) return images;
+
+  // Etsy caps the batch endpoint at 100 ids per call.
+  for (let i = 0; i < unique.length; i += 100) {
+    const batch = unique.slice(i, i + 100);
+    const data = await etsyFetch<{ results?: EtsyListing[] }>(
+      `/listings/batch?listing_ids=${batch.join(",")}&includes=Images`,
+      accessToken,
+    );
+    for (const listing of data.results ?? []) {
+      const url = listing.images?.[0]?.url_570xN;
+      if (url) images.set(String(listing.listing_id), url);
+    }
+  }
+
+  return images;
 }
 
 /** Push a tracking number back to Etsy and mark the receipt as shipped. */

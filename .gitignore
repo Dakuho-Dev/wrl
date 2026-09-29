@@ -18,3 +18,4 @@ tsconfig.tsbuildinfo
 # Etsy probe artefacts (contain live tokens and shop data)
 scripts/.etsy-token.json
 scripts/etsy-probe-output/
+CMS_SYNC_TOKEN.local.txt

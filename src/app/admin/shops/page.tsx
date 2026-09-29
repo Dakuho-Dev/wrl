@@ -4,6 +4,7 @@ import { ExternalLink, RefreshCw, Trash2 } from "lucide-react";
 import {
   Badge,
   Button,
+  ButtonLink,
   Card,
   CardHeader,
   EmptyState,
@@ -63,7 +64,9 @@ export default async function AdminShopsPage({
 
   return (
     <>
-      <PageHeader title="Shops" description="Every connected sales channel across the platform." />
+      <PageHeader title="Shops" description="Every connected sales channel across the platform.">
+        <ButtonLink href="/dashboard/shops">Connect my Etsy shops</ButtonLink>
+      </PageHeader>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Total shops" value={formatNumber(total)} />

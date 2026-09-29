@@ -1,10 +1,13 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 
 import { logActivity } from "@/lib/auth";
 import { encryptSecret } from "@/lib/crypto";
 import { prisma } from "@/lib/db";
 import { etsyConfig, exchangeCodeForTokens, getMyShop, userIdFromToken } from "@/lib/etsy";
 import { syncShop } from "@/lib/sync";
+
+// Room for the background first sync scheduled below with after().
+export const maxDuration = 300;
 
 function fail(request: Request, message: string) {
   return NextResponse.redirect(
@@ -93,8 +96,13 @@ export async function GET(request: Request) {
       },
     });
 
-    // First import — failures are recorded on the sync job, not thrown at the user.
-    await syncShop(shop.id, "FULL");
+    // First import runs after the redirect has been sent. Running it inline made
+    // the seller wait on the whole import and, on a busy shop, outlived the
+    // function timeout: the browser got a 504, retried the callback, and the
+    // already-consumed state produced a misleading "connection failed". The
+    // sync is time-budgeted and resumable, so the cron finishes whatever this
+    // first pass does not; failures are recorded on the sync job.
+    after(() => syncShop(shop.id, "FULL"));
 
     return NextResponse.redirect(
       new URL(

@@ -18,7 +18,7 @@ import {
   Td,
   Th,
 } from "@/components/ui";
-import { requireUser } from "@/lib/auth";
+import { requireUser, shopLimitFor } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { etsyConfig } from "@/lib/etsy";
 import { formatDateTime, formatNumber, PLATFORM_LABEL, timeAgo } from "@/lib/utils";
@@ -46,7 +46,8 @@ export default async function ShopsPage({
     },
   });
 
-  const shopLimit = user.plan?.shopLimit ?? 1;
+  const shopLimit = shopLimitFor(user);
+  const unlimited = !Number.isFinite(shopLimit);
   // Disconnected shops keep their history but hold no tokens, so they don't
   // count against the plan — matching the check in connectDemoShop.
   const activeShops = shops.filter((shop) => shop.status !== "DISCONNECTED");
@@ -56,7 +57,11 @@ export default async function ShopsPage({
     <>
       <PageHeader
         title="Shops"
-        description={`${activeShops.length} of ${shopLimit} shop${shopLimit === 1 ? "" : "s"} connected on the ${user.plan?.name ?? "Starter"} plan.${
+        description={`${
+          unlimited
+            ? `${activeShops.length} shop${activeShops.length === 1 ? "" : "s"} connected — admin account, no shop limit.`
+            : `${activeShops.length} of ${shopLimit} shop${shopLimit === 1 ? "" : "s"} connected on the ${user.plan?.name ?? "Starter"} plan.`
+        }${
           shops.length > activeShops.length
             ? ` ${shops.length - activeShops.length} disconnected shop${shops.length - activeShops.length === 1 ? "" : "s"} kept for history — they don't use a slot.`
             : ""

@@ -81,6 +81,14 @@ model Shop {
   externalUserId String?
   lastSyncAt     DateTime?
   lastSyncError  String?
+  // Resume point for order sync: the last-modified time of the newest receipt
+  // fully written. A run that hits its time budget stops cleanly and the next
+  // run carries on from here instead of starting over.
+  receiptsCursor DateTime?
+  // Set once every unshipped order has been imported regardless of age. The
+  // incremental sync only sees receipts changed since its cursor, so an old
+  // order still waiting to ship would otherwise never arrive.
+  openOrdersSweptAt DateTime?
   autoSync       Boolean   @default(true)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
@@ -163,6 +171,13 @@ model Order {
   paidAt        DateTime?
   shippedAt     DateTime?
   deliveredAt   DateTime?
+  // Last time this order was forwarded to the downstream CMS. Null means the
+  // CMS has never seen it, which is what the outbound push selects on.
+  cmsPushedAt   DateTime?
+  // A second, independent outbox marker: the CMS has two tables fed from here,
+  // the shipment view (/order-info) and the production list (/order), and a row
+  // can be current in one while still queued for the other.
+  cmsOrderPushedAt DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -174,16 +189,23 @@ model Order {
   @@index([shopId])
   @@index([status])
   @@index([placedAt])
+  @@index([cmsPushedAt])
+  @@index([cmsOrderPushedAt])
 }
 
 model OrderItem {
   id              String  @id @default(cuid())
   orderId         String
   productId       String?
+  listingId       String? // Etsy listing_id, carried through to the CMS
   title           String
   sku             String?
   variation       String?
   personalization String?
+  // Every buyer-chosen field as Etsy labelled it, one "Label: value" per line.
+  // The CMS production list shows this block verbatim, so it is kept whole
+  // rather than rebuilt from the two split columns above, which lose the labels.
+  detailBlock     String?
   quantity        Int     @default(1)
   price           Float   @default(0)
   imageUrl        String?
@@ -210,11 +232,28 @@ model OrderEvent {
 model Shipment {
   id             String    @id @default(cuid())
   orderId        String
+  externalId     String? // Etsy receipt_shipping_id
   carrier        String
   service        String?
   trackingNumber String
   trackingUrl    String?
-  status         String    @default("LABEL_CREATED") // LABEL_CREATED | IN_TRANSIT | OUT_FOR_DELIVERY | DELIVERED | EXCEPTION
+  // LABEL_CREATED | PRE_TRANSIT | IN_TRANSIT | AVAILABLE_FOR_PICKUP | OUT_FOR_DELIVERY
+  // | DELIVERY_FAILURE | DELIVERED | EXCEPTION | EXPIRED | NOT_FOUND
+  status         String    @default("LABEL_CREATED")
+  subStatus      String? // 17TRACK sub_status, e.g. InTransit_CustomsProcessing
+  lastEvent      String?
+  lastEventAt    DateTime?
+  // Which lane resolves this parcel: USPS (the free carrier API, server side)
+  // or MANUAL (the local 17track agent). Set when the shipment is written.
+  trackerProvider     String?
+  // Set once the number is registered with the tracking provider — registering
+  // is what costs quota, so we never do it twice for the same parcel.
+  trackerRegisteredAt DateTime?
+  trackerError        String?
+  lastTrackedAt       DateTime?
+  // Soft lease held by the local agent while a batch is on screen, so two
+  // machines running the agent do not look up the same 40 numbers.
+  trackerClaimedAt    DateTime?
   cost           Float     @default(0)
   weightGrams    Int?
   labelUrl       String?
@@ -226,7 +265,10 @@ model Shipment {
 
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
+  @@unique([orderId, trackingNumber])
   @@index([orderId])
+  @@index([status])
+  @@index([trackerProvider, status])
 }
 
 // ---------------------------------------------------------------- Automation
