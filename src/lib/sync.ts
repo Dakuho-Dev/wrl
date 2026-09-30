@@ -61,7 +61,10 @@ export type SyncOptions = {
 };
 
 export type SyncResult =
-  | { ok: true; read: number; saved: number; complete: boolean }
+  // `unchanged` counts receipts Etsy handed back inside the re-read window that
+  // had not actually moved. On a frequent schedule that is most of them, and it
+  // is the number that shows the schedule is cheap rather than merely quiet.
+  | { ok: true; read: number; saved: number; unchanged: number; complete: boolean }
   | { ok: false; error: string; skipped?: boolean };
 
 export async function syncShop(
@@ -96,6 +99,7 @@ export async function syncShop(
 
   let read = 0;
   let saved = 0;
+  let unchanged = 0;
   let complete = true;
 
   try {
@@ -112,6 +116,7 @@ export async function syncShop(
         const result = await syncOrders(shop, accessToken, outOfTime);
         read += result.read;
         saved += result.saved;
+        unchanged += result.skipped;
         complete = result.complete;
       }
 
@@ -168,7 +173,7 @@ export async function syncShop(
       data: { status: "CONNECTED", lastSyncAt: new Date(), lastSyncError: null },
     });
 
-    return { ok: true, read, saved, complete };
+    return { ok: true, read, saved, unchanged, complete };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown sync error";
     await prisma.syncJob.update({
@@ -187,20 +192,31 @@ export async function syncShop(
 const CURSOR_SAVE_EVERY = 20;
 
 /**
+ * How far back before the cursor each pass re-reads.
+ *
+ * The window has to cover a whole pass plus clock skew: Etsy's last-modified
+ * has second granularity, and a receipt edited while the previous pass was
+ * reading would otherwise fall between the two. A pass is capped at
+ * maxDuration (300s), so ten minutes is comfortable.
+ *
+ * It used to be an hour, which was sized for an hourly schedule. Passes now run
+ * every couple of minutes, and every receipt inside the window costs a lookup —
+ * so the window is only as wide as correctness needs.
+ */
+const RECEIPT_REREAD_MS = 10 * 60 * 1000;
+
+/**
  * Pull the receipts that changed since the shop's cursor and write them,
  * oldest change first, advancing the cursor as each one lands. Stops at the
  * next receipt boundary once `outOfTime` says so; the caller reports that as
  * an incomplete run and the next run resumes from the saved cursor.
  */
 async function syncOrders(shop: Shop, accessToken: string, outOfTime: () => boolean) {
-  // Re-read an hour before the cursor: Etsy's last-modified has second
-  // granularity and a receipt edited while the previous run was reading would
-  // otherwise be missed. Writes are idempotent, so the overlap costs nothing.
   // A shop that has never synced starts from a bounded backfill window rather
   // than its whole history — old parcels are not worth tracking anyway.
   const resumeFrom = shop.receiptsCursor ?? shop.lastSyncAt;
   const since = resumeFrom
-    ? new Date(resumeFrom.getTime() - 60 * 60 * 1000)
+    ? new Date(resumeFrom.getTime() - RECEIPT_REREAD_MS)
     : new Date(Date.now() - backfillDays() * 24 * 60 * 60 * 1000);
 
   const receipts = await listAllReceipts(accessToken, shop.externalId ?? "", {
@@ -208,6 +224,7 @@ async function syncOrders(shop: Shop, accessToken: string, outOfTime: () => bool
   });
 
   let saved = 0;
+  let skipped = 0;
   let complete = true;
   let cursor: Date | null = null;
 
@@ -217,12 +234,15 @@ async function syncOrders(shop: Shop, accessToken: string, outOfTime: () => bool
       break;
     }
 
-    await writeReceipt(shop, receipt);
-    saved += 1;
+    const outcome = await writeReceipt(shop, receipt);
+    if (outcome === "written") saved += 1;
+    else skipped += 1;
 
+    // The cursor advances for a skipped receipt too, or a shop whose recent
+    // receipts are all unchanged would never move past them.
     const changedAt = receipt.updated_timestamp ?? receipt.update_timestamp;
     if (changedAt) cursor = new Date(changedAt * 1000);
-    if (cursor && saved % CURSOR_SAVE_EVERY === 0) {
+    if (cursor && (saved + skipped) % CURSOR_SAVE_EVERY === 0) {
       await prisma.shop.update({ where: { id: shop.id }, data: { receiptsCursor: cursor } });
     }
   }
@@ -239,7 +259,9 @@ async function syncOrders(shop: Shop, accessToken: string, outOfTime: () => bool
     complete = sweep.complete;
   }
 
-  return { read, saved, complete };
+  // `skipped` is what proves the frequent schedule is behaving: on a quiet
+  // shop a pass should read a handful and write none.
+  return { read, saved, skipped, complete };
 }
 
 /**
@@ -281,11 +303,40 @@ async function sweepOpenOrders(shop: Shop, accessToken: string, outOfTime: () =>
 }
 
 
-/** Write one Etsy receipt (order, items, shipments). Idempotent. */
-async function writeReceipt(shop: Shop, receipt: EtsyReceipt) {
+/**
+ * Write one Etsy receipt (order, items, shipments). Idempotent.
+ *
+ * Returns "unchanged" — having written nothing at all — when Etsy's own
+ * last-modified for the receipt matches what we already stored.
+ *
+ * That check is what makes a frequent schedule affordable. A pass asks Etsy for
+ * everything modified since the cursor minus an overlap window, so the same
+ * recent receipts come back every single pass. Writing one clears both CMS
+ * outbox markers, which is correct when it really changed and pure waste when
+ * it did not: without this, a two-minute poll re-sends every recent order to
+ * both CMS tables thirty times an hour.
+ */
+async function writeReceipt(
+  shop: Shop,
+  receipt: EtsyReceipt,
+): Promise<"written" | "unchanged"> {
   const existing = await prisma.order.findFirst({
     where: { shopId: shop.id, externalId: String(receipt.receipt_id) },
   });
+
+  const changedAt = receipt.updated_timestamp ?? receipt.update_timestamp;
+  const externalUpdatedAt = changedAt ? new Date(changedAt * 1000) : null;
+
+  // Only a real match skips. A null on either side means we cannot tell whether
+  // anything moved, and writing is the safe answer to not knowing.
+  if (
+    existing &&
+    externalUpdatedAt &&
+    existing.externalUpdatedAt &&
+    existing.externalUpdatedAt.getTime() === externalUpdatedAt.getTime()
+  ) {
+    return "unchanged";
+  }
 
   const data = {
     shopId: shop.id,
@@ -317,6 +368,7 @@ async function writeReceipt(shop: Shop, receipt: EtsyReceipt) {
     shipZip: receipt.zip ?? null,
     shipCountry: receipt.country_iso ?? null,
     placedAt: new Date(receipt.create_timestamp * 1000),
+    externalUpdatedAt,
     // Clear both CMS outbox markers: this row changed, so both downstream
     // pushes have to see it again — the shipment view and the production list.
     cmsPushedAt: null,
@@ -340,6 +392,7 @@ async function writeReceipt(shop: Shop, receipt: EtsyReceipt) {
   }
 
   await syncReceiptShipments(order.id, receipt);
+  return "written";
 }
 
 /**

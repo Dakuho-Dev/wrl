@@ -40,8 +40,34 @@ function authorised(request: Request) {
 const SHOPS_UNTIL_MS = 170 * 1000;
 const TRACKING_UNTIL_MS = 240 * 1000;
 
-async function run() {
+/**
+ * The orders-only lane gets a tighter budget than the full run.
+ *
+ * It is triggered every couple of minutes, so a pass that ran to the full
+ * budget would still be holding the lock when the next one knocked — the next
+ * one would be turned away and the schedule would quietly halve itself. Ninety
+ * seconds is far more than a quiet pass needs (one Etsy call per shop) and
+ * anything it cannot finish resumes from the cursor.
+ */
+const ORDERS_ONLY_UNTIL_MS = 90 * 1000;
+
+/**
+ * What a run does.
+ *
+ *   full     every step: import orders, refresh tracking, push both CMS tables.
+ *   orders   import orders and push them onward, nothing else.
+ *
+ * The split exists because the two halves have very different costs and very
+ * different urgency. A new order should reach the CMS in minutes, and importing
+ * it is one Etsy call per shop. Refreshing tracking walks every parcel still
+ * moving and is the expensive half — running that every two minutes would buy
+ * nothing, because a parcel's status does not change that often.
+ */
+export type RunMode = "full" | "orders";
+
+async function run(mode: RunMode = "full") {
   const startedAt = Date.now();
+  const ordersOnly = mode === "orders";
 
   const shops = await prisma.shop.findMany({
     where: {
@@ -58,11 +84,12 @@ async function run() {
     ok: boolean;
     read?: number;
     saved?: number;
+    unchanged?: number;
     complete?: boolean;
     error?: string;
   }> = [];
 
-  const shopsDeadline = startedAt + SHOPS_UNTIL_MS;
+  const shopsDeadline = startedAt + (ordersOnly ? ORDERS_ONLY_UNTIL_MS : SHOPS_UNTIL_MS);
 
   for (const shop of shops) {
     if (Date.now() >= shopsDeadline) {
@@ -79,6 +106,7 @@ async function run() {
               ok: true,
               read: result.read,
               saved: result.saved,
+              unchanged: result.unchanged,
               complete: result.complete,
             }
           : { shop: shop.name, ok: false, error: result.error },
@@ -94,9 +122,13 @@ async function run() {
 
   // Each step is isolated: a 17TRACK outage must not stop orders reaching the
   // CMS, and a CMS outage must not throw away tracking work already done.
-  const tracking = await step(() =>
-    refreshTracking(undefined, startedAt + TRACKING_UNTIL_MS),
-  );
+  //
+  // Tracking is the step the fast lane leaves out. Both CMS pushes stay in it:
+  // they are the whole point of running often, and each is a no-op costing one
+  // query when its outbox is empty.
+  const tracking = ordersOnly
+    ? { skipped: "orders-only run" as const }
+    : await step(() => refreshTracking(undefined, startedAt + TRACKING_UNTIL_MS));
   const cms = await step(() => pushOrdersToCms());
   // The production list is a separate table in the CMS with its own marker, so
   // a failure in one push leaves the other's work intact.
@@ -108,6 +140,7 @@ async function run() {
       !("error" in tracking) &&
       !("error" in cms) &&
       !("error" in cmsOrders),
+    mode,
     durationMs: Date.now() - startedAt,
     db: await probeDatabase(),
     shops: synced,
@@ -154,21 +187,29 @@ async function step<T>(fn: () => Promise<T>): Promise<T | { error: string }> {
 const LOCK_TTL_MS = 6 * 60 * 1000;
 
 /**
- * GET              start a run in the background and answer at once
- * GET ?status=1    report the outcome of the last finished run
+ * GET                   start a full run in the background and answer at once
+ * GET ?only=orders      import new orders and push them on; skip tracking
+ * GET ?status=1         report the outcome of the last finished run
  *
  * Answering at once matters: a run takes minutes, but the proxy in front of
  * wearelucky.io.vn gives up after about a minute, shows a 504, and re-sends the
  * request — which used to start a second, overlapping run.
+ *
+ * `only=orders` is what makes a new order reach the CMS within minutes rather
+ * than within the hour. Vercel's Hobby plan allows one cron a day, so the clock
+ * lives on the CMS server, which is up anyway; see WrlSyncTriggerService there.
  */
 export async function GET(request: Request) {
   if (!authorised(request)) {
     return Response.json({ error: "unauthorized" }, { status: 401 });
   }
 
-  if (new URL(request.url).searchParams.has("status")) {
+  const params = new URL(request.url).searchParams;
+  if (params.has("status")) {
     return Response.json({ lastRun: await readLastRun() });
   }
+
+  const mode: RunMode = params.get("only") === "orders" ? "orders" : "full";
 
   const lease = await acquireLock(LOCK_TTL_MS);
   if (!lease) {
@@ -180,7 +221,7 @@ export async function GET(request: Request) {
 
   after(async () => {
     try {
-      await run();
+      await run(mode);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unknown error";
       console.error(`[cron/sync] failed: ${message}`);
@@ -194,6 +235,7 @@ export async function GET(request: Request) {
     {
       ok: true,
       started: true,
+      mode,
       message: "Sync started. Check the result in a few minutes with ?status=1",
     },
     { status: 202 },
