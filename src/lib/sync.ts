@@ -10,6 +10,7 @@ import {
   refreshTokens,
   personalizationLines,
   splitVariations,
+  decodeEntities,
   type EtsyReceipt,
 } from "@/lib/etsy";
 import { generateDemoOrders, generateDemoProducts } from "@/lib/demo-data";
@@ -342,9 +343,9 @@ async function writeReceipt(
     shopId: shop.id,
     externalId: String(receipt.receipt_id),
     orderNumber: `#${receipt.receipt_id}`,
-    buyerName: receipt.name ?? "Etsy buyer",
+    buyerName: decodeEntities(receipt.name) ?? "Etsy buyer",
     buyerEmail: receipt.buyer_email ?? null,
-    buyerMessage: receipt.message_from_buyer ?? null,
+    buyerMessage: decodeEntities(receipt.message_from_buyer) ?? null,
     // mapReceiptStatus can only see Etsy's view, which stops at
     // "is_shipped" — re-applying it would knock a parcel the tracking
     // provider already reported as delivered back to SHIPPED.
@@ -360,11 +361,11 @@ async function writeReceipt(
     discount: money(receipt.discount_amt),
     total: money(receipt.grandtotal),
     currency: receipt.grandtotal?.currency_code ?? shop.currency,
-    shipName: receipt.name ?? null,
-    shipLine1: receipt.first_line ?? null,
-    shipLine2: receipt.second_line ?? null,
-    shipCity: receipt.city ?? null,
-    shipState: receipt.state ?? null,
+    shipName: decodeEntities(receipt.name) ?? null,
+    shipLine1: decodeEntities(receipt.first_line) ?? null,
+    shipLine2: decodeEntities(receipt.second_line) ?? null,
+    shipCity: decodeEntities(receipt.city) ?? null,
+    shipState: decodeEntities(receipt.state) ?? null,
     shipZip: receipt.zip ?? null,
     shipCountry: receipt.country_iso ?? null,
     placedAt: new Date(receipt.create_timestamp * 1000),
@@ -433,7 +434,7 @@ async function writeReceiptItems(shopId: string, orderId: string, receipt: EtsyR
       const listingId = transaction.listing_id ? String(transaction.listing_id) : null;
       return {
         orderId,
-        title: transaction.title,
+        title: decodeEntities(transaction.title),
         sku: transaction.sku ?? null,
         listingId,
         productId: null,

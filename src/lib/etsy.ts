@@ -306,6 +306,48 @@ export const PERSONALIZATION_LABEL =
 /** Etsy's placeholder when the buyer left an optional personalisation blank. */
 export const NOT_REQUESTED = /not requested on this item/i;
 
+/**
+ * Etsy hands these strings back HTML-escaped.
+ *
+ * A buyer who personalises a basket with "Eileen's Reading Nook" arrives from
+ * the API as "Eileen&#39;s Reading Nook", and every consumer downstream renders
+ * it as plain text, so the CMS showed the escape to the maker who has to read
+ * the name off it. Measured across production: 101 occurrences of &#39; and 29
+ * of &quot; in order items, plus a handful in buyer names and messages.
+ *
+ * One pass, so an escaped escape stays escaped: "&amp;#39;" is text that means
+ * "&#39;", and decoding it twice would turn it into an apostrophe that the
+ * buyer never typed.
+ */
+const NAMED_ENTITIES: Record<string, string> = {
+  amp: "&",
+  lt: "<",
+  gt: ">",
+  quot: '"',
+  apos: "'",
+  nbsp: " ",
+};
+
+export function decodeEntities<T extends string | null | undefined>(value: T): T {
+  if (typeof value !== "string" || !value.includes("&")) return value;
+
+  return value.replace(/&(#x?[0-9a-fA-F]+|[a-zA-Z]+);/g, (whole, body: string) => {
+    if (!body.startsWith("#")) {
+      return NAMED_ENTITIES[body.toLowerCase()] ?? whole;
+    }
+    const hex = body[1] === "x" || body[1] === "X";
+    const code = Number.parseInt(hex ? body.slice(2) : body.slice(1), hex ? 16 : 10);
+    // An out-of-range code point would throw; leaving the text as written is
+    // always better than losing it.
+    if (!Number.isInteger(code) || code <= 0 || code > 0x10ffff) return whole;
+    try {
+      return String.fromCodePoint(code);
+    } catch {
+      return whole;
+    }
+  }) as T;
+}
+
 export function splitVariations(
   variations?: Array<{ formatted_name: string; formatted_value: string }>,
 ) {
@@ -313,11 +355,12 @@ export function splitVariations(
   const options: string[] = [];
 
   for (const variation of variations ?? []) {
-    const line = `${variation.formatted_name}: ${variation.formatted_value}`;
-    if (PERSONALIZATION_LABEL.test(variation.formatted_name)) {
-      personalization.push(variation.formatted_value);
+    const name = decodeEntities(variation.formatted_name);
+    const value = decodeEntities(variation.formatted_value);
+    if (PERSONALIZATION_LABEL.test(name)) {
+      personalization.push(value);
     } else {
-      options.push(line);
+      options.push(`${name}: ${value}`);
     }
   }
 
@@ -343,7 +386,10 @@ export function personalizationLines(
   variations?: Array<{ formatted_name: string; formatted_value: string }>,
 ) {
   return (variations ?? [])
-    .map((variation) => `${variation.formatted_name}: ${variation.formatted_value}`)
+    .map(
+      (variation) =>
+        `${decodeEntities(variation.formatted_name)}: ${decodeEntities(variation.formatted_value)}`,
+    )
     .join(NEWLINE);
 }
 
