@@ -40,6 +40,12 @@ export async function reportStuckParcels(limit = 500): Promise<StuckReport> {
       inTransitAt: null,
       status: { in: ["LABEL_CREATED", "PRE_TRANSIT", "NOT_FOUND"] },
       trackingAddedAt: { not: null },
+      // Only parcels something has actually looked up. A parcel nobody has
+      // checked is unknown, not stuck, and saying otherwise would have raised
+      // 577 alerts the moment this shipped — almost all of them for parcels
+      // left unchecked by the dead USPS lane rather than parcels in trouble.
+      // The agent decides what is true here; this only reports what it found.
+      lastTrackedAt: { not: null },
       order: { shop: { isDemo: false } },
     },
     select: {
