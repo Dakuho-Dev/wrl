@@ -80,10 +80,26 @@ export function isUsps(carrierName?: string | null, trackingNumber?: string | nu
   return USPS_NAME.test(name);
 }
 
+/**
+ * Which lane resolves a parcel.
+ *
+ * The USPS lane is off by default because it does not work: USPS put Akamai in
+ * front of the free lookup endpoints, so the server-side calls never come back
+ * with anything. The damage was invisible rather than loud — of 1,716 parcels
+ * routed to that lane, 1,715 had never been looked up once, 1,699 of them still
+ * sat at LABEL_CREATED, and not a single trackerError had been recorded. A lane
+ * that fails silently reads exactly like a lane with nothing to do.
+ *
+ * So everything goes to the agent, which reads 17track.net and Etsy's own order
+ * pages and is not blocked. Set USPS_LANE=on to put the carrier API back in
+ * service if that access ever returns; the mapping code is all still here.
+ */
 export function trackerProviderFor(
   carrierName?: string | null,
   trackingNumber?: string | null,
 ): TrackerProvider {
+  const uspsLaneEnabled = (process.env.USPS_LANE ?? "").trim().toLowerCase() === "on";
+  if (!uspsLaneEnabled) return "MANUAL";
   return isUsps(carrierName, trackingNumber) ? "USPS" : "MANUAL";
 }
 

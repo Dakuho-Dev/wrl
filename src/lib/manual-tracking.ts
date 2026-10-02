@@ -36,10 +36,18 @@ function recheckHours() {
   return Number.isFinite(hours) && hours > 0 ? hours : 6;
 }
 
-/** Only parcels shipped within this many days stay in the queue. */
+/**
+ * Only parcels shipped within this many days stay in the queue.
+ *
+ * Thirty days was too short to be a window and long enough to look like one:
+ * 319 parcels that had never reached a final status had simply aged out of it,
+ * so nothing would ever look at them again and nothing said so. A parcel still
+ * in transit is still worth asking about, and the cost of asking is one line in
+ * a batch of forty.
+ */
 function trackWindowDays() {
   const days = Number(process.env.TRACK_WINDOW_DAYS);
-  return Number.isFinite(days) && days > 0 ? days : 30;
+  return Number.isFinite(days) && days > 0 ? days : 120;
 }
 
 export type ManualQueueItem = {
@@ -179,7 +187,17 @@ export async function applyManualResults(
     // label across a combined shipment, so update every row that carries it.
     const shipments = await prisma.shipment.findMany({
       where: { trackingNumber },
-      select: { id: true, orderId: true, trackingNumber: true, status: true },
+      // preTransitAt/inTransitAt come along so applyTrackingResult can tell a
+      // first sighting from a repeat one; without them it would stamp the
+      // timestamp on every pass.
+      select: {
+        id: true,
+        orderId: true,
+        trackingNumber: true,
+        status: true,
+        preTransitAt: true,
+        inTransitAt: true,
+      },
     });
 
     if (!shipments.length) {

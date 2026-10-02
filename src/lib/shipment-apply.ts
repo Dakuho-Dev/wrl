@@ -26,7 +26,23 @@ export type ShipmentRow = {
   orderId: string;
   trackingNumber: string;
   status: string;
+  /** Already recorded first-sighting times, so they are never overwritten. */
+  preTransitAt?: Date | null;
+  inTransitAt?: Date | null;
 };
+
+/**
+ * Anything at or past this point counts as the parcel physically moving, as
+ * opposed to a label existing and a carrier not having it yet. PRE_TRANSIT is
+ * deliberately not in the list: that is the state we are measuring the wait in.
+ */
+const MOVING_STATUSES = new Set([
+  "IN_TRANSIT",
+  "AVAILABLE_FOR_PICKUP",
+  "OUT_FOR_DELIVERY",
+  "DELIVERY_FAILURE",
+  "DELIVERED",
+]);
 
 export type ApplyOutcome = "unchanged" | "updated" | "delivered";
 
@@ -44,6 +60,14 @@ export async function applyTrackingResult(
       ? (shipment.status as ShipmentStatus)
       : info.status;
 
+  // First sighting only. Writing these every time would turn "when did it first
+  // move" into "when did we last look", which is a different question that
+  // lastTrackedAt already answers.
+  const firstPreTransit =
+    status === "PRE_TRANSIT" && !shipment.preTransitAt ? now : undefined;
+  const firstMovement =
+    MOVING_STATUSES.has(status) && !shipment.inTransitAt ? now : undefined;
+
   await prisma.shipment.update({
     where: { id: shipment.id },
     data: {
@@ -55,6 +79,11 @@ export async function applyTrackingResult(
       lastTrackedAt: now,
       trackerClaimedAt: null,
       trackerError: null,
+      ...(firstPreTransit ? { preTransitAt: firstPreTransit } : {}),
+      ...(firstMovement ? { inTransitAt: firstMovement } : {}),
+      // A parcel that has started moving is no longer stuck, so it is eligible
+      // to be reported again if it stalls later on.
+      ...(firstMovement ? { stuckAlertedAt: null } : {}),
     },
   });
 

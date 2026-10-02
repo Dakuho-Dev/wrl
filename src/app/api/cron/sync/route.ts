@@ -7,6 +7,7 @@ import { pushOrdersToCms } from "@/lib/cms";
 import { pushOrdersToCmsList } from "@/lib/cms-orders";
 import { syncShop } from "@/lib/sync";
 import { refreshTracking } from "@/lib/tracking-sync";
+import { reportStuckParcels } from "@/lib/stuck-parcels";
 
 /**
  * The scheduled pipeline: Etsy -> WrL -> CMS.
@@ -129,6 +130,12 @@ async function run(mode: RunMode = "full") {
   const tracking = ordersOnly
     ? { skipped: "orders-only run" as const }
     : await step(() => refreshTracking(undefined, startedAt + TRACKING_UNTIL_MS));
+  // Runs on the full pass only: a parcel that has not moved in three days has
+  // not moved in the last two minutes either, and the check reads every parcel
+  // still waiting.
+  const stuck = ordersOnly
+    ? { skipped: "orders-only run" as const }
+    : await step(() => reportStuckParcels());
   const cms = await step(() => pushOrdersToCms());
   // The production list is a separate table in the CMS with its own marker, so
   // a failure in one push leaves the other's work intact.
@@ -138,6 +145,7 @@ async function run(mode: RunMode = "full") {
     ok:
       synced.every((s) => s.ok) &&
       !("error" in tracking) &&
+      !("error" in stuck) &&
       !("error" in cms) &&
       !("error" in cmsOrders),
     mode,
@@ -145,6 +153,7 @@ async function run(mode: RunMode = "full") {
     db: await probeDatabase(),
     shops: synced,
     tracking,
+    stuck,
     cms,
     cmsOrders,
   };

@@ -261,6 +261,24 @@ model Shipment {
   // Soft lease held by the local agent while a batch is on screen, so two
   // machines running the agent do not look up the same 40 numbers.
   trackerClaimedAt    DateTime?
+  // When the tracking number was attached, whatever put it there — the Etsy
+  // sync, the dashboard, or an import from Lark/Excel/a fulfiller. It is the
+  // clock every "has this parcel moved yet?" question is measured from.
+  trackingAddedAt     DateTime?
+  // First time the parcel was seen in each state. Written once and never
+  // overwritten, because the question is how long the first move took, not what
+  // the parcel is doing now — status already answers that.
+  preTransitAt        DateTime?
+  // First real movement: IN_TRANSIT or anything past it. A parcel can skip
+  // PRE_TRANSIT entirely, so this is not simply "the state after preTransitAt".
+  inTransitAt         DateTime?
+  // Hours of no real movement before this parcel is worth complaining about.
+  // Per parcel, because what counts as late depends on the carrier and the
+  // fulfiller; null falls back to STUCK_ALERT_HOURS.
+  stuckAlertHours     Int?
+  // Set when the alert was raised, so a stuck parcel is reported once rather
+  // than every day it stays stuck.
+  stuckAlertedAt      DateTime?
   cost                Float     @default(0)
   weightGrams         Int?
   labelUrl            String?

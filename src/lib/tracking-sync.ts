@@ -91,7 +91,17 @@ export async function refreshTracking(
     },
     orderBy: { lastTrackedAt: { sort: "asc", nulls: "first" } },
     take: limit,
-    select: { id: true, orderId: true, trackingNumber: true, status: true },
+      // preTransitAt/inTransitAt come along so applyTrackingResult can tell a
+      // first sighting from a repeat one; without them it would stamp the
+      // timestamp on every pass.
+      select: {
+        id: true,
+        orderId: true,
+        trackingNumber: true,
+        status: true,
+        preTransitAt: true,
+        inTransitAt: true,
+      },
   });
 
   if (!pending.length) return result;
