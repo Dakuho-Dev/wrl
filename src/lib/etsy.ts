@@ -307,12 +307,16 @@ export type EtsyReceipt = {
  * — buyer-typed text by any reading, and none of them matched.
  *
  * Every pattern below is a label seen in production, which is what the `labels`
- * tally on the push result is for. Option labels the buyer picks from a list
+ * tally on the push result is for. "Custom" is matched on its own because every
+ * label that starts with it is a field the seller added for the buyer to fill
+ * in — "Custom Name", "Custom Title", "Custom Character"; and `photo` and
+ * `note` because "Child's Photo for Custom Character" and "NOTE" are both the
+ * buyer handing something over. Option labels the buyer picks from a list
  * ("Size", "Color", "Style", "Printing Option") stay out on purpose: a
  * configured product is not a personalised one.
  */
 export const PERSONALIZATION_LABEL =
-  /personali[sz]|please enter|custom text|your text|add your|enter your|engrav|custom (name|title|wording|message|note)|\bnames?\b|monogram|initial|upload/i;
+  /personali[sz]|please enter|custom text|your text|add your|enter your|engrav|\bcustom\b|\bnames?\b|monogram|initial|upload|photo|\bnotes?\b/i;
 
 /** Etsy's placeholder when the buyer left an optional personalisation blank. */
 export const NOT_REQUESTED = /not requested on this item/i;
