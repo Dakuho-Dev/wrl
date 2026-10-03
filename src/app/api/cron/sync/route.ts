@@ -8,6 +8,7 @@ import { pushOrdersToCmsList } from "@/lib/cms-orders";
 import { syncShop } from "@/lib/sync";
 import { refreshTracking } from "@/lib/tracking-sync";
 import { reportStuckParcels } from "@/lib/stuck-parcels";
+import { backfillItemImages } from "@/lib/item-images";
 
 /**
  * The scheduled pipeline: Etsy -> WrL -> CMS.
@@ -136,6 +137,11 @@ async function run(mode: RunMode = "full") {
   const stuck = ordersOnly
     ? { skipped: "orders-only run" as const }
     : await step(() => reportStuckParcels());
+  // Full pass only: it talks to Etsy for photos, and a missing thumbnail is
+  // not worth a call every two minutes.
+  const images = ordersOnly
+    ? { skipped: "orders-only run" as const }
+    : await step(() => backfillItemImages());
   const cms = await step(() => pushOrdersToCms());
   // The production list is a separate table in the CMS with its own marker, so
   // a failure in one push leaves the other's work intact.
@@ -146,6 +152,7 @@ async function run(mode: RunMode = "full") {
       synced.every((s) => s.ok) &&
       !("error" in tracking) &&
       !("error" in stuck) &&
+      !("error" in images) &&
       !("error" in cms) &&
       !("error" in cmsOrders),
     mode,
@@ -154,6 +161,7 @@ async function run(mode: RunMode = "full") {
     shops: synced,
     tracking,
     stuck,
+    images,
     cms,
     cmsOrders,
   };
