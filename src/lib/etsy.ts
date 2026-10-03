@@ -299,9 +299,20 @@ export type EtsyReceipt = {
  * are already in use across one shop ("Personalization" and "Please enter"), so
  * matching only the obvious one silently loses orders: it was why 13 of 48
  * personalised orders reached the production list.
+ *
+ * The second round of losses came from the same cause and was quieter still: 62
+ * orders were classed as plain and dropped before any push, so they never
+ * appeared on the list and nothing recorded their absence. Their labels were
+ * "Custom Name (FREE)", "Custom Title", "Name", "Pet Name", "Upload Pet Photo"
+ * — buyer-typed text by any reading, and none of them matched.
+ *
+ * Every pattern below is a label seen in production, which is what the `labels`
+ * tally on the push result is for. Option labels the buyer picks from a list
+ * ("Size", "Color", "Style", "Printing Option") stay out on purpose: a
+ * configured product is not a personalised one.
  */
 export const PERSONALIZATION_LABEL =
-  /personali[sz]|please enter|custom text|your text|add your|enter your|engrav/i;
+  /personali[sz]|please enter|custom text|your text|add your|enter your|engrav|custom (name|title|wording|message|note)|\bnames?\b|monogram|initial|upload/i;
 
 /** Etsy's placeholder when the buyer left an optional personalisation blank. */
 export const NOT_REQUESTED = /not requested on this item/i;
