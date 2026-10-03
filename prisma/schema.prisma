@@ -279,6 +279,11 @@ model Shipment {
   // Set when the alert was raised, so a stuck parcel is reported once rather
   // than every day it stays stuck.
   stuckAlertedAt      DateTime?
+  // When the parcel entered the status it is in now. Distinct from
+  // lastTrackedAt, which says when we last looked: a parcel checked an hour ago
+  // can have been stuck in the same state for three weeks, and "how long has it
+  // been like this" is the question the production list actually asks.
+  statusSince         DateTime?
   cost                Float     @default(0)
   weightGrams         Int?
   labelUrl            String?

@@ -81,6 +81,10 @@ export async function applyTrackingResult(
       trackerError: null,
       ...(firstPreTransit ? { preTransitAt: firstPreTransit } : {}),
       ...(firstMovement ? { inTransitAt: firstMovement } : {}),
+      // Only on a real change. Re-stamping it on every check would make every
+      // parcel look as though it had just arrived in its current state, which
+      // is the exact misreading this column exists to prevent.
+      ...(status !== shipment.status ? { statusSince: now } : {}),
       // A parcel that has started moving is no longer stuck, so it is eligible
       // to be reported again if it stalls later on.
       ...(firstMovement ? { stuckAlertedAt: null } : {}),

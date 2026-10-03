@@ -126,6 +126,8 @@ export type CmsOrderPayload = {
   shippedAt: string | null;
   deliveredAt: string | null;
   lastTrackedAt: string | null;
+  /** When the parcel entered the status above — the clock the list counts. */
+  shipmentStatusSince: string | null;
   source: string;
 };
 
@@ -185,6 +187,7 @@ export function toCmsPayload(order: OrderWithRelations): CmsOrderPayload {
     shippedAt: order.shippedAt?.toISOString() ?? null,
     deliveredAt: order.deliveredAt?.toISOString() ?? null,
     lastTrackedAt: shipment?.lastTrackedAt?.toISOString() ?? null,
+    shipmentStatusSince: shipment?.statusSince?.toISOString() ?? null,
     source: "WRL",
   });
 }
