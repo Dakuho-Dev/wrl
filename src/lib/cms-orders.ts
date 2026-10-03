@@ -83,6 +83,13 @@ export type CmsOrdersPushResult = {
    */
   labels?: Record<string, number>;
   sent: number;
+  /**
+   * Sent, answered with a 200, and still not named in the CMS's own list of
+   * order codes it holds. These are left queued on purpose: this number being
+   * anything other than zero is the signal that orders are going missing, and
+   * it is the number that was absent while 114 of them did.
+   */
+  unconfirmed: number;
   shops: number;
   batches: number;
   /** Set on a dry run: what would have been sent, with a sample to eyeball. */
@@ -291,6 +298,7 @@ export async function pushOrdersToCmsList(limit = 500): Promise<CmsOrdersPushRes
   const result: CmsOrdersPushResult = {
     notPersonalized: 0,
     personalized: 0,
+    unconfirmed: 0,
     sent: 0,
     shops: 0,
     batches: 0,
@@ -383,12 +391,30 @@ export async function pushOrdersToCmsList(limit = 500): Promise<CmsOrdersPushRes
       result.batches += 1;
       result.sent += batch.length;
 
-      // Only mark what the CMS accepted, so a mid-run failure leaves the rest
-      // queued instead of silently dropping it.
-      await prisma.order.updateMany({
-        where: { id: { in: batch.map((order) => order.id) } },
-        data: { cmsOrderPushedAt: pushedAt },
+      // A 200 used to be the whole test, and it was not enough: 114 of 237
+      // orders were marked as delivered to the CMS and were not in it. The
+      // response body says which order codes the CMS actually holds, so that
+      // is what decides. Anything it does not name stays queued and is sent
+      // again next run, which turns a silent loss into a retry.
+      const confirmed = new Set(
+        ((await res.json().catch(() => [])) as unknown[])
+          .filter((code): code is string => typeof code === "string")
+          .map((code) => code.replace(/^#/, "")),
+      );
+
+      const accepted = batch.filter((order) => {
+        const code = (order.externalId ?? order.orderNumber).replace(/^#/, "");
+        return confirmed.has(code);
       });
+
+      result.unconfirmed += batch.length - accepted.length;
+
+      if (accepted.length) {
+        await prisma.order.updateMany({
+          where: { id: { in: accepted.map((order) => order.id) } },
+          data: { cmsOrderPushedAt: pushedAt },
+        });
+      }
     }
   }
 
