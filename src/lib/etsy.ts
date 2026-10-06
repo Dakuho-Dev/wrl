@@ -589,6 +589,35 @@ export async function submitTracking(
   });
 }
 
+/** One receipt, read fresh — used to check what Etsy already holds before writing to it. */
+export async function getReceipt(accessToken: string, shopId: string, receiptId: string) {
+  return etsyFetch<EtsyReceipt>(`/shops/${shopId}/receipts/${receiptId}`, accessToken);
+}
+
+/**
+ * createReceiptShipment, as the current OpenAPI spec describes it (JSON body).
+ *
+ * Kept apart from submitTracking above, which the dashboard still uses with the
+ * older form encoding. Etsy emails the buyer on every successful call, and a
+ * shipment cannot be taken back off a receipt — callers check first.
+ *
+ * The spec also notes a Preferred Partner Program restriction: where it is
+ * enforced, an app that is not a fulfillment partner gets 403 here even though
+ * every other receipt endpoint works. That surfaces as the thrown error.
+ */
+export async function createReceiptShipment(
+  accessToken: string,
+  shopId: string,
+  receiptId: string,
+  trackingCode: string,
+  carrierName: string,
+) {
+  return etsyFetch<EtsyReceipt>(`/shops/${shopId}/receipts/${receiptId}/tracking`, accessToken, {
+    method: "POST",
+    body: JSON.stringify({ tracking_code: trackingCode, carrier_name: carrierName, send_bcc: false }),
+  });
+}
+
 /**
  * Raw passthrough for the admin API explorer: performs the request and returns
  * the untouched status and body so you can see exactly what Etsy sends back.
