@@ -112,6 +112,16 @@ function loadPendingOrders(limit: number) {
       // already shipped, delivered or cancelled has no business appearing there
       // — and on the first run after the backfill there are hundreds of those.
       status: { in: ["NEW", "PROCESSING"] },
+      // Paid only. Etsy creates a receipt when a buyer starts checkout, and the
+      // API hands it over whether or not the payment ever completes — with no
+      // buyer email and no shipping address, which is how an unpaid one is
+      // recognisable. The seller's own Orders page never shows them, so putting
+      // one on the production list sends somebody off to make a product for an
+      // order that does not exist yet.
+      //
+      // Not filtered out for good: the row stays queued, and the moment Etsy
+      // reports is_paid the next sync writes PAID and it comes through here.
+      paymentStatus: "PAID",
     },
     orderBy: { placedAt: "asc" },
     take: limit,

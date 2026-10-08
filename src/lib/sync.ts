@@ -65,7 +65,15 @@ export type SyncResult =
   // `unchanged` counts receipts Etsy handed back inside the re-read window that
   // had not actually moved. On a frequent schedule that is most of them, and it
   // is the number that shows the schedule is cheap rather than merely quiet.
-  | { ok: true; read: number; saved: number; unchanged: number; complete: boolean }
+  | {
+      ok: true;
+      read: number;
+      saved: number;
+      unchanged: number;
+      /** Abandoned checkouts turned away — receipts Etsy opened but nobody paid. */
+      unpaid: number;
+      complete: boolean;
+    }
   | { ok: false; error: string; skipped?: boolean };
 
 export async function syncShop(
@@ -101,6 +109,7 @@ export async function syncShop(
   let read = 0;
   let saved = 0;
   let unchanged = 0;
+  let unpaid = 0;
   let complete = true;
 
   try {
@@ -118,6 +127,7 @@ export async function syncShop(
         read += result.read;
         saved += result.saved;
         unchanged += result.skipped;
+        unpaid += result.unpaid;
         complete = result.complete;
       }
 
@@ -174,7 +184,7 @@ export async function syncShop(
       data: { status: "CONNECTED", lastSyncAt: new Date(), lastSyncError: null },
     });
 
-    return { ok: true, read, saved, unchanged, complete };
+    return { ok: true, read, saved, unchanged, unpaid, complete };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown sync error";
     await prisma.syncJob.update({
@@ -226,6 +236,7 @@ async function syncOrders(shop: Shop, accessToken: string, outOfTime: () => bool
 
   let saved = 0;
   let skipped = 0;
+  let unpaid = 0;
   let complete = true;
   let cursor: Date | null = null;
 
@@ -237,13 +248,14 @@ async function syncOrders(shop: Shop, accessToken: string, outOfTime: () => bool
 
     const outcome = await writeReceipt(shop, receipt);
     if (outcome === "written") saved += 1;
+    else if (outcome === "unpaid") unpaid += 1;
     else skipped += 1;
 
     // The cursor advances for a skipped receipt too, or a shop whose recent
     // receipts are all unchanged would never move past them.
     const changedAt = receipt.updated_timestamp ?? receipt.update_timestamp;
     if (changedAt) cursor = new Date(changedAt * 1000);
-    if (cursor && (saved + skipped) % CURSOR_SAVE_EVERY === 0) {
+    if (cursor && (saved + skipped + unpaid) % CURSOR_SAVE_EVERY === 0) {
       await prisma.shop.update({ where: { id: shop.id }, data: { receiptsCursor: cursor } });
     }
   }
@@ -261,8 +273,10 @@ async function syncOrders(shop: Shop, accessToken: string, outOfTime: () => bool
   }
 
   // `skipped` is what proves the frequent schedule is behaving: on a quiet
-  // shop a pass should read a handful and write none.
-  return { read, saved, skipped, complete };
+  // shop a pass should read a handful and write none. `unpaid` is the count of
+  // abandoned checkouts turned away, reported rather than dropped silently —
+  // a number nobody can see is how the last few of these went unnoticed.
+  return { read, saved, skipped, unpaid, complete };
 }
 
 /**
@@ -320,10 +334,25 @@ async function sweepOpenOrders(shop: Shop, accessToken: string, outOfTime: () =>
 async function writeReceipt(
   shop: Shop,
   receipt: EtsyReceipt,
-): Promise<"written" | "unchanged"> {
+): Promise<"written" | "unchanged" | "unpaid"> {
   const existing = await prisma.order.findFirst({
     where: { shopId: shop.id, externalId: String(receipt.receipt_id) },
   });
+
+  // An unpaid receipt is not an order yet.
+  //
+  // Etsy opens a receipt the moment a buyer starts checkout and hands it over
+  // through the API whether or not the payment ever completes — with no buyer
+  // email and no shipping address, which is how one is recognisable. The
+  // seller's own Orders page never lists them, so importing one produces an
+  // order that exists nowhere else and that somebody can be sent off to make.
+  //
+  // Only brand-new ones are turned away. A receipt already in the table keeps
+  // being updated, because a row that has been seen needs to be able to become
+  // PAID or CANCELLED rather than freeze at whatever it was. And turning one
+  // away is not final: paying changes the receipt, so the next pass reads it
+  // again with is_paid set and imports it then.
+  if (!receipt.is_paid && !existing) return "unpaid";
 
   const changedAt = receipt.updated_timestamp ?? receipt.update_timestamp;
   const externalUpdatedAt = changedAt ? new Date(changedAt * 1000) : null;

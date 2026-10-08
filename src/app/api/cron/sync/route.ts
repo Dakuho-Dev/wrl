@@ -87,6 +87,7 @@ async function run(mode: RunMode = "full") {
     read?: number;
     saved?: number;
     unchanged?: number;
+    unpaid?: number;
     complete?: boolean;
     error?: string;
   }> = [];
@@ -109,6 +110,7 @@ async function run(mode: RunMode = "full") {
               read: result.read,
               saved: result.saved,
               unchanged: result.unchanged,
+              unpaid: result.unpaid,
               complete: result.complete,
             }
           : { shop: shop.name, ok: false, error: result.error },
