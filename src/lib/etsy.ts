@@ -2,6 +2,8 @@ import "server-only";
 
 import crypto from "node:crypto";
 
+import { decryptSecret } from "@/lib/crypto";
+import { prisma } from "@/lib/db";
 import { appUrl, cleanEnv } from "@/lib/env";
 
 /**
@@ -50,6 +52,62 @@ export function etsyConfig() {
   };
 }
 
+/**
+ * The app a call goes out as: its keystring (OAuth client_id) and shared secret.
+ *
+ * Normally the platform app from ETSY_CLIENT_ID. A shop can instead bring its
+ * own Etsy app (a Personal app the owner registered) — Etsy's Preferred Partner
+ * Program refuses tracking writes from a commercial seller-tools app, but lets
+ * a shop's own app write to that shop.
+ */
+export type EtsyApp = { clientId: string; clientSecret: string };
+
+function platformApp(): EtsyApp {
+  const { clientId, clientSecret } = etsyConfig();
+  return { clientId, clientSecret };
+}
+
+/** A shop row's own app, whether or not it has been authorised yet. */
+export function shopOwnApp(shop: { etsyAppKey: string | null; etsyAppSecret: string | null }): EtsyApp | null {
+  const clientId = shop.etsyAppKey?.trim();
+  if (!clientId) return null;
+  return { clientId, clientSecret: decryptSecret(shop.etsyAppSecret) ?? "" };
+}
+
+/**
+ * Which app issued an access token, looked up by the Etsy user id the token
+ * starts with.
+ *
+ * Etsy only accepts a token together with the key of the app that issued it,
+ * so every call has to send the right one. Keying on the token rather than
+ * passing the app through every function keeps all the callers — sync, the CMS
+ * order feed, tracking — unchanged. Only shops re-authorised through their own
+ * app count (etsyAppActive); before that their tokens are the platform app's.
+ */
+const APP_CACHE_MS = 60 * 1000;
+const appByUser = new Map<string, { app: EtsyApp | null; at: number }>();
+
+async function appForToken(accessToken: string): Promise<EtsyApp> {
+  const userId = userIdFromToken(accessToken);
+  if (!userId) return platformApp();
+
+  const cached = appByUser.get(userId);
+  if (cached && Date.now() - cached.at < APP_CACHE_MS) return cached.app ?? platformApp();
+
+  const shop = await prisma.shop.findFirst({
+    where: { externalUserId: userId, platform: "ETSY", etsyAppActive: true },
+    select: { etsyAppKey: true, etsyAppSecret: true },
+  });
+  const app = shop ? shopOwnApp(shop) : null;
+  appByUser.set(userId, { app, at: Date.now() });
+  return app ?? platformApp();
+}
+
+/** Forget cached app choices — after a shop's own app is saved or authorised. */
+export function forgetEtsyAppCache() {
+  appByUser.clear();
+}
+
 // ------------------------------------------------------------------ PKCE
 
 export function createPkcePair() {
@@ -66,8 +124,10 @@ function base64url(buffer: Buffer) {
 export function buildAuthorizeUrl(params: {
   state: string;
   codeChallenge: string;
+  app?: EtsyApp;
 }) {
-  const { clientId, redirectUri, scopes } = etsyConfig();
+  const { redirectUri, scopes } = etsyConfig();
+  const { clientId } = params.app ?? platformApp();
   const url = new URL(ETSY_AUTH_URL);
   url.searchParams.set("response_type", "code");
   url.searchParams.set("client_id", clientId);
@@ -88,8 +148,13 @@ export type EtsyTokens = {
   token_type: string;
 };
 
-export async function exchangeCodeForTokens(code: string, codeVerifier: string): Promise<EtsyTokens> {
-  const { clientId, redirectUri } = etsyConfig();
+export async function exchangeCodeForTokens(
+  code: string,
+  codeVerifier: string,
+  app?: EtsyApp,
+): Promise<EtsyTokens> {
+  const { redirectUri } = etsyConfig();
+  const { clientId } = app ?? platformApp();
   const res = await fetch(ETSY_TOKEN_URL, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -109,8 +174,8 @@ export async function exchangeCodeForTokens(code: string, codeVerifier: string):
   return (await res.json()) as EtsyTokens;
 }
 
-export async function refreshTokens(refreshToken: string): Promise<EtsyTokens> {
-  const { clientId } = etsyConfig();
+export async function refreshTokens(refreshToken: string, app?: EtsyApp): Promise<EtsyTokens> {
+  const { clientId } = app ?? platformApp();
   const res = await fetch(ETSY_TOKEN_URL, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -138,8 +203,7 @@ export async function refreshTokens(refreshToken: string): Promise<EtsyTokens> {
  * want the keystring alone. Which one applies is a property of the app, not of
  * the endpoint, so try the richer form first and fall back once.
  */
-function apiKeyForms() {
-  const { clientId, clientSecret } = etsyConfig();
+function apiKeyForms({ clientId, clientSecret }: EtsyApp) {
   return clientSecret ? [`${clientId}:${clientSecret}`, clientId] : [clientId];
 }
 
@@ -148,10 +212,10 @@ function isKeyFormComplaint(status: number, body: string) {
   return status === 403 && /shared secret/i.test(body);
 }
 
-async function etsyFetch<T>(path: string, accessToken: string, init?: RequestInit): Promise<T> {
+async function etsyFetch<T>(path: string, accessToken: string, init?: RequestInit, app?: EtsyApp): Promise<T> {
   let lastError: Error | null = null;
 
-  for (const apiKey of apiKeyForms()) {
+  for (const apiKey of apiKeyForms(app ?? (await appForToken(accessToken)))) {
     const res = await fetch(`${ETSY_API_BASE}${path}`, {
       ...init,
       headers: {
@@ -196,7 +260,7 @@ export type EtsyShop = {
  * Every failure is collected and rethrown. Swallowing them here is what turns a
  * 403 or an expired scope into a misleading "no shop was found on it".
  */
-export async function getMyShop(accessToken: string): Promise<EtsyShop | null> {
+export async function getMyShop(accessToken: string, app?: EtsyApp): Promise<EtsyShop | null> {
   const attempts: string[] = [];
   const note = (path: string, error: unknown) =>
     attempts.push(`${path} → ${error instanceof Error ? error.message : String(error)}`);
@@ -204,13 +268,15 @@ export async function getMyShop(accessToken: string): Promise<EtsyShop | null> {
   const me = await etsyFetch<{ user_id: number; shop_id?: number | null }>(
     "/users/me",
     accessToken,
+    undefined,
+    app,
   ).catch((error) => {
     note("/users/me", error);
     return null;
   });
 
   if (me?.shop_id) {
-    const shop = await etsyFetch<EtsyShop>(`/shops/${me.shop_id}`, accessToken).catch((error) => {
+    const shop = await etsyFetch<EtsyShop>(`/shops/${me.shop_id}`, accessToken, undefined, app).catch((error) => {
       note(`/shops/${me.shop_id}`, error);
       return null;
     });
@@ -221,6 +287,8 @@ export async function getMyShop(accessToken: string): Promise<EtsyShop | null> {
   const owned = await etsyFetch<{ count?: number; results?: EtsyShop[] } & Partial<EtsyShop>>(
     `/users/${userId}/shops`,
     accessToken,
+    undefined,
+    app,
   ).catch((error) => {
     note(`/users/${userId}/shops`, error);
     return null;
@@ -639,7 +707,8 @@ export async function rawEtsyRequest(path: string, accessToken?: string) {
   // Same key-form fallback as etsyFetch, so the explorer sees what the app sees.
   let res!: Response;
   let text = "";
-  for (const apiKey of apiKeyForms()) {
+  const app = accessToken ? await appForToken(accessToken) : platformApp();
+  for (const apiKey of apiKeyForms(app)) {
     res = await fetch(url, {
       headers: {
         "x-api-key": apiKey,

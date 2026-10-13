@@ -9,6 +9,7 @@ import {
   money,
   refreshTokens,
   personalizationLines,
+  shopOwnApp,
   splitVariations,
   decodeEntities,
   type EtsyReceipt,
@@ -34,7 +35,8 @@ export async function ensureFreshToken(shop: Shop) {
     !shop.tokenExpiresAt || shop.tokenExpiresAt.getTime() - Date.now() < 5 * 60 * 1000;
   if (!expiresSoon) return accessToken ?? "";
 
-  const tokens = await refreshTokens(refreshToken);
+  // A token is refreshed with the client id of the app that issued it.
+  const tokens = await refreshTokens(refreshToken, (shop.etsyAppActive && shopOwnApp(shop)) || undefined);
   await prisma.shop.update({
     where: { id: shop.id },
     data: {

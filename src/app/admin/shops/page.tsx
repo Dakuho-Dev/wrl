@@ -20,7 +20,7 @@ import {
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { formatNumber, PLATFORM_LABEL, timeAgo } from "@/lib/utils";
-import { adminDeleteShop, adminSyncShop } from "../actions";
+import { adminDeleteShop, adminSaveShopApp, adminSyncShop } from "../actions";
 
 export const metadata: Metadata = { title: "Shops · Admin" };
 export const dynamic = "force-dynamic";
@@ -110,6 +110,7 @@ export default async function AdminShopsPage({
                 <Th>Owner</Th>
                 <Th>Status</Th>
                 <Th>Mode</Th>
+                <Th>Etsy app</Th>
                 <Th>Last sync</Th>
                 <Th className="text-right">Orders</Th>
                 <Th className="text-right">Listings</Th>
@@ -149,6 +150,54 @@ export default async function AdminShopsPage({
                   </Td>
                   <Td>
                     <Badge>{shop.isDemo ? "demo" : "live"}</Badge>
+                  </Td>
+                  <Td>
+                    {shop.platform === "ETSY" && !shop.isDemo ? (
+                      <div className="w-64 space-y-1.5">
+                        <p className="text-xs text-muted">
+                          {shop.etsyAppActive
+                            ? "App riêng — đang dùng"
+                            : shop.etsyAppKey
+                              ? "App riêng — chưa cấp quyền"
+                              : "App chung (ETSY_CLIENT_ID)"}
+                        </p>
+                        <form action={adminSaveShopApp} className="space-y-1.5">
+                          <input type="hidden" name="shopId" value={shop.id} />
+                          <Input
+                            name="etsyAppKey"
+                            defaultValue={shop.etsyAppKey ?? ""}
+                            placeholder="Keystring"
+                            autoComplete="off"
+                            className="py-1 text-xs"
+                          />
+                          <Input
+                            name="etsyAppSecret"
+                            type="password"
+                            placeholder={shop.etsyAppSecret ? "Shared secret (đã lưu)" : "Shared secret"}
+                            autoComplete="new-password"
+                            className="py-1 text-xs"
+                          />
+                          <div className="flex gap-1.5">
+                            <Button type="submit" variant="outline" className="px-2 py-1 text-xs">
+                              Lưu
+                            </Button>
+                            {shop.etsyAppKey ? (
+                              <ButtonLink
+                                href={`/api/integrations/etsy/connect?shop=${shop.id}`}
+                                target="_blank"
+                                prefetch={false}
+                                variant="ghost"
+                                className="px-2 py-1 text-xs"
+                              >
+                                Link cấp quyền
+                              </ButtonLink>
+                            ) : null}
+                          </div>
+                        </form>
+                      </div>
+                    ) : (
+                      <span className="text-xs text-muted-2">—</span>
+                    )}
                   </Td>
                   <Td className="whitespace-nowrap text-xs text-muted">
                     {timeAgo(shop.lastSyncAt)}

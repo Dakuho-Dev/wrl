@@ -90,6 +90,15 @@ model Shop {
   // order still waiting to ship would otherwise never arrive.
   openOrdersSweptAt DateTime?
   autoSync          Boolean   @default(true)
+  // The shop's own Etsy app (a Personal app the shop owner registered), used
+  // instead of the platform-wide ETSY_CLIENT_ID. Etsy's Preferred Partner
+  // Program refuses tracking writes from a commercial seller-tools app, but not
+  // from the shop's own app. The keys are only used once the shop has been
+  // re-authorised through that app (etsyAppActive) — until then the tokens on
+  // the row still belong to the platform app.
+  etsyAppKey        String?
+  etsyAppSecret     String? // encrypted like the tokens
+  etsyAppActive     Boolean   @default(false)
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
@@ -109,6 +118,8 @@ model OAuthState {
   codeVerifier String
   userId       String
   platform     String
+  // Set when re-authorising one existing shop through its own Etsy app.
+  shopId       String?
   expiresAt    DateTime
   createdAt    DateTime @default(now())
 }
