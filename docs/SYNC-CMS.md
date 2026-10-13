@@ -146,7 +146,7 @@ Trên WrL (Vercel):
 |---|---|
 | `USPS_CLIENT_ID` / `USPS_CLIENT_SECRET` | Đăng ký app ở https://developer.usps.com → thêm API "Tracking" → lấy Consumer Key / Secret |
 | `MANUAL_TRACKING_TOKEN` | Mật khẩu chung cho Track17 Agent (header `x-agent-token`) |
-| `MANUAL_RECHECK_HOURS` | Tra lại một mã sớm nhất sau bao nhiêu giờ. Mặc định 6 |
+| `MANUAL_RECHECK_HOURS` | Tra lại một mã sớm nhất sau bao nhiêu giờ. Mặc định 20 (agent quét mỗi ngày một lượt) |
 | `CMS_BASE_URL` | Mặc định `https://apiserver.dakuho.com` |
 | `CMS_SYNC_TOKEN` | Phải trùng `ORDER_SYNC_TOKEN` của server CMS |
 | `CMS_ORDERS_DRY_RUN` | Đặt `1` để chỉ *báo cáo* sẽ đẩy gì, không gửi và không đánh dấu gì. Dùng một lần để đối chiếu luật lọc personalization với tab Etsy trước khi tạo dòng thật |

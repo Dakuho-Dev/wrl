@@ -30,10 +30,16 @@ export const MANUAL_BATCH_SIZE = 40;
 /** How long a handed-out batch stays reserved before another agent may take it. */
 const CLAIM_TTL_MS = 10 * 60 * 1000;
 
-/** Don't re-check a parcel that was looked up recently. MANUAL_RECHECK_HOURS, default 6. */
+/**
+ * Don't re-check a parcel that was looked up recently. MANUAL_RECHECK_HOURS, default 20.
+ *
+ * The agent runs one round a day (Sếp, 13/10/2026: several checks a day caught
+ * hardly any more status changes). 20 rather than 24 so a round that starts a
+ * little earlier than yesterday's still picks every parcel up once.
+ */
 function recheckHours() {
   const hours = Number(process.env.MANUAL_RECHECK_HOURS);
-  return Number.isFinite(hours) && hours > 0 ? hours : 6;
+  return Number.isFinite(hours) && hours > 0 ? hours : 20;
 }
 
 /**
