@@ -2,9 +2,20 @@
  * Deploy-time database bootstrap.
  *
  * 1. On an empty database, run the demo seed.
- * 2. On a database that already has users, leave the data alone but keep the two
- *    demo accounts' passwords in sync with DEMO_*_PASSWORD, so rotating the env
- *    var is enough to change the published credentials.
+ * 2. On a database that already has users, leave the data alone.
+ *
+ * Point 2 used to include "keep the demo accounts' passwords in sync with
+ * DEMO_*_PASSWORD". That quietly became a way to lose your password: there is
+ * only one real admin account, its address is what DEMO_ADMIN_EMAIL points at,
+ * and so every deploy overwrote whatever password had been set from the
+ * settings page with the env var's value. Worse, it was invisible — the reset
+ * is only logged when the hash actually differs, so a deploy that found the
+ * password already equal to the env var printed nothing at all, which reads
+ * exactly like a deploy that never touches passwords.
+ *
+ * Rotating a password is now opt-in for a single deploy (DEMO_PASSWORD_SYNC),
+ * the same shape as SEED_RESET below. Ordinary password changes belong in
+ * /dashboard/settings, and a deploy no longer has an opinion about them.
  *
  * Never throws — a demo-data problem must not fail a deployment.
  */
@@ -85,6 +96,13 @@ async function migrateSeedDomain(prisma: PrismaClient) {
   }
 }
 
+/**
+ * Force the demo accounts' passwords to the env values.
+ *
+ * Only runs when DEMO_PASSWORD_SYNC is set, which is the recovery path for a
+ * forgotten admin password: set it, deploy once, sign in, remove it. Left on,
+ * it would go back to overwriting the password on every deploy.
+ */
 async function syncDemoPasswords(prisma: PrismaClient) {
   for (const account of DEMO_ACCOUNTS) {
     const user = await prisma.user.findUnique({ where: { email: account.email } });
@@ -121,7 +139,16 @@ async function main() {
       console.log(`· bootstrap: ${users} users present, skipping seed.`);
       await repairEmails(prisma);
       await migrateSeedDomain(prisma);
-      await syncDemoPasswords(prisma);
+
+      // Opt-in, one deploy at a time. Say either way: silence here is what made
+      // the old behaviour so hard to pin down.
+      if ((process.env.DEMO_PASSWORD_SYNC ?? "").trim().toLowerCase() === "true") {
+        console.log("· bootstrap: DEMO_PASSWORD_SYNC set — forcing demo passwords to the env values.");
+        await syncDemoPasswords(prisma);
+        console.log("· bootstrap: remove DEMO_PASSWORD_SYNC so the next deploy leaves passwords alone.");
+      } else {
+        console.log("· bootstrap: leaving passwords alone (set DEMO_PASSWORD_SYNC=true for one deploy to reset them).");
+      }
       return;
     }
   } catch (error) {

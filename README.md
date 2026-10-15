@@ -172,13 +172,36 @@ Container Postgres ở cổng 5433, khớp `DATABASE_URL` trong `.env.example`.
 
 ---
 
-## 6. Nộp đơn xin Etsy API
+## 6. Đồng bộ đơn hàng về CMS Dakuho
+
+WrL kéo đơn từ Etsy, tra trạng thái vận chuyển, rồi đẩy về
+`apiserver.dakuho.com` theo lịch (Vercel cron 1 lần/ngày do giới hạn gói Hobby + server NestJS của CMS gọi mỗi giờ).
+
+Lưu ý quan trọng: **Etsy API không trả về pre-transit / in-transit** — receipt
+chỉ có `carrier_name` + `tracking_code`. Trạng thái vận chuyển được tra theo hai làn:
+
+- **USPS** (~80% số đơn): máy chủ gọi thẳng API miễn phí của USPS, chạy 24/7.
+- **Các hãng còn lại**: app [Track17 Agent](../track17-agent) chạy trên máy nhân
+  viên, dán mã vào 17track.net rồi gửi kết quả về qua `/api/tracking/manual/*`.
+
+Chi tiết luồng, bảng trạng thái và biến môi trường:
+[`docs/SYNC-CMS.md`](docs/SYNC-CMS.md).
+
+Chạy tay một lượt đồng bộ:
+
+```bash
+curl -H "Authorization: Bearer $CRON_SECRET" https://wearelucky.io.vn/api/cron/sync
+```
+
+---
+
+## 7. Nộp đơn xin Etsy API
 
 Xem hướng dẫn chi tiết kèm nội dung mẫu để điền: [`docs/ETSY-API-APPLICATION.md`](docs/ETSY-API-APPLICATION.md)
 
 ---
 
-## 7. Trạng thái bảo mật
+## 8. Trạng thái bảo mật
 
 Đã làm:
 

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 
-import { logActivity, requireUser } from "@/lib/auth";
+import { logActivity, requireUser, shopLimitFor } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { syncShop } from "@/lib/sync";
 
@@ -28,7 +28,7 @@ export async function connectDemoShop(formData: FormData) {
 
   // A disconnected shop holds no tokens and syncs nothing, so it must not
   // consume a slot — otherwise disconnecting leaves the seller with no way out.
-  const planShopLimit = user.plan?.shopLimit ?? 1;
+  const planShopLimit = shopLimitFor(user);
   const current = await prisma.shop.count({
     where: { userId: user.id, status: { not: "DISCONNECTED" } },
   });

@@ -91,6 +91,16 @@ export async function requireUser() {
   return user;
 }
 
+/**
+ * How many active shops a user may hold. Admins are exempt: the operator
+ * account connects every shop the business owns so the scheduled job can feed
+ * their orders to the CMS, and a plan cap makes no sense there.
+ */
+export function shopLimitFor(user: { role: string; plan?: { shopLimit: number } | null }) {
+  if (user.role === "ADMIN") return Number.POSITIVE_INFINITY;
+  return user.plan?.shopLimit ?? 1;
+}
+
 export async function requireAdmin() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");

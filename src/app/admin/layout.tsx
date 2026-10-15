@@ -23,6 +23,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       items: [
         { href: "/admin/users", label: "Users", icon: "users" },
         { href: "/admin/shops", label: "Shops", icon: "store", badge: brokenShops || undefined },
+        // The admin account is also the operator that connects the business's own
+        // Etsy shops; that flow lives in the seller area, so link to it from here.
+        { href: "/dashboard/shops", label: "Connect my shops", icon: "plug" },
         { href: "/admin/orders", label: "Orders", icon: "bag" },
         { href: "/admin/products", label: "Products", icon: "boxes" },
         { href: "/admin/automations", label: "Automations", icon: "workflow" },

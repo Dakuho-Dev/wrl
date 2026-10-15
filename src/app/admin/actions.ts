@@ -3,7 +3,9 @@
 import { revalidatePath } from "next/cache";
 
 import { logActivity, requireAdmin } from "@/lib/auth";
+import { encryptSecret } from "@/lib/crypto";
 import { prisma } from "@/lib/db";
+import { forgetEtsyAppCache } from "@/lib/etsy";
 import { syncShop } from "@/lib/sync";
 
 // ------------------------------------------------------------------ Users
@@ -102,6 +104,47 @@ export async function adminDeleteShop(formData: FormData) {
     category: "ADMIN",
     level: "WARN",
     message: `Deleted shop "${shop.name}" and all its data`,
+  });
+
+  revalidatePath("/admin/shops");
+}
+
+/**
+ * Save (or clear) a shop's own Etsy app keys.
+ *
+ * Saving does not switch the shop over: its tokens still belong to the
+ * platform app until the owner re-authorises through the new app (the connect
+ * link), so etsyAppActive goes back to false whenever the keystring changes.
+ * A blank secret keeps the stored one, so re-saving never needs it retyped.
+ */
+export async function adminSaveShopApp(formData: FormData) {
+  const admin = await requireAdmin();
+  const shopId = String(formData.get("shopId"));
+  const key = String(formData.get("etsyAppKey") ?? "").trim();
+  const secret = String(formData.get("etsyAppSecret") ?? "").trim();
+
+  const shop = await prisma.shop.findUniqueOrThrow({ where: { id: shopId } });
+  const keyChanged = key !== (shop.etsyAppKey ?? "");
+
+  await prisma.shop.update({
+    where: { id: shopId },
+    data: key
+      ? {
+          etsyAppKey: key,
+          ...(secret ? { etsyAppSecret: encryptSecret(secret) } : {}),
+          ...(keyChanged ? { etsyAppActive: false } : {}),
+        }
+      : { etsyAppKey: null, etsyAppSecret: null, etsyAppActive: false },
+  });
+  forgetEtsyAppCache();
+
+  await logActivity({
+    userId: admin.id,
+    category: "ADMIN",
+    level: "WARN",
+    message: key
+      ? `Saved own Etsy app for shop "${shop.name}" (${key.slice(0, 6)}…)`
+      : `Removed own Etsy app from shop "${shop.name}" — back on the platform app, reconnect it`,
   });
 
   revalidatePath("/admin/shops");

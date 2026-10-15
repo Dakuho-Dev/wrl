@@ -1,10 +1,20 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 
 import { logActivity } from "@/lib/auth";
 import { encryptSecret } from "@/lib/crypto";
 import { prisma } from "@/lib/db";
-import { etsyConfig, exchangeCodeForTokens, getMyShop, userIdFromToken } from "@/lib/etsy";
+import {
+  etsyConfig,
+  exchangeCodeForTokens,
+  forgetEtsyAppCache,
+  getMyShop,
+  shopOwnApp,
+  userIdFromToken,
+} from "@/lib/etsy";
 import { syncShop } from "@/lib/sync";
+
+// Room for the background first sync scheduled below with after().
+export const maxDuration = 300;
 
 function fail(request: Request, message: string) {
   return NextResponse.redirect(
@@ -39,6 +49,8 @@ export async function GET(request: Request) {
   if (stored.expiresAt < new Date()) {
     return fail(request, "The authorization request expired. Please try connecting again.");
   }
+
+  if (stored.shopId) return finishShopApp(stored.shopId, stored.userId, code, stored.codeVerifier);
 
   try {
     const tokens = await exchangeCodeForTokens(code, stored.codeVerifier);
@@ -93,8 +105,13 @@ export async function GET(request: Request) {
       },
     });
 
-    // First import — failures are recorded on the sync job, not thrown at the user.
-    await syncShop(shop.id, "FULL");
+    // First import runs after the redirect has been sent. Running it inline made
+    // the seller wait on the whole import and, on a busy shop, outlived the
+    // function timeout: the browser got a 504, retried the callback, and the
+    // already-consumed state produced a misleading "connection failed". The
+    // sync is time-budgeted and resumable, so the cron finishes whatever this
+    // first pass does not; failures are recorded on the sync job.
+    after(() => syncShop(shop.id, "FULL"));
 
     return NextResponse.redirect(
       new URL(
@@ -111,5 +128,74 @@ export async function GET(request: Request) {
       message: `Etsy OAuth callback failed: ${message}`,
     });
     return fail(request, message);
+  }
+}
+
+function plainPage(title: string, message: string, status = 200) {
+  const escape = (text: string) => text.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+  return new NextResponse(
+    `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">` +
+      `<title>${escape(title)}</title>` +
+      `<body style="font:15px/1.5 system-ui,sans-serif;max-width:720px;margin:40px auto;padding:0 16px">` +
+      `<h1 style="font-size:20px">${escape(title)}</h1><p>${escape(message)}</p></body>`,
+    { status, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } },
+  );
+}
+
+/**
+ * The end of a re-authorisation through the shop's own app (see the connect
+ * route). It runs in the shop's Hidemyacc profile, which has no WrL session,
+ * so it answers with a plain page instead of redirecting into the dashboard.
+ *
+ * The new tokens only replace the shop's current ones when Etsy confirms they
+ * are for that same shop — granting while signed in to another shop's Etsy
+ * account must not cross the two over.
+ */
+async function finishShopApp(shopId: string, userId: string, code: string, codeVerifier: string) {
+  const shop = await prisma.shop.findUnique({ where: { id: shopId } });
+  const app = shop ? shopOwnApp(shop) : null;
+  if (!shop || !app) return plainPage("Không kết nối được", "Shop hoặc app riêng của shop không còn trên WrL.", 400);
+
+  try {
+    const tokens = await exchangeCodeForTokens(code, codeVerifier, app);
+    const shopInfo = await getMyShop(tokens.access_token, app);
+
+    if (!shopInfo || String(shopInfo.shop_id) !== shop.externalId) {
+      throw new Error(
+        `Tài khoản Etsy vừa cấp quyền là shop ${shopInfo ? `"${shopInfo.shop_name}" (${shopInfo.shop_id})` : "không xác định"}, ` +
+          `không phải ${shop.name} (${shop.externalId}). Mở link trong đúng profile của shop rồi thử lại.`,
+      );
+    }
+
+    await prisma.shop.update({
+      where: { id: shop.id },
+      data: {
+        externalUserId: userIdFromToken(tokens.access_token),
+        accessToken: encryptSecret(tokens.access_token),
+        refreshToken: encryptSecret(tokens.refresh_token),
+        tokenExpiresAt: new Date(Date.now() + tokens.expires_in * 1000),
+        scopes: etsyConfig().scopes.join(" "),
+        etsyAppActive: true,
+        status: "CONNECTED",
+        lastSyncError: null,
+      },
+    });
+    forgetEtsyAppCache();
+
+    await logActivity({
+      userId,
+      category: "SYNC",
+      message: `Shop "${shop.name}" now uses its own Etsy app (${app.clientId.slice(0, 6)}…)`,
+    });
+    return plainPage("Đã kết nối", `${shop.name} giờ dùng app Etsy riêng của shop. Có thể đóng tab này.`);
+  } catch (caught) {
+    const message = caught instanceof Error ? caught.message : String(caught);
+    await logActivity({
+      userId,
+      level: "ERROR",
+      category: "SYNC",
+      message: `Own-app authorisation for shop "${shop.name}" failed: ${message}`,
+    });
+    return plainPage("Không kết nối được", message, 400);
   }
 }
